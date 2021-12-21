@@ -1,13 +1,21 @@
 const Product = require('../models/productModel');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
+const ApiFeatures = require('../utils/apiFeatures');
 
 // Get all products from the database
-exports.getAllProducts = catchAsyncErrors(async (_, res) => {
-  const products = await Product.find();
+exports.getAllProducts = catchAsyncErrors(async (req, res) => {
+  const productsCount = await Product.countDocuments();
+
+  const apiFeature = new ApiFeatures(Product.find(), req.query)
+    .search()
+    .filter()
+    .paginate();
+  const products = await apiFeature.query;
   res.status(200).json({
     success: true,
     message: 'All products fetched',
+    productsCount,
     products,
   });
 });

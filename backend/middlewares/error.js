@@ -14,7 +14,7 @@ module.exports = (err, req, res, next) => {
       statusCode: err.statusCode,
       status: err.status,
       message: err.message,
-      // stack: err.stack,
+      stack: err.stack,
     });
   } else {
     res.status(500).json({
@@ -23,7 +23,7 @@ module.exports = (err, req, res, next) => {
       success: false,
       status: 'error',
       message: err.message,
-      // stack: err.stack,
+      stack: err.stack,
     });
   }
 };
