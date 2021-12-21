@@ -9,9 +9,6 @@ const connectToDb = () => {
     .then((data) => {
       console.log('Connected to MongoDB at ', process.env.MONGO_URI);
       console.log(`data.connection.host`, data.connection.host);
-    })
-    .catch((err) => {
-      console.log('error', err);
     });
 };
 module.exports = connectToDb;
