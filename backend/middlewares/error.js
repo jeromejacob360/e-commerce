@@ -6,6 +6,22 @@ module.exports = (err, req, res, next) => {
     err = new ErrorHandler('Resource not found at ' + err.path, 404);
   }
 
+  // Mongoose duplicate key error
+  if (err.name === 'MongoServerError' && err.code === 11000) {
+    const message = `Duplicate ${Object.keys(err.keyValue)[0]} entered`;
+    err = new ErrorHandler(message, 400);
+  }
+
+  // Wrong jwt error
+  if (err.name === 'JsonWebTokenError') {
+    err = new ErrorHandler('Invalid JWT', 401);
+  }
+
+  //  JWT expire error
+  if (err.name === 'JsonWebTokenError') {
+    err = new ErrorHandler('Expired JWT', 401);
+  }
+
   if (err instanceof ErrorHandler) {
     res.status(err.statusCode).json({
       name: err.name,

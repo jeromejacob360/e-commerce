@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const productSchema = new Schema({
   name: {
@@ -63,6 +63,11 @@ const productSchema = new Schema({
       },
     },
   ],
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Product creator is required'],
+  },
   createdAt: {
     type: Date,
     default: Date.now,
