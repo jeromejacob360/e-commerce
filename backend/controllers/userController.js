@@ -83,3 +83,84 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
     );
   }
 });
+
+// Get user details
+exports.getUserDetails = catchAsyncErrors(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user) return;
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// Update user details
+exports.updateUserDetails = catchAsyncErrors(async (req, res) => {
+  const newUser = {
+    name: req.body.name,
+    email: req.body.email,
+  };
+
+  const user = await User.findByIdAndUpdate(req.user.id, newUser, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// Get all users (Admin only)
+exports.getAlluserDetails = catchAsyncErrors(async (req, res, next) => {
+  const users = await User.find();
+  res.status(200).json({
+    success: true,
+    users,
+  });
+});
+
+// Get single user detail (Admin only)
+exports.getSingleUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) return next(new ErrorHandler('User not found', 400));
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// Update user role (Admin only)
+exports.updateUserDetailsAdmin = catchAsyncErrors(async (req, res) => {
+  const newUser = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+  };
+
+  const user = await User.findByIdAndUpdate(req.user.id, newUser, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
+  if (!user) return next(new ErrorHandler('User not found', 400));
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// Delete user (Admin only)
+exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) return next(new ErrorHandler('User not found', 400));
+  await user.remove();
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});

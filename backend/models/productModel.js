@@ -49,6 +49,10 @@ const productSchema = new Schema({
   },
   reviews: [
     {
+      userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
       name: {
         type: String,
         required: [true, 'Review name is required'],
@@ -56,6 +60,8 @@ const productSchema = new Schema({
       rating: {
         type: Number,
         required: [true, 'Review rating is required'],
+        min: [0, 'Review rating must be greater than 0'],
+        max: [5, 'Review rating must be less than 5'],
       },
       comment: {
         type: String,
