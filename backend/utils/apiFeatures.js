@@ -26,18 +26,16 @@ class ApiFeatures {
     excludedFields.forEach((el) => delete queryObj[el]);
 
     // Filter for price and rating
-    // let queryStr = JSON.stringify(queryObj);
-    // queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => '$' + key);
-    // console.log(`queryStr`, queryStr);
-    // this.query = this.query.find(JSON.parse(queryStr)); TODO
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
 
-    this.query = this.query.find(queryObj);
+    this.query = this.query.find(JSON.parse(queryStr));
+
     return this;
   }
 
-  paginate() {
+  paginate(limit) {
     const page = this.queryString.page * 1 || 1;
-    const limit = this.queryString.limit * 1 || 6;
     const skip = (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
     return this;

@@ -1,24 +1,44 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchProductDetails } from '../../redux/actions/productActions';
+import {
+  clearErrors,
+  fetchProductDetails,
+} from '../../redux/actions/productActions';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
-import { Button, Card, IconButton, Rating, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Button, Rating } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ReviewCard from '../../helper-components/ReviewCard';
+import Loading from '../../helper-components/loading/Loading';
+import { useAlert } from 'react-alert';
 
 export default function ProductDetails({ match }) {
   const dispatch = useDispatch();
+  const alert = useAlert();
 
   useEffect(() => {
     dispatch(fetchProductDetails(match.params.id));
   }, [dispatch, match.params.id]);
 
-  const { loading, product } = useSelector((state) => state.productDetails);
+  useEffect(() => {
+    if (error) {
+      dispatch(clearErrors());
+      alert.error(error.message + '\nRedirecting...');
+      setTimeout(() => {
+        window.history.back();
+      }, 3000);
+    }
+  });
 
-  console.log(`product`, product);
+  const { loading, product, error } = useSelector(
+    (state) => state.productDetails,
+  );
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return product?.images ? (
     <div className="my-10">
       <div className="border-b lg:flex-row flex flex-col justify-center items-center px-5">
@@ -39,7 +59,20 @@ export default function ProductDetails({ match }) {
           <div className="text-gray-500 max-w-[400px] mb-4">
             {product.description}
           </div>
-          <h5 className="text-3xl">${product.price}</h5>
+          <div className="flex items-baseline space-x-4">
+            <h5 className="text-3xl">${product.price}</h5>
+            <span>
+              {product.stock > 0 ? (
+                <span className="text-green-500 font-bold text-lg">
+                  In stock
+                </span>
+              ) : (
+                <span className="text-red-500 font-bold text-lg">
+                  Out of stock
+                </span>
+              )}
+            </span>
+          </div>
           <br />
           <div className="flex items-center">
             <Rating
@@ -53,13 +86,13 @@ export default function ProductDetails({ match }) {
           <br />
           <div className="flex items-center mb-4">
             <div className="border inline-flex items-center py-1 rounded-lg border-blue-600 mr-2">
-              <div className="px-2">
+              <Button disabled={!product.stock} className="px-2">
                 <RemoveIcon />
-              </div>
-              <span className="font-bold text-xl">1</span>
-              <div className="px-2">
+              </Button>
+              <span className="font-bold text-xl">0</span>
+              <Button disabled={!product.stock} className="px-2">
                 <AddIcon />
-              </div>
+              </Button>
             </div>
             <Button
               disabled={!product.stock}
@@ -71,7 +104,7 @@ export default function ProductDetails({ match }) {
           </div>
         </div>
       </div>
-      {product.reviews.length > 0 && (
+      {product.reviews.length > 0 ? (
         <>
           <h3 className="text-xl my-4 text-center">Reviews</h3>
           <div className="flex justify-center overflow-auto w-screen">
@@ -80,6 +113,8 @@ export default function ProductDetails({ match }) {
             ))}
           </div>
         </>
+      ) : (
+        <h4 className="flex justify-center text-2xl my-6">No reviews yet</h4>
       )}
     </div>
   ) : null;

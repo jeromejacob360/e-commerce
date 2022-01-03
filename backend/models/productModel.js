@@ -35,7 +35,7 @@ const productSchema = new Schema({
       },
     },
   ],
-  type: {
+  category: {
     type: String,
     required: [true, 'Product type is required'],
   },

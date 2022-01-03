@@ -6,17 +6,29 @@ const ApiFeatures = require('../utils/apiFeatures');
 // Get all products from the database
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
+  const limit = req.query.limit * 1 || 10;
 
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
-    .filter()
-    .paginate();
-  const products = await apiFeature.query;
+    .filter();
+
+  let products = await apiFeature.query;
+  const filteredProductsCount = products.length;
+
+  apiFeature.paginate(limit);
+
+  try {
+    products = await apiFeature.query.clone();
+  } catch (error) {
+    console.log(error);
+  }
+
   res.status(200).json({
     success: true,
-    message: 'All products fetched',
-    productsCount,
     products,
+    productsCount,
+    filteredProductsCount,
+    limit,
   });
 });
 

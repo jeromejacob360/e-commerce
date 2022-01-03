@@ -6,6 +6,8 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
+import { ThemeProvider } from '@mui/material';
+import { theme } from './mui/theme';
 
 const options = {
   position: positions.BOTTOM_LEFT,
@@ -17,7 +19,9 @@ const options = {
 ReactDOM.render(
   <Provider store={store}>
     <AlertProvider template={AlertTemplate} {...options}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
     </AlertProvider>
   </Provider>,
   document.getElementById('root'),
