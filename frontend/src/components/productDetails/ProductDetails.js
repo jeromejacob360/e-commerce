@@ -12,6 +12,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ReviewCard from '../../helper-components/ReviewCard';
 import Loading from '../../helper-components/loading/Loading';
 import { useAlert } from 'react-alert';
+import Metadata from '../../metadata';
 
 export default function ProductDetails({ match }) {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ export default function ProductDetails({ match }) {
 
   return product?.images ? (
     <div className="my-10">
+      <Metadata title={product.name + '--Virtual shop'} />
       <div className="border-b lg:flex-row flex flex-col justify-center items-center px-5">
         <div className="max-w-[300px]">
           <Carousel>

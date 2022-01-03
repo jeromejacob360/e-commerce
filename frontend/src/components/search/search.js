@@ -6,6 +6,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import React, { useState } from 'react';
+import Metadata from '../../metadata';
 
 export default function Search({ history }) {
   const [searchText, setSearchText] = useState('');
@@ -26,6 +27,7 @@ export default function Search({ history }) {
         alignItems: 'center',
       }}
     >
+      <Metadata title="Search" />
       <Box
         component="form"
         sx={{

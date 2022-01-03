@@ -5,6 +5,7 @@ export function fetchProducts(
   page = 1,
   price = [0, 25000],
   category,
+  rating,
 ) {
   return async function (dispatch) {
     try {
@@ -14,6 +15,10 @@ export function fetchProducts(
 
       if (category && category !== 'All') {
         link += `&category=${category.toLowerCase()}`;
+      }
+
+      if (category && rating !== null) {
+        link += `&rating[gte]=${rating}`;
       }
 
       const { data } = await axios.get(link);
