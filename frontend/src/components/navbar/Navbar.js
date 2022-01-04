@@ -36,12 +36,7 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar
-      sx={{
-        marginBottom: '1rem',
-      }}
-      position="static"
-    >
+    <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to="/">

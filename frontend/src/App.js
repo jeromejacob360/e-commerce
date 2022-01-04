@@ -6,6 +6,7 @@ import { CssBaseline } from '@mui/material';
 import ProductDetails from './components/productDetails/ProductDetails';
 import Products from './components/products/products';
 import Search from './components/search/search';
+import LoginSignup from './components/user/LoginSignup';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Navbar />
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={LoginSignup} />
           <Route exact path="/search" component={Search} />
           <Route exact path="/products" component={Products} />
           <Route exact path="/products/:keyword" component={Products} />

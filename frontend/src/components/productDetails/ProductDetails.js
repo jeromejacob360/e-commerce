@@ -43,21 +43,21 @@ export default function ProductDetails({ match }) {
   return product?.images ? (
     <div className="my-10">
       <Metadata title={product.name + '--Virtual shop'} />
-      <div className="border-b lg:flex-row flex flex-col justify-center items-center px-5">
-        <div className="max-w-[300px]">
+      <div className="flex flex-col items-center justify-center px-5 border-b lg:flex-row">
+        <div className="max-w-[200px]">
           <Carousel>
             {product.images.map((image, index) => (
               <img
                 alt="product"
-                className="object-cover h-full w-auto"
+                className="object-cover w-auto h-full"
                 key={index}
                 src={image.url}
               />
             ))}
           </Carousel>
         </div>
-        <div className="my-auto mx-5">
-          <h3 className="text-xl mb-4">{product.name}</h3>
+        <div className="mx-5 my-auto">
+          <h3 className="mb-4 text-xl">{product.name}</h3>
           <div className="text-gray-500 max-w-[400px] mb-4">
             {product.description}
           </div>
@@ -65,11 +65,11 @@ export default function ProductDetails({ match }) {
             <h5 className="text-3xl">${product.price}</h5>
             <span>
               {product.stock > 0 ? (
-                <span className="text-green-500 font-bold text-lg">
+                <span className="text-lg font-bold text-green-500">
                   In stock
                 </span>
               ) : (
-                <span className="text-red-500 font-bold text-lg">
+                <span className="text-lg font-bold text-red-500">
                   Out of stock
                 </span>
               )}
@@ -86,17 +86,20 @@ export default function ProductDetails({ match }) {
             <span>({product.reviews.length} reviews)</span>
           </div>
           <br />
-          <div className="flex items-center mb-4">
-            <div className="border inline-flex items-center py-1 rounded-lg border-blue-600 mr-2">
+          <div className="flex items-center justify-between mb-4">
+            <div className="inline-flex items-center py-1 mr-2 border border-blue-600 rounded-lg">
               <Button disabled={!product.stock} className="px-2">
                 <RemoveIcon />
               </Button>
-              <span className="font-bold text-xl">0</span>
+              <span className="text-xl font-bold">0</span>
               <Button disabled={!product.stock} className="px-2">
                 <AddIcon />
               </Button>
             </div>
             <Button
+              sx={{
+                padding: '10px 30px',
+              }}
               disabled={!product.stock}
               color="primary"
               variant="contained"
@@ -108,15 +111,15 @@ export default function ProductDetails({ match }) {
       </div>
       {product.reviews.length > 0 ? (
         <>
-          <h3 className="text-xl my-4 text-center">Reviews</h3>
-          <div className="flex justify-center overflow-auto w-screen">
+          <h3 className="my-4 text-xl text-center">Reviews</h3>
+          <div className="flex flex-col items-center justify-center w-screen overflow-auto md:items-stretch md:flex-row">
             {product.reviews.map((review, index) => (
               <ReviewCard review={review} key={index} />
             ))}
           </div>
         </>
       ) : (
-        <h4 className="flex justify-center text-2xl my-6">No reviews yet</h4>
+        <h4 className="flex justify-center my-6 text-2xl">No reviews yet</h4>
       )}
     </div>
   ) : null;
