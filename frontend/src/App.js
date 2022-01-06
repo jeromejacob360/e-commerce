@@ -7,8 +7,15 @@ import ProductDetails from './components/productDetails/ProductDetails';
 import Products from './components/products/products';
 import Search from './components/search/search';
 import LoginSignup from './components/user/LoginSignup';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { loadUser } from './redux/actions/userActions';
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
   return (
     <>
       <CssBaseline />

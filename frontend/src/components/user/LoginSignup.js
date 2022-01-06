@@ -1,19 +1,57 @@
 import { Box, Button, Paper } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTheme } from '@mui/material';
 import Login from '../../helper-components/Login';
 import Signup from '../../helper-components/Signup';
+import { useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
+import Loading from '../../helper-components/loading/Loading';
 
-export default function LoginSignup() {
+export default function LoginSignup({ history }) {
   const theme = useTheme();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
   const [mode, setMode] = useState('login');
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const { error, loading, isAuthenticated } = useSelector(
+    (state) => state.user,
+  );
+
+  useEffect(() => {
+    const action = () => (
+      <Button
+        onClick={() => {
+          closeSnackbar();
+        }}
+      >
+        Close
+      </Button>
+    );
+
+    if (error) {
+      enqueueSnackbar(error, {
+        variant: 'error',
+        autoHideDuration: 3000,
+        action,
+      });
+    }
+  }, [error, enqueueSnackbar, closeSnackbar]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log('isAuthenticated');
+      history.push('/');
+    }
+  }, [isAuthenticated, history]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <Box className="flex justify-center mt-40">
-      <Paper elevation={8}>
+    <Box className="flex justify-center mt-20">
+      <Paper elevation={2}>
         <Box px={2} pb={3}>
           <Box className="flex justify-between mt-2 mb-8">
             <Button
@@ -40,23 +78,7 @@ export default function LoginSignup() {
               Signup
             </Button>
           </Box>
-          {mode === 'login' ? (
-            <Login
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-            />
-          ) : (
-            <Signup
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              name={name}
-              setName={setName}
-            />
-          )}
+          {mode === 'login' ? <Login /> : <Signup />}
         </Box>
       </Paper>
     </Box>

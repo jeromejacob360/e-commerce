@@ -2,10 +2,28 @@ const User = require('../models/userModel');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const sendToken = require('../utils/jwtToken');
+const cloudinary = require('cloudinary');
 
 // Register a new user
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.create(req.body);
+  const { name, email, password, avatar } = req.body;
+  if (!name || !email || !password) {
+    return next(new ErrorHandler('Name, email and password are required', 400));
+  }
+
+  const myCloudinary = await cloudinary.v2.uploader.upload(avatar, {
+    folder: 'avatars',
+    width: 200,
+    crop: 'fill',
+  });
+
+  const user = await User.create({
+    ...req.body,
+    avatar: {
+      public_id: myCloudinary.public_id,
+      url: myCloudinary.secure_url,
+    },
+  });
   sendToken(user, 201, res, 'User registered successfully');
 });
 
@@ -14,14 +32,16 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
 
   // 1) Check if email and password exist
-  if (!email || !password)
+  if (!email || !password) {
     return next(new ErrorHandler('Please provide email and password', 400));
+  }
 
   // 2) Check if user exists && password is correct
   const user = await User.findOne({ email }).select('+password');
 
-  if (!user || !(await user.correctPassword(password)))
+  if (!user || !(await user.correctPassword(password))) {
     return next(new ErrorHandler('Incorrect email or password', 401));
+  }
 
   // 3) If everything ok, send token to client
   sendToken(user, 200, res, 'Login successful');

@@ -6,8 +6,9 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
-import { ThemeProvider } from '@mui/material';
+import { Grow, ThemeProvider } from '@mui/material';
 import { theme } from './mui/theme';
+import { SnackbarProvider } from 'notistack';
 
 const options = {
   position: positions.BOTTOM_LEFT,
@@ -20,7 +21,15 @@ ReactDOM.render(
   <Provider store={store}>
     <AlertProvider template={AlertTemplate} {...options}>
       <ThemeProvider theme={theme}>
-        <App />
+        <SnackbarProvider
+          maxSnack={1}
+          TransitionComponent={Grow}
+          hideIconVariant
+        >
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        </SnackbarProvider>
       </ThemeProvider>
     </AlertProvider>
   </Provider>,

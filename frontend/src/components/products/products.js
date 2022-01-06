@@ -63,7 +63,6 @@ export default function Products({ match }) {
 
   return (
     <Container
-      fluid
       maxWidth="xxl"
       sx={{
         display: 'flex',

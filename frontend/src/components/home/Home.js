@@ -9,7 +9,7 @@ import Metadata from '../../metadata';
 
 export default function Home() {
   const dispatch = useDispatch();
-  const alert = useAlert();
+  const alert = useAlert(); //TODO change all useAlerts to notistack as in loginSignup component
 
   const { loading, error, products } = useSelector((state) => state.products);
 
@@ -26,7 +26,6 @@ export default function Home() {
     <>
       <Metadata title="Home" />
       <Container
-        fluid
         maxWidth="xxl"
         sx={{
           display: 'flex',
