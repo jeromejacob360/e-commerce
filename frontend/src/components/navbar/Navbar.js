@@ -1,4 +1,3 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,14 +10,54 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { logoutUser } from '../../redux/actions/userActions';
 
 const pages = ['Products', 'Pricing', 'Search'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [options, setOptions] = useState([
+    { name: 'Orders', function: orders },
+    { name: 'Account', function: account },
+    { name: 'Logout', function: logout },
+  ]);
+
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  function orders() {
+    handleCloseUserMenu();
+    history.push('/orders');
+  }
+
+  function account() {
+    handleCloseUserMenu();
+    history.push('/account');
+  }
+
+  async function logout() {
+    handleCloseUserMenu();
+    await dispatch(logoutUser());
+    history.push('/login');
+  }
+
+  useEffect(() => {
+    if (user && user.role === 'admin') {
+      setOptions((prev) => [
+        { name: 'Dashboard', function: dashboard },
+        ...prev,
+      ]);
+    }
+    function dashboard() {
+      handleCloseUserMenu();
+      history.push('/dashboard');
+    }
+  }, [history, user]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -35,8 +74,17 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
-    <AppBar position="sticky">
+    <AppBar
+      sx={{
+        marginBottom: '1rem',
+      }}
+      position="static"
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to="/">
@@ -109,7 +157,7 @@ const ResponsiveAppBar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Open options">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Eemy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
@@ -130,9 +178,9 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {options.map((option) => (
+                <MenuItem key={option.name} onClick={option.function}>
+                  <Typography textAlign="center">{option.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>

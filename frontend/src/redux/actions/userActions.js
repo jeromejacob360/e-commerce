@@ -17,6 +17,22 @@ export const login = (email, password) => async (dispatch) => {
     });
   }
 };
+export const logoutUser = () => async (dispatch) => {
+  try {
+    dispatch({ type: 'LOGOUT_REQUEST' });
+
+    await axios.get(`/api/v1/logout`);
+
+    dispatch({
+      type: 'LOGOUT_SUCCESS',
+    });
+  } catch (error) {
+    dispatch({
+      type: 'LOGOUT_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
 
 export const loadUser = () => async (dispatch) => {
   try {
