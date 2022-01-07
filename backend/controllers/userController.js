@@ -6,24 +6,29 @@ const cloudinary = require('cloudinary');
 
 // Register a new user
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
+  let user;
   const { name, email, password, avatar } = req.body;
   if (!name || !email || !password) {
     return next(new ErrorHandler('Name, email and password are required', 400));
   }
 
-  const myCloudinary = await cloudinary.v2.uploader.upload(avatar, {
-    folder: 'avatars',
-    width: 200,
-    crop: 'fill',
-  });
+  if (avatar) {
+    const myCloudinary = await cloudinary.v2.uploader.upload(avatar, {
+      folder: 'avatars',
+      width: 200,
+      crop: 'fill',
+    });
 
-  const user = await User.create({
-    ...req.body,
-    avatar: {
-      public_id: myCloudinary.public_id,
-      url: myCloudinary.secure_url,
-    },
-  });
+    user = await User.create({
+      ...req.body,
+      avatar: {
+        public_id: myCloudinary.public_id,
+        url: myCloudinary.secure_url,
+      },
+    });
+  } else {
+    user = await User.create(req.body);
+  }
   sendToken(user, 201, res, 'User registered successfully');
 });
 

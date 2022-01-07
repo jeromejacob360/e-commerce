@@ -26,9 +26,7 @@ ReactDOM.render(
           TransitionComponent={Grow}
           hideIconVariant
         >
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
+          <App />
         </SnackbarProvider>
       </ThemeProvider>
     </AlertProvider>

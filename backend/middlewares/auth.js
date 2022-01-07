@@ -8,7 +8,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 
   if (!token) {
     console.log('No token found');
-    return next(new ErrorHandler('You are not logged in!', 401));
+    return next(new ErrorHandler('Plese login to continue!', 401));
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   clearErrors,
@@ -11,12 +11,23 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ReviewCard from '../../helper-components/ReviewCard';
 import Loading from '../../helper-components/loading/Loading';
-import { useAlert } from 'react-alert';
+import { useSnackbar } from 'notistack';
 import Metadata from '../../metadata';
+import { addToCart, clearCartErrors } from '../../redux/actions/cartActions';
 
 export default function ProductDetails({ match }) {
+  const [quantity, setQuantity] = useState(1);
+  const { loading, product, error } = useSelector(
+    (state) => state.productDetails,
+  );
+
+  const { error: cartError, loading: cartLoading } = useSelector(
+    (state) => state.cart,
+  );
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const dispatch = useDispatch();
-  const alert = useAlert();
 
   useEffect(() => {
     dispatch(fetchProductDetails(match.params.id));
@@ -25,16 +36,37 @@ export default function ProductDetails({ match }) {
   useEffect(() => {
     if (error) {
       dispatch(clearErrors());
-      alert.error(error.message + '\nRedirecting...');
+      enqueueSnackbar(error, {
+        variant: 'error',
+        autoHideDuration: 3000,
+      });
       setTimeout(() => {
         window.history.back();
       }, 3000);
     }
   });
 
-  const { loading, product, error } = useSelector(
-    (state) => state.productDetails,
-  );
+  useEffect(() => {
+    if (cartError) {
+      dispatch(clearCartErrors());
+      enqueueSnackbar(cartError, {
+        variant: 'error',
+        autoHideDuration: 3000,
+      });
+    }
+  });
+
+  function increaseQuantity() {
+    if (quantity < product.stock) setQuantity(quantity + 1);
+  }
+
+  function decreaseQuantity() {
+    if (quantity > 1) setQuantity(quantity - 1);
+  }
+
+  async function handleAddToCart(quantity) {
+    dispatch(addToCart(product, quantity));
+  }
 
   if (loading) {
     return <Loading />;
@@ -86,25 +118,34 @@ export default function ProductDetails({ match }) {
             <span>({product.reviews.length} reviews)</span>
           </div>
           <br />
-          <div className="flex items-center justify-between mb-4">
-            <div className="inline-flex items-center py-1 mr-2 border border-blue-600 rounded-lg">
-              <Button disabled={!product.stock} className="px-2">
+          <div className="flex flex-col items-center justify-between mb-4 sm:flex-row sm:space-x-4">
+            <div className="inline-flex items-center py-1 my-4 border border-blue-600 rounded-lg">
+              <Button
+                disabled={!product.stock}
+                onClick={decreaseQuantity}
+                className="px-2"
+              >
                 <RemoveIcon />
               </Button>
-              <span className="text-xl font-bold">0</span>
-              <Button disabled={!product.stock} className="px-2">
+              <span className="text-xl font-bold">{quantity}</span>
+              <Button
+                disabled={!product.stock}
+                onClick={increaseQuantity}
+                className="px-2"
+              >
                 <AddIcon />
               </Button>
             </div>
             <Button
+              onClick={() => handleAddToCart(quantity)}
               sx={{
                 padding: '10px 30px',
               }}
-              disabled={!product.stock}
+              disabled={!product.stock || cartLoading}
               color="primary"
               variant="contained"
             >
-              Add to cart
+              {cartLoading ? 'Loading' : 'Add to cart'}
             </Button>
           </div>
         </div>

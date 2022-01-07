@@ -1,6 +1,7 @@
 import { Avatar, Button, Paper } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 export default function Account() {
   const { user } = useSelector((state) => state.user);
@@ -18,7 +19,8 @@ export default function Account() {
       >
         <div className="flex flex-col items-start space-y-3">
           <Avatar
-            src={user.avatar.url}
+            src={user?.avatar?.url}
+            alt={user.name}
             sx={{
               width: '70px',
               height: '70px',
@@ -35,7 +37,10 @@ export default function Account() {
           </p>
         </div>
       </Paper>
-      <Button variant="contained"> Edit profile</Button>
+      <Link to="/me/update">
+        {/* <Button variant="contained"> Edit profile</Button>  */}
+        {/* //TODO add edit profile button< */}
+      </Link>
 
       <div className="flex justify-center w-full mt-4 space-x-6">
         <Button variant="outlined">My Orders</Button>

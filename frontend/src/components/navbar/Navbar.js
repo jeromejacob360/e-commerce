@@ -14,6 +14,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { logoutUser } from '../../redux/actions/userActions';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const pages = ['Products', 'Pricing', 'Search'];
 
@@ -157,11 +158,19 @@ const ResponsiveAppBar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Go to Cart">
+              <Link to="/cart">
+                <IconButton sx={{ mr: 2 }}>
+                  <ShoppingCartIcon />
+                </IconButton>
+              </Link>
+            </Tooltip>
             <Tooltip title="Open options">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Eemy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
+
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
