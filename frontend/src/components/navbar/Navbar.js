@@ -14,7 +14,8 @@ import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { logoutUser } from '../../redux/actions/userActions';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import { Badge } from '@mui/material';
 
 const pages = ['Products', 'Pricing', 'Search'];
 
@@ -28,6 +29,8 @@ const ResponsiveAppBar = () => {
   ]);
 
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { cartItems } = useSelector((state) => state.cart);
+
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -159,11 +162,21 @@ const ResponsiveAppBar = () => {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Go to Cart">
-              <Link to="/cart">
-                <IconButton sx={{ mr: 2 }}>
-                  <ShoppingCartIcon />
-                </IconButton>
-              </Link>
+              <Badge
+                component={Link}
+                to="/cart"
+                sx={{ mr: 3 }}
+                badgeContent={cartItems.length}
+                color="error"
+              >
+                <LocalMallIcon
+                  sx={{
+                    width: '2rem',
+                    height: '2rem',
+                  }}
+                  color="secondary"
+                />
+              </Badge>
             </Tooltip>
             <Tooltip title="Open options">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

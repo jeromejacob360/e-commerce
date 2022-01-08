@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   clearErrors,
@@ -17,13 +17,18 @@ import { addToCart, clearCartErrors } from '../../redux/actions/cartActions';
 
 export default function ProductDetails({ match }) {
   const [quantity, setQuantity] = useState(1);
+  const watching = useRef(false);
+  const [addedQuantity, setAddedQuantity] = useState(0);
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
 
-  const { error: cartError, loading: cartLoading } = useSelector(
-    (state) => state.cart,
-  );
+  const {
+    cartItems,
+    error: cartError,
+    loading: cartLoading,
+    completed,
+  } = useSelector((state) => state.cart);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -56,6 +61,32 @@ export default function ProductDetails({ match }) {
     }
   });
 
+  //find the item in the cart
+  useEffect(() => {
+    if (product) {
+      const item = cartItems.find((item) => {
+        return item.productId === product._id;
+      });
+      if (item) {
+        setAddedQuantity(item.quantity);
+      }
+    }
+  }, [cartItems, product]);
+
+  // Watch for changes in the cartItems array
+  useEffect(() => {
+    if (!completed) {
+      watching.current = true;
+    }
+    if (completed && watching.current) {
+      enqueueSnackbar('Item added to cart', {
+        variant: 'success',
+        autoHideDuration: 3000,
+      });
+      watching.current = false;
+    }
+  }, [completed, enqueueSnackbar]);
+
   function increaseQuantity() {
     if (quantity < product.stock) setQuantity(quantity + 1);
   }
@@ -65,7 +96,7 @@ export default function ProductDetails({ match }) {
   }
 
   async function handleAddToCart(quantity) {
-    dispatch(addToCart(product, quantity));
+    dispatch(addToCart(product._id, quantity));
   }
 
   if (loading) {
@@ -141,11 +172,15 @@ export default function ProductDetails({ match }) {
               sx={{
                 padding: '10px 30px',
               }}
-              disabled={!product.stock || cartLoading}
+              disabled={
+                !product.stock ||
+                cartLoading ||
+                addedQuantity + quantity > product.stock
+              }
               color="primary"
               variant="contained"
             >
-              {cartLoading ? 'Loading' : 'Add to cart'}
+              {cartLoading ? 'Adding..' : 'Add to cart'}
             </Button>
           </div>
         </div>
