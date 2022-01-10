@@ -6,7 +6,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { Link } from 'react-router-dom';
 import { addToCart, removeFromCart } from '../redux/actions/cartActions';
 
-export default function Cart() {
+export default function Cart({ history }) {
   const { cartItems, loading } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
@@ -19,6 +19,10 @@ export default function Cart() {
   function increment(item, quantity, stock) {
     if (quantity >= stock) return;
     dispatch(addToCart(item.productId, 1));
+  }
+
+  function handleCheckout() {
+    history.push('/login?redirect=checkout');
   }
 
   if (!cartItems || !cartItems.length) {
@@ -131,7 +135,11 @@ export default function Cart() {
           </div>
 
           <div className="flex justify-end px-4 mt-4">
-            <Button variant="contained" color="primary">
+            <Button
+              onClick={handleCheckout}
+              variant="contained"
+              color="primary"
+            >
               Place order
             </Button>
           </div>

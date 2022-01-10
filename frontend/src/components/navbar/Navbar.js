@@ -28,40 +28,51 @@ const ResponsiveAppBar = () => {
     { name: 'Logout', function: logout },
   ]);
 
-  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   function orders() {
-    handleCloseUserMenu();
     history.push('/orders');
   }
 
   function account() {
-    handleCloseUserMenu();
     history.push('/account');
   }
 
   async function logout() {
-    handleCloseUserMenu();
     await dispatch(logoutUser());
     history.push('/login');
   }
 
   useEffect(() => {
     if (user && user.role === 'admin') {
-      setOptions((prev) => [
+      setOptions([
         { name: 'Dashboard', function: dashboard },
-        ...prev,
+        { name: 'Orders', function: orders },
+        { name: 'Account', function: account },
+        { name: 'Logout', function: logout },
       ]);
     }
     function dashboard() {
       handleCloseUserMenu();
       history.push('/dashboard');
     }
-  }, [history, user]);
+    function orders() {
+      history.push('/orders');
+    }
+
+    function account() {
+      history.push('/account');
+    }
+
+    async function logout() {
+      await dispatch(logoutUser());
+      history.push('/login');
+    }
+  }, [user, history, dispatch]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -78,9 +89,7 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  // return null;
 
   return (
     <AppBar
@@ -201,7 +210,13 @@ const ResponsiveAppBar = () => {
               onClose={handleCloseUserMenu}
             >
               {options.map((option) => (
-                <MenuItem key={option.name} onClick={option.function}>
+                <MenuItem
+                  key={option.name}
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    option.function();
+                  }}
+                >
                   <Typography textAlign="center">{option.name}</Typography>
                 </MenuItem>
               ))}

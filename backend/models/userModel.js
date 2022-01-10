@@ -37,9 +37,41 @@ const userSchema = new Schema(
       type: String,
       default: 'user',
     },
+
+    shippingInfo: {
+      mobile: {
+        type: String,
+        minlength: [10, 'Mobile number must be at least 10 characters'],
+        maxlength: [10, 'Mobile number must be at most 10 characters'],
+      },
+      name: {
+        type: String,
+      },
+      area: {
+        type: String,
+      },
+      street: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      district: {
+        type: String,
+      },
+      pinCode: {
+        type: String,
+        minlength: [6, 'PIN must be at least 6 characters'],
+        maxlength: [6, 'PIN must be at most 6 characters'],
+      },
+      state: {
+        type: String,
+      },
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },
+
   { timestamps: true },
 );
 

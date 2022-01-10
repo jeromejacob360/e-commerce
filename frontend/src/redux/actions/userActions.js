@@ -17,6 +17,7 @@ export const login = (email, password) => async (dispatch) => {
     });
   }
 };
+
 export const logoutUser = () => async (dispatch) => {
   try {
     dispatch({ type: 'LOGOUT_REQUEST' });
@@ -65,6 +66,24 @@ export const register = (user) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: 'REGISTER_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
+
+export const saveShippingInfo = (address) => async (dispatch) => {
+  try {
+    dispatch({ type: 'SAVE_SHIPPING_INFO_REQUEST' });
+
+    const { data } = await axios.post(`/api/v1/shipping`, address);
+
+    dispatch({
+      type: 'SAVE_SHIPPING_INFO_SUCCESS',
+      payload: data.user,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'SAVE_SHIPPING_INFO_FAILURE',
       payload: error.response.data.message,
     });
   }

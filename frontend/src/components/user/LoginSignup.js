@@ -38,12 +38,15 @@ export default function LoginSignup({ history }) {
     }
   }, [error, enqueueSnackbar, closeSnackbar]);
 
+  const redirect = window.location.search
+    ? window.location.search.split('=')[1]
+    : '/';
+
   useEffect(() => {
     if (isAuthenticated) {
-      console.log('isAuthenticated');
-      history.push('/');
+      history.push(redirect);
     }
-  }, [isAuthenticated, history]);
+  }, [isAuthenticated, history, redirect]);
 
   if (loading) {
     return <Loading />;

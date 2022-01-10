@@ -53,6 +53,26 @@ export const userReducer = (state = { user: {} }, action) => {
         error: action.payload,
       };
 
+    case 'SAVE_SHIPPING_INFO_REQUEST':
+      return {
+        ...state,
+        shippingInfoloading: true,
+      };
+
+    case 'SAVE_SHIPPING_INFO_SUCCESS':
+      return {
+        ...state,
+        shippingInfoloading: false,
+        user: action.payload,
+      };
+
+    case 'SAVE_SHIPPING_INFO_FAILURE':
+      return {
+        ...state,
+        shippingInfoloading: false,
+        error: action.payload,
+      };
+
     case 'CLEAR_ERRORS':
       return {
         ...state,
