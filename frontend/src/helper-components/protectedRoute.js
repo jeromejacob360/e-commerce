@@ -7,6 +7,7 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
   const { isAuthenticated, loading } = useSelector((state) => state.user);
 
   if (loading) {
+    console.log('loading');
     return <Loading />;
   }
 
@@ -14,8 +15,11 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={(props) => {
-        if (!isAuthenticated) return <Redirect to="/login" />;
-
+        if (!isAuthenticated) {
+          console.log('not authenticated');
+          return <Redirect to="/login" />;
+        }
+        console.log('authenticated');
         return <Component {...props} />;
       }}
     />

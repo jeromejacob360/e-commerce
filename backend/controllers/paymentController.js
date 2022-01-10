@@ -1,5 +1,5 @@
 const catchAsyncError = require('../middlewares/catchAsyncErrors');
-
+const ErrorHandler = require('../utils/errorHandler');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.processPayment = catchAsyncError(async (req, res, next) => {
@@ -7,8 +7,6 @@ exports.processPayment = catchAsyncError(async (req, res, next) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: req.body.amount,
       currency: 'inr',
-      // payment_method_types: ['card'],
-      // receipt_email: req.user.email,
       description: 'Payment for order',
       metadata: {
         companyName: 'Virtual Store',
@@ -20,7 +18,7 @@ exports.processPayment = catchAsyncError(async (req, res, next) => {
       clientSecret: paymentIntent.client_secret,
     });
   } catch (err) {
-    console.log(err.message);
+    return next(new ErrorHandler('err.message', 500));
   }
 });
 

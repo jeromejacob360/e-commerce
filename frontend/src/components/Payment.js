@@ -12,19 +12,39 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Loading from '../helper-components/loading/Loading';
 import { useSnackbar } from 'notistack';
+import { createOrder } from '../redux/actions/orderActions';
 
-export default function Payment() {
+export default function Payment({ history }) {
   const stripe = useStripe();
   const elements = useElements();
+  const dispatch = useDispatch();
   const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
-  const [stripeApiKey, setStripeApiKey] = useState();
+  const [stripeApiKey, setStripeApiKey] = useState('');
   const [disablePayBtn, setDisablePayBtn] = useState(false);
   const { user } = useSelector((state) => state.user);
+  const { cartItems: cartItemWithImageObj } = useSelector(
+    (state) => state.cart,
+  );
   const { enqueueSnackbar } = useSnackbar();
+
+  // convert image object to string
+  const cartItems = cartItemWithImageObj.map((item) => ({
+    ...item,
+    image: item.image.url,
+  }));
+
+  const order = {
+    shippingInfo: user.shippingInfo,
+    orderItems: cartItems,
+    itemsPrice: orderInfo.cartTotal,
+    discount: orderInfo.discount,
+    shippingPrice: orderInfo.shipping,
+    totalPrice: orderInfo.total,
+  };
 
   useEffect(() => {
     getStripeApiKey();
@@ -39,16 +59,7 @@ export default function Payment() {
     setDisablePayBtn(true);
 
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-      const { data } = await axios.post(
-        '/api/v1/payment/process',
-        paymentData,
-        config,
-      );
+      const { data } = await axios.post('/api/v1/payment/process', paymentData);
 
       const clientSecret = data.clientSecret;
 
@@ -79,23 +90,27 @@ export default function Payment() {
         setDisablePayBtn(false);
         enqueueSnackbar(result.error.message, {
           variant: 'error',
-          autoHideDuration: 5000,
         });
         return;
       }
 
       if (result.paymentIntent.status === 'succeeded') {
-        window.location.href = '/order-success';
+        order.paymentInfo = {
+          id: result.paymentIntent.id,
+          status: result.paymentIntent.status,
+        };
+
+        dispatch(createOrder(order));
+        setDisablePayBtn(false);
+        history.push('/success');
       } else {
         setDisablePayBtn(false);
         enqueueSnackbar('Something went wrong. Please try again.', {
           variant: 'error',
-          autoHideDuration: 5000,
         });
       }
     } catch (error) {
       console.log(error.message);
-
       setDisablePayBtn(false);
     }
   }

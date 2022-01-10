@@ -21,6 +21,7 @@ import Payment from './components/Payment';
 import { Elements } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
+import OrderSuccess from './components/OrderSuccess';
 
 function App() {
   const dispatch = useDispatch();
@@ -49,6 +50,11 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Navbar />
+        {stripeApiKey && (
+          <Elements stripe={loadStripe(stripeApiKey)}>
+            <ProtectedRoute exact path="/payment" component={Payment} />
+          </Elements>
+        )}
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={LoginSignup} />
@@ -61,12 +67,7 @@ function App() {
           <ProtectedRoute exact path="/account" component={Profile} />
           <ProtectedRoute exact path="/checkout" component={Checkout} />
           <ProtectedRoute exact path="/checkout/confirm" component={Confirm} />
-
-          {stripeApiKey && (
-            <Elements stripe={loadStripe(stripeApiKey)}>
-              <ProtectedRoute exact path="/payment" component={Payment} />
-            </Elements>
-          )}
+          <ProtectedRoute exact path="/success" component={OrderSuccess} />
           <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
         </Switch>
       </BrowserRouter>
