@@ -5,7 +5,7 @@ export function addToCart(productId, quantity) {
     try {
       dispatch({ type: 'ADD_TO_CART_REQUEST' });
 
-      const { data } = await axios.post('/api/v1/cart/add', {
+      const { data } = await axios.post('/api/cart/add', {
         productId,
         quantity,
       });
@@ -29,7 +29,7 @@ export function removeFromCart(productId) {
     try {
       dispatch({ type: 'REMOVE_FROM_CART_REQUEST' });
 
-      const { data } = await axios.post('/api/v1/cart/remove', {
+      const { data } = await axios.post('/api/cart/remove', {
         productId,
       });
 
@@ -49,7 +49,7 @@ export function removeFromCart(productId) {
 
 export function loadCart() {
   return async function (dispatch) {
-    const { data } = await axios.get('/api/v1/cart');
+    const { data } = await axios.get('/api/cart');
     dispatch({
       type: 'LOAD_CART_SUCCESS',
       payload: data.cart,

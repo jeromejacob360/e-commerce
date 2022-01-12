@@ -24,7 +24,13 @@ export default function Payment({ history }) {
   const dispatch = useDispatch();
   const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
   const [stripeApiKey, setStripeApiKey] = useState('');
-  const [disablePayBtn, setDisablePayBtn] = useState(false);
+  const [disablePayBtn, setDisablePayBtn] = useState(true);
+  const [validated, setValidated] = useState({
+    cardNumber: false,
+    cardExpiry: false,
+    cardCvc: false,
+  });
+
   const { user } = useSelector((state) => state.user);
   const { cartItems: cartItemWithImageObj } = useSelector(
     (state) => state.cart,
@@ -50,16 +56,66 @@ export default function Payment({ history }) {
     getStripeApiKey();
   }, []);
 
+  useEffect(() => {
+    if (validated.cardNumber && validated.cardExpiry && validated.cardCvc) {
+      setDisablePayBtn(false);
+    } else {
+      setDisablePayBtn(true);
+    }
+  }, [validated]);
+
   const paymentData = {
     amount: orderInfo.total * 100,
   };
 
+  const verifyComplete = ({ error, complete }) => {
+    if (complete) {
+      return true;
+    } else {
+      if (error?.error?.message) {
+        setDisablePayBtn(true);
+        enqueueSnackbar(error.error.message, { variant: 'error' });
+      } else {
+        setDisablePayBtn(true);
+      }
+    }
+  };
+
+  function validateCardNumber(error, complete) {
+    if (verifyComplete(error, complete)) {
+      console.log('validateCardNumber');
+      setValidated({
+        ...validated,
+        cardNumber: true,
+      });
+    }
+  }
+  function validatecardExpiry(error, complete) {
+    if (verifyComplete(error, complete)) {
+      console.log('validatecardExpiry');
+      setValidated({
+        ...validated,
+        cardExpiry: true,
+      });
+    }
+  }
+  function validatecardCvc(error, complete) {
+    console.log('validatecardCvc');
+    if (verifyComplete(error, complete)) {
+      setValidated({
+        ...validated,
+        cardCvc: true,
+      });
+    }
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
+    if (disablePayBtn) return;
     setDisablePayBtn(true);
 
     try {
-      const { data } = await axios.post('/api/v1/payment/process', paymentData);
+      const { data } = await axios.post('/api/payment/process', paymentData);
 
       const clientSecret = data.clientSecret;
 
@@ -116,7 +172,7 @@ export default function Payment({ history }) {
   }
 
   async function getStripeApiKey() {
-    const { data } = await axios.get('/api/v1/stripeApiKey');
+    const { data } = await axios.get('/api/stripeApiKey');
     const { stripeApiKey } = data;
     setStripeApiKey(stripeApiKey);
   }
@@ -139,16 +195,25 @@ export default function Payment({ history }) {
         >
           <div className="relative flex items-center w-80">
             <CreditCardIcon className="absolute left-2" />
-            <CardNumberElement className="w-full pt-3 pb-2 pl-10 pr-2 border rounded-md" />
+            <CardNumberElement
+              onChange={validateCardNumber}
+              className="w-full pt-3 pb-2 pl-10 pr-2 border rounded-md "
+            />
           </div>
           <div className="flex space-x-4 w-80">
             <div className="relative flex items-center w-full">
               <EventIcon className="absolute left-2" />
-              <CardExpiryElement className="w-full pt-3 pb-2 pl-10 pr-4 border rounded-md" />
+              <CardExpiryElement
+                onChange={validatecardExpiry}
+                className="w-full pt-3 pb-2 pl-10 pr-4 border rounded-md"
+              />
             </div>
             <div className="relative flex items-center w-full">
               <VpnKeyIcon className="absolute left-2" />
-              <CardCvcElement className="w-full pt-3 pb-2 pl-10 pr-2 border rounded-md" />
+              <CardCvcElement
+                onChange={validatecardCvc}
+                className="w-full pt-3 pb-2 pl-10 pr-2 border rounded-md"
+              />
             </div>
           </div>
 

@@ -188,8 +188,12 @@ const ResponsiveAppBar = () => {
               </Badge>
             </Tooltip>
             <Tooltip title="Open options">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Eemy Sharp" src="/static/images/avatar/2.jpg" />
+              <IconButton
+                data-testid="avatarButton"
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0 }}
+              >
+                <Avatar alt="Eemy Sharp" src="" />
               </IconButton>
             </Tooltip>
 

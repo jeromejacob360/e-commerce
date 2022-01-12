@@ -21,11 +21,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload());
 
-app.use('/api/v1', productRoutes);
-app.use('/api/v1', userRoutes);
-app.use('/api/v1', orderRoutes);
-app.use('/api/v1', cartRoutes);
-app.use('/api/v1', paymentRoutes);
+app.use('/api', productRoutes);
+app.use('/api', userRoutes);
+app.use('/api', orderRoutes);
+app.use('/api', cartRoutes);
+app.use('/api', paymentRoutes);
 
 // Error handler
 app.use(errorMiddleware);

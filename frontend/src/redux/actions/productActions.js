@@ -11,7 +11,7 @@ export function fetchProducts(
     try {
       dispatch({ type: 'ALL_PRODUCT_REQUEST' });
 
-      let link = `/api/v1/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}`;
+      let link = `/api/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}`;
 
       if (category && category !== 'All') {
         link += `&category=${category.toLowerCase()}`;
@@ -46,7 +46,7 @@ export function fetchProductDetails(id) {
     try {
       dispatch({ type: 'PRODUCT_DETAILS_REQUEST' });
 
-      const { data } = await axios.get('/api/v1/product/' + id);
+      const { data } = await axios.get('/api/product/' + id);
 
       dispatch({
         type: 'PRODUCT_DETAILS_SUCCESS',

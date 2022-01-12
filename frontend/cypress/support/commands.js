@@ -23,3 +23,21 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', (email, password) => {
+  cy.visit('/login');
+  cy.get('[placeholder="Email"]').type('jerome@gmail.com');
+  cy.get('[placeholder="password"]').type('123123');
+  cy.get('[type="submit"]').click();
+  cy.location('pathname').should('eq', '/');
+});
+
+Cypress.Commands.add('getStripeIframe', (title) => {
+  return cy
+    .get(`iframe[title="${title}"]`)
+    .its('0.contentDocument')
+    .should('exist')
+    .its('body')
+    .should('not.be.undefined')
+    .then(cy.wrap);
+});

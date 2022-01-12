@@ -89,6 +89,7 @@ export default function Products({ match }) {
             }}
           >
             <AccordionSummary
+              data-testid="ExpandMoreIcon-price"
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header"

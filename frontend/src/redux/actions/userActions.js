@@ -4,7 +4,7 @@ export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: 'LOGIN_REQUEST' });
 
-    const { data } = await axios.post(`/api/v1/login`, { email, password });
+    const { data } = await axios.post(`/api/login`, { email, password });
 
     dispatch({
       type: 'LOGIN_SUCCESS',
@@ -22,7 +22,7 @@ export const logoutUser = () => async (dispatch) => {
   try {
     dispatch({ type: 'LOGOUT_REQUEST' });
 
-    await axios.get(`/api/v1/logout`);
+    await axios.get(`/api/logout`);
 
     dispatch({
       type: 'LOGOUT_SUCCESS',
@@ -39,7 +39,7 @@ export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: 'LOAD_USER_REQUEST' });
 
-    const { data } = await axios.get(`/api/v1/me`);
+    const { data } = await axios.get(`/api/me`);
 
     dispatch({
       type: 'LOAD_USER_SUCCESS',
@@ -57,7 +57,7 @@ export const register = (user) => async (dispatch) => {
   try {
     dispatch({ type: 'REGISTER_REQUEST' });
 
-    const { data } = await axios.post(`/api/v1/register`, user);
+    const { data } = await axios.post(`/api/register`, user);
 
     dispatch({
       type: 'REGISTER_SUCCESS',
@@ -75,7 +75,7 @@ export const saveShippingInfo = (address) => async (dispatch) => {
   try {
     dispatch({ type: 'SAVE_SHIPPING_INFO_REQUEST' });
 
-    const { data } = await axios.post(`/api/v1/shipping`, address);
+    const { data } = await axios.post(`/api/shipping`, address);
 
     dispatch({
       type: 'SAVE_SHIPPING_INFO_SUCCESS',
