@@ -22,6 +22,8 @@ import { Elements } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
 import OrderSuccess from './components/OrderSuccess';
+import FourOFour from './components/404';
+import MyOrders from './components/MyOrders';
 
 function App() {
   const dispatch = useDispatch();
@@ -69,6 +71,8 @@ function App() {
           <ProtectedRoute exact path="/checkout/confirm" component={Confirm} />
           <ProtectedRoute exact path="/success" component={OrderSuccess} />
           <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
+          <ProtectedRoute exact path="/orders/me" component={MyOrders} />
+          {!stripeApiKey && <Route component={FourOFour} />}
         </Switch>
       </BrowserRouter>
     </>

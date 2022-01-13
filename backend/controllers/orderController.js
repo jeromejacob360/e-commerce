@@ -61,6 +61,7 @@ exports.getOrder = catchAsyncErrors(async (req, res, next) => {
 
 // Get logged in user's orders
 exports.getUserOrders = catchAsyncErrors(async (req, res, next) => {
+  console.log('SSSSSSSSSSSS');
   const orders = await Order.find({ user: req.user.id }).populate(
     'user',
     '-password',

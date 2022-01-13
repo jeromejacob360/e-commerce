@@ -35,7 +35,7 @@ const ResponsiveAppBar = () => {
   const history = useHistory();
 
   function orders() {
-    history.push('/orders');
+    history.push('/orders/me');
   }
 
   function account() {
