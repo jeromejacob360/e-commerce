@@ -1,6 +1,6 @@
 import { Button, FormGroup, OutlinedInput } from '@mui/material';
 import { useEffect, useState } from 'react';
-import Metadata from '../metadata';
+import Metadata from '../helper-components/metadata';
 import Steps from '../helper-components/Steps';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';

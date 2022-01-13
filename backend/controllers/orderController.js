@@ -42,11 +42,7 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
 
 // Get single order
 exports.getOrder = catchAsyncErrors(async (req, res, next) => {
-  const order = await Order.findById(req.params.id).populate(
-    'user',
-    '-password',
-    '-role',
-  );
+  const order = await Order.findById(req.params.id);
 
   if (!order) {
     return next(new ErrorHandler(404, 'Order not found'));
@@ -61,12 +57,7 @@ exports.getOrder = catchAsyncErrors(async (req, res, next) => {
 
 // Get logged in user's orders
 exports.getUserOrders = catchAsyncErrors(async (req, res, next) => {
-  console.log('SSSSSSSSSSSS');
-  const orders = await Order.find({ user: req.user.id }).populate(
-    'user',
-    '-password',
-    '-role',
-  );
+  const orders = await Order.find({ user: req.user.id }).populate('user');
 
   if (!orders) {
     return next(new ErrorHandler(404, 'Orders not found'));
@@ -74,7 +65,7 @@ exports.getUserOrders = catchAsyncErrors(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: 'Orders retrieved',
+    message: orders.length + ' Orders retrieved',
     orders,
   });
 });

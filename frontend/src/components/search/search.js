@@ -6,7 +6,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import React, { useState } from 'react';
-import Metadata from '../../metadata';
+import Metadata from '../../helper-components/metadata';
 
 export default function Search({ history }) {
   const [searchText, setSearchText] = useState('');

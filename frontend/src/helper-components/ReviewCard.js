@@ -27,9 +27,9 @@ export default function ReviewCard({ review }) {
       />
       {/*  TODO view full review */}
       <div>
-        {review.comment.length > 200
-          ? review.comment.substring(0, 200) + '...'
-          : review.comment}
+        {review?.reviewMessage?.length > 200
+          ? review.reviewMessage.substring(0, 200) + '...'
+          : review.reviewMessage}
       </div>
     </div>
   );

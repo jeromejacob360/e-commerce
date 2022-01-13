@@ -24,6 +24,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import OrderSuccess from './components/OrderSuccess';
 import FourOFour from './components/404';
 import MyOrders from './components/MyOrders';
+import OrderDetails from './components/orderDetails';
 
 function App() {
   const dispatch = useDispatch();
@@ -57,23 +58,30 @@ function App() {
             <ProtectedRoute exact path="/payment" component={Payment} />
           </Elements>
         )}
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/login" component={LoginSignup} />
-          <Route exact path="/search" component={Search} />
-          <Route exact path="/products" component={Products} />
-          <Route exact path="/products/:keyword" component={Products} />
-          <Route exact path="/product/:id" component={ProductDetails} />
-          <Route exact path="/cart" component={Cart} />
+        <div className="max max-w-[1920px] mx-auto">
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={LoginSignup} />
+            <Route exact path="/search" component={Search} />
+            <Route exact path="/products" component={Products} />
+            <Route exact path="/products/:keyword" component={Products} />
+            <Route exact path="/product/:id" component={ProductDetails} />
+            <Route exact path="/cart" component={Cart} />
 
-          <ProtectedRoute exact path="/account" component={Profile} />
-          <ProtectedRoute exact path="/checkout" component={Checkout} />
-          <ProtectedRoute exact path="/checkout/confirm" component={Confirm} />
-          <ProtectedRoute exact path="/success" component={OrderSuccess} />
-          <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
-          <ProtectedRoute exact path="/orders/me" component={MyOrders} />
-          {!stripeApiKey && <Route component={FourOFour} />}
-        </Switch>
+            <ProtectedRoute exact path="/account" component={Profile} />
+            <ProtectedRoute exact path="/checkout" component={Checkout} />
+            <ProtectedRoute
+              exact
+              path="/checkout/confirm"
+              component={Confirm}
+            />
+            <ProtectedRoute exact path="/success" component={OrderSuccess} />
+            <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
+            <ProtectedRoute exact path="/orders/me" component={MyOrders} />
+            <ProtectedRoute exact path="/order/:id" component={OrderDetails} />
+            {!stripeApiKey && <Route component={FourOFour} />}
+          </Switch>
+        </div>
       </BrowserRouter>
     </>
   );

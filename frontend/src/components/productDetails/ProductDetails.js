@@ -12,16 +12,26 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ReviewCard from '../../helper-components/ReviewCard';
 import Loading from '../../helper-components/loading/Loading';
 import { useSnackbar } from 'notistack';
-import Metadata from '../../metadata';
+import Metadata from '../../helper-components/metadata';
 import { addToCart, clearCartErrors } from '../../redux/actions/cartActions';
+import RatingDialog from '../../helper-components/RatingDialog';
 
 export default function ProductDetails({ match }) {
   const [quantity, setQuantity] = useState(1);
-  const watching = useRef(false);
   const [addedQuantity, setAddedQuantity] = useState(0);
+  const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
+
+  const watching = useRef(false);
+
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
+
+  const {
+    loading: reviewLoading,
+    success,
+    error: reviewError,
+  } = useSelector((state) => state.newReview);
 
   const {
     cartItems,
@@ -36,9 +46,6 @@ export default function ProductDetails({ match }) {
 
   useEffect(() => {
     dispatch(fetchProductDetails(match.params.id));
-  }, [dispatch, match.params.id]);
-
-  useEffect(() => {
     if (error) {
       dispatch(clearErrors());
       enqueueSnackbar(error, {
@@ -49,7 +56,7 @@ export default function ProductDetails({ match }) {
         window.history.back();
       }, 3000);
     }
-  });
+  }, [dispatch, error, enqueueSnackbar, match.params.id, success]);
 
   useEffect(() => {
     if (cartError) {
@@ -59,7 +66,18 @@ export default function ProductDetails({ match }) {
         autoHideDuration: 3000,
       });
     }
-  });
+    if (reviewError) {
+      dispatch(clearCartErrors());
+      enqueueSnackbar(reviewError.message, {
+        variant: 'error',
+      });
+    }
+    if (success) {
+      enqueueSnackbar('Thanks for your review', {
+        variant: 'success',
+      });
+    }
+  }, [reviewError, dispatch, enqueueSnackbar, success, cartError]);
 
   //find the item in the cart
   useEffect(() => {
@@ -99,7 +117,7 @@ export default function ProductDetails({ match }) {
     dispatch(addToCart(product._id, quantity));
   }
 
-  if (loading) {
+  if (loading || reviewLoading) {
     return <Loading />;
   }
 
@@ -146,11 +164,11 @@ export default function ProductDetails({ match }) {
               precision={0.5}
               readOnly
             />
-            <span>({product.reviews.length} reviews)</span>
+            <span>({product.reviews.length})</span>
           </div>
           <br />
           <div className="flex flex-col items-center justify-between mb-4 sm:flex-row sm:space-x-4">
-            <div className="inline-flex items-center py-1 my-4 border border-blue-600 rounded-lg">
+            <div className="inline-flex items-center py-1 my-4 border border-yellow-600 rounded-md px-2">
               <Button
                 disabled={!product.stock}
                 onClick={decreaseQuantity}
@@ -185,6 +203,12 @@ export default function ProductDetails({ match }) {
           </div>
         </div>
       </div>
+      <div className="flex justify-center pt-6">
+        <Button variant="outlined" onClick={() => setRatingDialogOpen(true)}>
+          Submit a review
+        </Button>
+      </div>
+
       {product.reviews.length > 0 ? (
         <>
           <h3 className="my-4 text-xl text-center">Reviews</h3>
@@ -197,6 +221,11 @@ export default function ProductDetails({ match }) {
       ) : (
         <h4 className="flex justify-center my-6 text-2xl">No reviews yet</h4>
       )}
+      <RatingDialog
+        productId={product._id}
+        open={ratingDialogOpen}
+        setOpen={setRatingDialogOpen}
+      />
     </div>
   ) : null;
 }

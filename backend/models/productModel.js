@@ -37,7 +37,6 @@ const productSchema = new Schema({
   ],
   category: {
     type: String,
-    required: [true, 'Product type is required'],
   },
   stock: {
     type: Number,
@@ -63,7 +62,7 @@ const productSchema = new Schema({
         min: [0, 'Review rating must be greater than 0'],
         max: [5, 'Review rating must be less than 5'],
       },
-      comment: {
+      reviewMessage: {
         type: String,
         required: [true, 'Review comment is required'],
       },

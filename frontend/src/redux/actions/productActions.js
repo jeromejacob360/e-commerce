@@ -60,3 +60,28 @@ export function fetchProductDetails(id) {
     }
   };
 }
+
+// Add a review
+export const addReview = (productId, rating, review) => async (dispatch) => {
+  dispatch({
+    type: 'NEW_REVIEW_REQUEST',
+  });
+
+  try {
+    const { data } = await axios.put('/api/review', {
+      productId,
+      rating,
+      reviewMessage: review,
+    });
+
+    dispatch({
+      type: 'NEW_REVIEW_SUCCESS',
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'NEW_REVIEW_FAILURE',
+      payload: error,
+    });
+  }
+};

@@ -1,5 +1,5 @@
 import Steps from '../helper-components/Steps';
-import Metadata from '../metadata';
+import Metadata from '../helper-components/metadata';
 import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';

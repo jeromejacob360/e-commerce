@@ -61,7 +61,7 @@ const ResponsiveAppBar = () => {
       history.push('/dashboard');
     }
     function orders() {
-      history.push('/orders');
+      history.push('/orders/me');
     }
 
     function account() {

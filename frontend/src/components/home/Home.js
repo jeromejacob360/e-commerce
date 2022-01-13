@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../../helper-components/loading/Loading';
 import { useAlert } from 'react-alert';
 import { Container } from '@mui/material';
-import Metadata from '../../metadata';
+import Metadata from '../../helper-components/metadata';
 
 export default function Home() {
   const dispatch = useDispatch();

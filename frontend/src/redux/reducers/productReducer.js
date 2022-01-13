@@ -48,3 +48,27 @@ export const detailsReducer = (state = { products: [] }, action) => {
       return state;
   }
 };
+
+export const newReviewReducer = (state = { reviews: [] }, action) => {
+  switch (action.type) {
+    case 'NEW_REVIEW_REQUEST':
+      return { ...state, loading: true, error: null, success: false };
+    case 'NEW_REVIEW_SUCCESS':
+      return {
+        loading: false,
+        success: action.payload.success,
+      };
+    case 'NEW_REVIEW_FAILURE':
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};

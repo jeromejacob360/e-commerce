@@ -100,47 +100,54 @@ exports.deleteProduct = catchAsyncErrors(async (req, res) => {
 
 // Add a product review
 exports.addProductReview = catchAsyncErrors(async (req, res, next) => {
-  const { productId, rating, comment } = req.body;
+  const { productId, rating, reviewMessage } = req.body;
 
   const review = {
     userId: req.user.id,
     name: req.user.name,
     rating: rating * 1,
-    comment,
+    reviewMessage,
   };
 
   const product = await Product.findById(productId);
   if (!product) return next(new ErrorHandler('Product not found', 400));
 
-  const isReviewed =
-    !!product.reviews.find((review) => review.userId === req.user.id) || false;
+  try {
+    const isReviewed =
+      !!product.reviews.find((review) => {
+        return review.userId.toString() === req.user.id;
+      }) || false;
 
-  if (isReviewed)
-    product.reviews.forEach((review) => {
-      if (review.userId.toString() === req.user.id) {
-        review.rating = rating;
-        review.comment = comment;
-      }
+    if (isReviewed)
+      product.reviews.forEach((review) => {
+        if (review.userId.toString() === req.user.id) {
+          review.rating = rating;
+          review.reviewMessage = reviewMessage;
+        }
+      });
+    else {
+      product.reviews.push(review);
+      product.numOfReviews = product.reviews.length;
+    }
+
+    // Calculate overall rating
+    const totalRating = product.reviews.reduce((acc, review) => {
+      return acc + review.rating;
+    }, 0);
+    product.rating = (totalRating * 1) / product.reviews.length;
+    await product.save({
+      validateBeforeSave: true,
     });
-  else {
-    product.reviews.push(review);
-    product.numOfReviews = product.numOfReviews.length;
+
+    res.status(200).json({
+      success: true,
+      message: 'Product review added',
+      product,
+    });
+  } catch (error) {
+    console.log('error', error.message);
+    return next(new ErrorHandler(error.message, 400));
   }
-
-  // Calculate overall rating
-  const totalRating = product.reviews.reduce((acc, review) => {
-    return acc + review.rating;
-  }, 0);
-  product.rating = (totalRating * 1) / product.reviews.length;
-  await product.save({
-    validateBeforeSave: true,
-  });
-
-  res.status(200).json({
-    success: true,
-    message: 'Product review added',
-    product,
-  });
 });
 
 // Get all reviews for a product
@@ -149,7 +156,7 @@ exports.getProductReviews = catchAsyncErrors(async (req, res, next) => {
 
   if (!product)
     return next(
-      new ErrorHandler(`Product not found with id of ${req.params.id}`, 404),
+      new ErrorHandler(`Product not found with id of ${req.query.id}`, 404),
     );
 
   res.status(200).json({

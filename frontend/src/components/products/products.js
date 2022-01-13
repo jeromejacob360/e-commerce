@@ -21,7 +21,7 @@ import ProductCard from '../../helper-components/productCard/productCard';
 import { clearErrors, fetchProducts } from '../../redux/actions/productActions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAlert } from 'react-alert';
-import Metadata from '../../metadata';
+import Metadata from '../../helper-components/metadata';
 
 const categories = [
   'Laptop',
