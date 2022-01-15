@@ -28,6 +28,7 @@ import OrderDetails from './components/orderDetails';
 import Dashboard from './components/admin/Dashboard';
 import AdminRoute from './helper-components/AdminRoute';
 import ProductsList from './components/admin/ProductsList';
+import CreateProduct from './components/admin/CreateProduct';
 
 function App() {
   const dispatch = useDispatch();
@@ -82,6 +83,7 @@ function App() {
               <AdminRoute>
                 <Route exact path="/admin/dashboard" component={Dashboard} />
                 <Route exact path="/admin/products" component={ProductsList} />
+                <Route exact path="/admin/product" component={CreateProduct} />
               </AdminRoute>
             </ProtectedRoute>
             {!stripeApiKey && <Route component={FourOFour} />}

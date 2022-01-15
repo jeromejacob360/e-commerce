@@ -6,6 +6,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import Sidebar from './Sidebar';
+import PageTitle from '../../helper-components/PageTitle';
 
 export default function ProductsList() {
   const dispatch = useDispatch();
@@ -107,20 +109,23 @@ export default function ProductsList() {
     return <Loading />;
   }
   return (
-    <div>
-      <div className="justify-center flex">
-        <h1 className="my-10 border-b px-10 text-3xl">All Products</h1>
+    <>
+      <PageTitle title="All Products" />
+      <div className="flex flex-col md:flex-row">
+        <Sidebar />
+        <div className="flex-1 md:px-20">
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={10}
+            disableSelectionOnClick
+            autoHeight
+            getRowClassName={(params) =>
+              params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
+            }
+          />
+        </div>
       </div>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={10}
-        disableSelectionOnClick
-        autoHeight
-        getRowClassName={(params) =>
-          params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
-        }
-      />
-    </div>
+    </>
   );
 }

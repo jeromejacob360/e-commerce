@@ -16,6 +16,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAdminProducts } from '../../redux/actions/productActions';
 import Loading from '../../helper-components/loading/Loading';
+import PageTitle from '../../helper-components/PageTitle';
 
 export default function Dashboard() {
   ChartJS.register(
@@ -75,10 +76,8 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="flex justify-center mx-auto max-w-screen-2xl">
-        <h1 className="px-8 pb-2 my-10 text-3xl border-b">ADMIN DASHBOARD</h1>
-      </div>
-      <div className="flex flex-col mt-10 md:flex-row">
+      <PageTitle title="Admin dashboard" />
+      <div className="flex flex-col md:flex-row">
         <Sidebar />
         <div className="flex-1 md:px-20">
           <h4 className="py-2 mt-10 mb-10 text-2xl text-center text-white bg-orange-400 md:py-10">
