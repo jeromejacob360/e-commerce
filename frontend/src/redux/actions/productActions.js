@@ -77,6 +77,49 @@ export function fetchAdminProducts() {
   };
 }
 
+// Create a product (admin only)
+export function createProduct(product) {
+  return async function (dispatch) {
+    try {
+      dispatch({ type: 'NEW_PRODUCT_REQUEST' });
+      const { data } = await axios.post('/api/admin/product/new', product);
+
+      dispatch({
+        type: 'NEW_PRODUCT_SUCCESS',
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'NEW_PRODUCT_FAILURE',
+        payload: error,
+      });
+    }
+    dispatch({ type: 'CLEAR_PRODUCT' });
+  };
+}
+
+// Delete a product (admin only)
+export function deleteProduct(productId) {
+  return async function (dispatch) {
+    console.log(`productId`, productId);
+    try {
+      dispatch({ type: 'DELETE_PRODUCT_REQUEST' });
+      const { data } = await axios.delete('/api/admin/product/' + productId);
+
+      dispatch({
+        type: 'DELETE_PRODUCT_SUCCESS',
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'DELETE_PRODUCT_FAILURE',
+        payload: error,
+      });
+    }
+    dispatch({ type: 'CLEAR_PRODUCT' });
+  };
+}
+
 // Add a review
 export const addReview = (productId, rating, review) => async (dispatch) => {
   dispatch({

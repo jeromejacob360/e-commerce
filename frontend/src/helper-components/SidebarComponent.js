@@ -12,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 export default function SidebarComponent() {
   return (
     <>
-      <div className="flex flex-col items-center pl-4 space-y-8">
+      <div className="flex flex-col items-center sm:items-start pl-4 space-y-8">
         <Link to="/admin/dashboard">
           <p className="flex">
             <DashboardIcon /> <span className="ml-2">Dashboard</span>

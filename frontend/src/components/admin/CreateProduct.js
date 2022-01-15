@@ -7,7 +7,7 @@ import {
   Select,
 } from '@mui/material';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '../../components/admin/Sidebar';
 import PageTitle from '../../helper-components/PageTitle';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
@@ -16,17 +16,22 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import CategoryIcon from '@mui/icons-material/Category';
 import { styled } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearErrors, createProduct } from '../../redux/actions/productActions';
+import { useSnackbar } from 'notistack';
+import Loading from '../../helper-components/loading/Loading';
+
+const initialState = {
+  name: '',
+  price: '',
+  description: '',
+  category: '',
+  stock: '',
+  images: [],
+};
 
 export default function CreateProduct() {
-  const [product, setProduct] = useState({
-    name: '',
-    price: '',
-    description: '',
-    category: '',
-    stock: '',
-    images: [],
-  });
-
+  const [product, setProduct] = useState(initialState);
   const categories = [
     'Laptop',
     'Footwear',
@@ -37,9 +42,36 @@ export default function CreateProduct() {
     'SmartPhones',
   ];
 
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const { error, loading, success } = useSelector((state) => state.newProduct);
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error' });
+      dispatch(clearErrors());
+    }
+    if (success) {
+      enqueueSnackbar('Product created successfully', { variant: 'success' });
+      dispatch(clearErrors());
+      setProduct(initialState);
+    }
+  }, [error, enqueueSnackbar, dispatch, success]);
+
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(product);
+    if (
+      !product.name ||
+      !product.price ||
+      !product.description ||
+      !product.category ||
+      !product.stock
+    ) {
+      enqueueSnackbar('Please fill all the fields', {
+        variant: 'error',
+      });
+      return;
+    }
+    dispatch(createProduct(product));
   }
 
   function setValue(e) {
@@ -63,6 +95,10 @@ export default function CreateProduct() {
   const Input = styled('input')({
     display: 'none',
   });
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -152,7 +188,7 @@ export default function CreateProduct() {
                 onChange={handleImageChange}
               />
               <Button fullWidth variant="outlined" component="span">
-                Upload
+                Select images
               </Button>
             </label>
 

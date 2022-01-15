@@ -1,4 +1,4 @@
-export const productReducer = (state = { products: [] }, action) => {
+export const productsReducer = (state = { products: [] }, action) => {
   switch (action.type) {
     case 'ALL_PRODUCT_REQUEST':
     case 'ADMIN_PRODUCTS_REQUEST':
@@ -23,6 +23,71 @@ export const productReducer = (state = { products: [] }, action) => {
         ...state,
         error: null,
       };
+    default:
+      return state;
+  }
+};
+
+// Create a product (admin only)
+export const newProductReducer = (state = { product: {} }, action) => {
+  switch (action.type) {
+    case 'NEW_PRODUCT_REQUEST':
+      return {
+        loading: true,
+      };
+    case 'NEW_PRODUCT_SUCCESS':
+      return {
+        loading: false,
+        success: true,
+        ...action.payload,
+      };
+    case 'NEW_PRODUCT_FAILURE':
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+    case 'CLEAR_PRODUCT':
+      return {
+        product: {},
+      };
+
+    default:
+      return state;
+  }
+};
+
+// Delete a product (admin only)
+export const productReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'DELETE_PRODUCT_REQUEST':
+      return {
+        loading: true,
+      };
+    case 'DELETE_PRODUCT_SUCCESS':
+      return {
+        loading: false,
+        ...action.payload,
+      };
+    case 'DELETE_PRODUCT_FAILURE':
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+    case 'CLEAR_PRODUCT':
+      return {
+        product: {},
+      };
+
     default:
       return state;
   }

@@ -8,7 +8,7 @@ export default function FileSystemNavigator() {
       <div className="hidden sm:block">
         <SidebarComponent />
       </div>
-      <div className="sm:hidden block">
+      <div className="sm:hidden block mb-4">
         <Accordion>
           <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
             <div>Menu</div>

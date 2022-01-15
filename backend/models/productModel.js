@@ -21,20 +21,7 @@ const productSchema = new Schema({
     max: 5,
     dafault: 0,
   },
-  images: [
-    {
-      public_id: {
-        type: String,
-        required: true,
-      },
-    },
-    {
-      url: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  images: [{}],
   category: {
     type: String,
   },

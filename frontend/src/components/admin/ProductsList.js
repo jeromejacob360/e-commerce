@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAdminProducts } from '../../redux/actions/productActions';
+import {
+  clearErrors,
+  deleteProduct,
+  fetchAdminProducts,
+} from '../../redux/actions/productActions';
 import Loading from '../../helper-components/loading/Loading';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
@@ -8,14 +12,33 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Sidebar from './Sidebar';
 import PageTitle from '../../helper-components/PageTitle';
+import { useSnackbar } from 'notistack';
+import { Button } from '@mui/material';
 
 export default function ProductsList() {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const { loading, products } = useSelector((state) => state.products);
+  const { success, error } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(fetchAdminProducts());
-  }, [dispatch]);
+  }, [dispatch, success]);
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar(error, { variant: 'error' });
+      dispatch(clearErrors());
+    }
+    if (success) {
+      enqueueSnackbar('Product deleted successfully', { variant: 'success' });
+      dispatch(clearErrors());
+    }
+  }, [error, enqueueSnackbar, dispatch, success]);
+
+  function deleteHandler(id) {
+    dispatch(deleteProduct(id));
+  }
 
   const rows = [];
   products &&
@@ -30,7 +53,19 @@ export default function ProductsList() {
     });
 
   const columns = [
-    { field: 'id', headerName: 'Product ID', minWidth: 200, flex: 1 },
+    {
+      field: 'id',
+      headerName: 'Product ID',
+      minWidth: 200,
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <Link to={`/product/${params.row.id}`}>
+            <span>{params.value}</span>
+          </Link>
+        );
+      },
+    },
 
     {
       field: 'name',
@@ -92,13 +127,13 @@ export default function ProductsList() {
       sortable: false,
       renderCell: (params) => {
         return (
-          <div className="text-gray-500 flex flex-1 justify-between px-2">
+          <div className="text-gray-500 flex flex-1 items-center justify-between px-2">
             <Link to={`/admin/product/${params.row.id}`}>
               <EditIcon />
             </Link>
-            <Link to={`/order/${params.id}`}>
+            <Button onClick={() => deleteHandler(params.row.id)}>
               <DeleteOutlineIcon />
-            </Link>
+            </Button>
           </div>
         );
       },
