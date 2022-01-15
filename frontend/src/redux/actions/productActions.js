@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Get all products
 export function fetchProducts(
   keyword = '',
   page = 1,
@@ -36,11 +37,6 @@ export function fetchProducts(
   };
 }
 
-// Clear errors
-export const clearErrors = () => (dispatch) => {
-  dispatch({ type: 'CLEAR_ERRORS' });
-};
-
 export function fetchProductDetails(id) {
   return async function (dispatch) {
     try {
@@ -55,6 +51,26 @@ export function fetchProductDetails(id) {
     } catch (error) {
       dispatch({
         type: 'PRODUCT_DETAILS_FAILURE',
+        payload: error,
+      });
+    }
+  };
+}
+
+//Get all products (Admin)
+export function fetchAdminProducts() {
+  return async function (dispatch) {
+    try {
+      dispatch({ type: 'ADMIN_PRODUCTS_REQUEST' });
+      const { data } = await axios.get('/api/admin/products');
+      dispatch({
+        type: 'ADMIN_PRODUCTS_SUCCESS',
+        payload: data,
+      });
+    } catch (error) {
+      console.log(`error`, error);
+      dispatch({
+        type: 'ADMIN_PRODUCTS_FAILURE',
         payload: error,
       });
     }
@@ -84,4 +100,9 @@ export const addReview = (productId, rating, review) => async (dispatch) => {
       payload: error,
     });
   }
+};
+
+// Clear errors
+export const clearErrors = () => (dispatch) => {
+  dispatch({ type: 'CLEAR_ERRORS' });
 };

@@ -25,6 +25,9 @@ import OrderSuccess from './components/OrderSuccess';
 import FourOFour from './components/404';
 import MyOrders from './components/MyOrders';
 import OrderDetails from './components/orderDetails';
+import Dashboard from './components/admin/Dashboard';
+import AdminRoute from './helper-components/AdminRoute';
+import ProductsList from './components/admin/ProductsList';
 
 function App() {
   const dispatch = useDispatch();
@@ -66,19 +69,21 @@ function App() {
             <Route exact path="/products" component={Products} />
             <Route exact path="/products/:keyword" component={Products} />
             <Route exact path="/product/:id" component={ProductDetails} />
-            <Route exact path="/cart" component={Cart} />
 
-            <ProtectedRoute exact path="/account" component={Profile} />
-            <ProtectedRoute exact path="/checkout" component={Checkout} />
-            <ProtectedRoute
-              exact
-              path="/checkout/confirm"
-              component={Confirm}
-            />
-            <ProtectedRoute exact path="/success" component={OrderSuccess} />
-            <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
-            <ProtectedRoute exact path="/orders/me" component={MyOrders} />
-            <ProtectedRoute exact path="/order/:id" component={OrderDetails} />
+            <ProtectedRoute>
+              <Route exact path="/cart" component={Cart} />
+              <Route exact path="/account" component={Profile} />
+              <Route exact path="/checkout" component={Checkout} />
+              <Route exact path="/checkout/confirm" component={Confirm} />
+              <Route exact path="/success" component={OrderSuccess} />
+              <Route exact path="/me/update" component={UpdateProfile} />
+              <Route exact path="/orders/me" component={MyOrders} />
+              <Route exact path="/order/:id" component={OrderDetails} />
+              <AdminRoute>
+                <Route exact path="/admin/dashboard" component={Dashboard} />
+                <Route exact path="/admin/products" component={ProductsList} />
+              </AdminRoute>
+            </ProtectedRoute>
             {!stripeApiKey && <Route component={FourOFour} />}
           </Switch>
         </div>

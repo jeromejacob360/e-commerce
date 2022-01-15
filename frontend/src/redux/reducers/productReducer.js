@@ -1,16 +1,19 @@
 export const productReducer = (state = { products: [] }, action) => {
   switch (action.type) {
     case 'ALL_PRODUCT_REQUEST':
+    case 'ADMIN_PRODUCTS_REQUEST':
       return {
         loading: true,
         products: [],
       };
     case 'ALL_PRODUCT_SUCCESS':
+    case 'ADMIN_PRODUCTS_SUCCESS':
       return {
         loading: false,
         ...action.payload,
       };
     case 'ALL_PRODUCT_FAILURE':
+    case 'ADMIN_PRODUCTS_FAILURE':
       return {
         loading: false,
         error: action.payload,

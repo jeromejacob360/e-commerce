@@ -58,7 +58,7 @@ const ResponsiveAppBar = () => {
     }
     function dashboard() {
       handleCloseUserMenu();
-      history.push('/dashboard');
+      history.push('/admin/dashboard');
     }
     function orders() {
       history.push('/orders/me');
@@ -88,8 +88,6 @@ const ResponsiveAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  // return null;
 
   return (
     <AppBar
