@@ -22,7 +22,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
     products = await apiFeature.query.clone();
   } catch (error) {
     console.log(error);
-  }
+  } // TODO no need of try catch block in catchasyncerrors function
 
   res.status(200).json({
     success: true,
@@ -60,39 +60,37 @@ exports.getProduct = catchAsyncErrors(async (req, res, next) => {
 
 // Create a product (admin only)
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
-  try {
-    const { images } = req.body;
+  const { images } = req.body;
 
-    const urlArray = [];
+  console.log(`images`, images);
 
-    for (let i = 0; i < images.length; i++) {
-      const result = await cloudinary.v2.uploader.upload(images[i], {
-        folder: `products`,
-      });
-      urlArray.push({
-        url: result.secure_url,
-        public_id: result.public_id,
-      });
-    }
+  const urlArray = [];
 
-    const newProduct = {
-      ...req.body,
-      images: urlArray,
-      createdBy: req.user.id,
-    };
-    const product = await Product.create(newProduct);
-    res.status(201).json({
-      success: true,
-      message: 'Product created',
-      product,
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i].url, {
+      folder: `products`,
     });
-  } catch (error) {
-    console.log(error);
+    urlArray.push({
+      url: result.secure_url,
+      public_id: result.public_id,
+    });
   }
+
+  const newProduct = {
+    ...req.body,
+    images: urlArray,
+    createdBy: req.user.id,
+  };
+  const product = await Product.create(newProduct);
+  res.status(201).json({
+    success: true,
+    message: 'Product created',
+    product,
+  });
 });
 
 // Update a product (admin only)
-exports.updateProduct = catchAsyncErrors(async (req, res) => {
+exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   const id = req.params.id;
   let product = await Product.findById(id);
   if (!product) {
@@ -101,11 +99,39 @@ exports.updateProduct = catchAsyncErrors(async (req, res) => {
     );
   }
 
-  const up = await Product.findByIdAndUpdate(id, req.body, {
+  const { oldImages, images } = req.body;
+
+  if (oldImages.length > 0) {
+    for (let i = 0; i < oldImages.length; i++) {
+      await cloudinary.v2.uploader.destroy(oldImages[i].public_id);
+    }
+  }
+
+  const urlArray = [];
+  if (images.length > 0)
+    for (let i = 0; i < images.length; i++) {
+      if (images[i].public_id) {
+        urlArray.push(images[i]);
+      } else {
+        const result = await cloudinary.v2.uploader.upload(images[i].url, {
+          folder: `products`,
+        });
+
+        urlArray.push({
+          url: result.secure_url,
+          public_id: result.public_id,
+        });
+      }
+    }
+
+  const updatedProduct = { ...req.body, images: urlArray };
+
+  const up = await Product.findByIdAndUpdate(id, updatedProduct, {
     new: true,
     runValidators: true,
     usefindAndModify: false,
   });
+
   res.status(200).json({
     success: true,
     message: 'Product updated',
@@ -114,7 +140,7 @@ exports.updateProduct = catchAsyncErrors(async (req, res) => {
 });
 
 // Delete a product (admin only)
-exports.deleteProduct = catchAsyncErrors(async (req, res) => {
+exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const id = req.params.id;
   let product = await Product.findById(id);
   if (!product) {

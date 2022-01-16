@@ -98,6 +98,30 @@ export function createProduct(product) {
   };
 }
 
+// Update a product (admin only)
+export function updateProduct(product) {
+  return async function (dispatch) {
+    try {
+      dispatch({ type: 'UPDATE_PRODUCT_REQUEST' });
+      const { data } = await axios.put(
+        '/api/admin/product/' + product._id,
+        product,
+      );
+
+      dispatch({
+        type: 'UPDATE_PRODUCT_SUCCESS',
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'UPDATE_PRODUCT_FAILURE',
+        payload: error,
+      });
+    }
+    dispatch({ type: 'CLEAR_PRODUCT' });
+  };
+}
+
 // Delete a product (admin only)
 export function deleteProduct(productId) {
   return async function (dispatch) {

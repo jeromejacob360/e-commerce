@@ -1,5 +1,7 @@
 import {
   Button,
+  CircularProgress,
+  Fab,
   FormGroup,
   InputAdornment,
   MenuItem,
@@ -17,10 +19,13 @@ import Inventory2Icon from '@mui/icons-material/Inventory2';
 import CategoryIcon from '@mui/icons-material/Category';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearErrors, createProduct } from '../../redux/actions/productActions';
+import {
+  clearErrors,
+  fetchProductDetails,
+  updateProduct,
+} from '../../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Loading from '../../helper-components/loading/Loading';
-
 const initialState = {
   name: '',
   price: '',
@@ -30,8 +35,7 @@ const initialState = {
   images: [],
 };
 
-export default function CreateProduct() {
-  const [product, setProduct] = useState(initialState);
+export default function UpdateProduct({ match, history }) {
   const categories = [
     'Laptop',
     'Footwear',
@@ -44,18 +48,48 @@ export default function CreateProduct() {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const { error, loading, success } = useSelector((state) => state.newProduct);
+
+  const {
+    loading,
+    error,
+    product: oldProduct,
+  } = useSelector((state) => state.productDetails);
+
+  const {
+    error: updateError,
+    loading: uploading,
+    success,
+  } = useSelector((state) => state.product);
+
+  const [product, setProduct] = useState(initialState);
+
+  useEffect(() => {
+    dispatch(fetchProductDetails(match.params.id));
+  }, [dispatch, match.params.id]);
+
+  useEffect(() => {
+    if (oldProduct) {
+      setProduct({
+        ...oldProduct,
+        oldImages: oldProduct?.images,
+      });
+    }
+  }, [oldProduct]);
+
   useEffect(() => {
     if (error) {
-      enqueueSnackbar(error, { variant: 'error' });
+      enqueueSnackbar(error.message, { variant: 'error' });
+      dispatch(clearErrors());
+    }
+    if (updateError) {
+      enqueueSnackbar(updateError.message, { variant: 'error' });
       dispatch(clearErrors());
     }
     if (success) {
-      enqueueSnackbar('Product created successfully', { variant: 'success' });
-      dispatch(clearErrors());
-      setProduct(initialState);
+      enqueueSnackbar('Product updated successfully', { variant: 'success' });
+      history.push('/admin/products');
     }
-  }, [error, enqueueSnackbar, dispatch, success]);
+  }, [error, enqueueSnackbar, dispatch, updateError, success, history]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -71,7 +105,7 @@ export default function CreateProduct() {
       });
       return;
     }
-    dispatch(createProduct(product));
+    dispatch(updateProduct(product));
   }
 
   function setValue(e) {
@@ -79,6 +113,7 @@ export default function CreateProduct() {
   }
 
   function deleteImage(index) {
+    if (uploading) return;
     const images = [...product.images];
     images.splice(index, 1);
     setProduct({ ...product, images });
@@ -108,13 +143,14 @@ export default function CreateProduct() {
   }
 
   return (
-    <div>
-      <PageTitle title="Create product" />
+    <>
+      <PageTitle title="Update product" />
       <div className="flex flex-col md:flex-row">
         <Sidebar />
-        <form className="flex justify-center flex-1 w-96">
+        <form className="flex justify-center flex-1">
           <FormGroup margin="dense" size="small" className="space-y-4 w-80">
             <OutlinedInput
+              disabled={uploading}
               type="text"
               placeholder="Product name"
               autoComplete="off"
@@ -128,6 +164,7 @@ export default function CreateProduct() {
               }
             />
             <OutlinedInput
+              disabled={uploading}
               type="number"
               placeholder="Price"
               name="price"
@@ -142,6 +179,7 @@ export default function CreateProduct() {
             />
 
             <OutlinedInput
+              disabled={uploading}
               type="text"
               placeholder="Description"
               multiline
@@ -155,6 +193,7 @@ export default function CreateProduct() {
               }
             />
             <OutlinedInput
+              disabled={uploading}
               type="number"
               placeholder="Stock"
               name="stock"
@@ -167,6 +206,7 @@ export default function CreateProduct() {
               }
             />
             <Select
+              disabled={uploading}
               name="category"
               displayEmpty
               renderValue={(value) =>
@@ -186,24 +226,35 @@ export default function CreateProduct() {
                 </MenuItem>
               ))}
             </Select>
+
             <label htmlFor="contained-button-file">
               <Input
+                disabled={uploading}
                 accept="image/*"
                 id="contained-button-file"
                 multiple
                 type="file"
                 onChange={handleImageChange}
               />
-              <Button fullWidth variant="outlined" component="span">
-                Select images
+
+              <Button
+                disabled={uploading}
+                fullWidth
+                variant="outlined"
+                component="span"
+              >
+                add images
               </Button>
             </label>
 
+            <h4>Selected images (click to remove)</h4>
             <div className="flex px-2 space-x-1 overflow-x-auto h-28">
-              {product.images.length > 0 &&
+              {product.images &&
                 product.images.map((image, index) => (
                   <img
-                    className="object-cover h-20 cursor-pointer w-14"
+                    className={`object-cover h-20 ${
+                      uploading ? 'opacity-10' : 'cursor-pointer'
+                    } w-14`}
                     key={index}
                     src={image.url}
                     onClick={() => deleteImage(index)}
@@ -215,15 +266,23 @@ export default function CreateProduct() {
             <Button
               type="submit"
               onClick={handleSubmit}
+              disabled={uploading}
               fullWidth
               variant="contained"
               color="primary"
             >
-              Create
+              update
             </Button>
           </FormGroup>
         </form>
       </div>
-    </div>
+      {uploading && (
+        <div className="fixed bottom-10 left-10">
+          <Fab color="secondary" aria-label="add">
+            <CircularProgress value={80} />
+          </Fab>
+        </div>
+      )}
+    </>
   );
 }

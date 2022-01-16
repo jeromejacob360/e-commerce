@@ -70,10 +70,6 @@ export default function Dashboard() {
     return <Loading />;
   }
 
-  if (products.length === 0) {
-    return <div>No products</div>;
-  }
-
   return (
     <div>
       <PageTitle title="Admin dashboard" />

@@ -33,6 +33,7 @@ module.exports = (err, req, res, next) => {
       stack: err.stack,
     });
   } else {
+    console.log(`errrrrrrrrrrrrrrrrrr`, err);
     res.status(500).json({
       name: err.name,
       type: 'ASYNC ERROR',

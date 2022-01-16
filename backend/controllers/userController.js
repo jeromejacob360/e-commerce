@@ -110,7 +110,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Get user details
-exports.getUserDetails = catchAsyncErrors(async (req, res) => {
+exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   if (!user) return;
 
@@ -121,7 +121,7 @@ exports.getUserDetails = catchAsyncErrors(async (req, res) => {
 });
 
 // Update user details
-exports.updateUserDetails = catchAsyncErrors(async (req, res) => {
+exports.updateUserDetails = catchAsyncErrors(async (req, res, next) => {
   const newUser = {
     name: req.body.name,
     email: req.body.email,
@@ -159,7 +159,7 @@ exports.getSingleUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Update user role (Admin only)
-exports.updateUserDetailsAdmin = catchAsyncErrors(async (req, res) => {
+exports.updateUserDetailsAdmin = catchAsyncErrors(async (req, res, next) => {
   const newUser = {
     name: req.body.name,
     email: req.body.email,
