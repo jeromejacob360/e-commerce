@@ -6,15 +6,14 @@ on:
    
 jobs:
   run-cypress-tests:
+  
     runs-on: ubuntu-latest
+    defaults:
+          run:
+            shell: bash
+            working-directory: ./frontend
     steps:
-     #- name: Setup and run Cypress
     - name: install deps
-      uses: cypress-io/github-action@v2
-    - uses: actions/checkout@v2
-      with:
-          browser: chrome
-          headless: true
-          start: npm start
-    
+    - run: npm install
+  
    
