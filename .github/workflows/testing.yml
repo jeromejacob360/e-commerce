@@ -11,9 +11,8 @@ jobs:
       steps:
         - name: start the server
           uses: actions/checkout@v2
-        - run:|
-              touch .env
-              echo MONGO_URI =${{ secrets.MONGO_URI }} >> .env
+        - run: touch .env
+        - run: echo fflkjaf >> .env
         - run: npm install
         - run: node server.js
 
