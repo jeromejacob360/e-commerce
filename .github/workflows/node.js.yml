@@ -4,14 +4,27 @@ on:
   
 
 jobs:
-  install_deps:
+
+  start_back_end:
+      runs-on: windows-latest
+      defaults:
+        run:
+          working-directory: backend
+      steps:
+        - name: start the server
+          uses: actions/checkout@v2
+        - run: npm install
+        - run: node server.js
+
+  start_front_end:
     runs-on: windows-latest
     defaults:
       run:
         working-directory: frontend
     steps:
-      - name: Checkout
+      - name: start the UI
         uses: actions/checkout@v2
       - run: npm install
       - run: npm start
+      - run: npm run test-run
 
