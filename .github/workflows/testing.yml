@@ -1,6 +1,9 @@
 name: testing
 on: 
   workflow_dispatch:
+  
+env:
+  MONGO_URI: ${{secrets.MONGO_URI}}
 
 jobs:
   start_back_end:
@@ -10,11 +13,7 @@ jobs:
           working-directory: backend
       steps:
         - name: start the server
-          uses: actions/checkout@v2
-        - run: cd config
-        - run: touch config.env
-        - run: echo "MONGO_URI = mongodb://localhost:27017/ecommerce" >> config.env
-        - run: cd..
+        - uses: actions/checkout@v2
         - run: npm install
         - run: node server.js
 
