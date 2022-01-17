@@ -12,7 +12,7 @@ jobs:
         - name: start the server
           uses: actions/checkout@v2
         - run: touch .env
-        - run: echo MONGO_URI =${{ secrets.MONGO_URI }} >> .env
+        - run: echo "MONGO_URI = mongodb://localhost:27017/ecommerce" >> .env
         - run: npm install
         - run: node server.js
 
