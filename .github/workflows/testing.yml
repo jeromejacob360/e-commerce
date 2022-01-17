@@ -11,9 +11,8 @@ jobs:
       steps:
         - name: start the server
           uses: actions/checkout@v2
-        - run: mkdir config
         - run: cd config
-        - run: touch .env
+        - run: touch config.env
         - run: echo "MONGO_URI = mongodb://localhost:27017/ecommerce" >> .env
         - run: npm install
         - run: node server.js
