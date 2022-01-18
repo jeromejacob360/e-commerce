@@ -6,7 +6,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import Sidebar from './Sidebar';
 import PageTitle from '../../helper-components/PageTitle';
 import { useSnackbar } from 'notistack';
 import { Button } from '@mui/material';
@@ -108,20 +107,17 @@ export default function OrdersList() {
   return (
     <>
       <PageTitle title="All Orders" />
-      <div className="flex flex-col md:flex-row">
-        <Sidebar />
-        <div className="flex-1 md:px-20">
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-            getRowClassName={(params) =>
-              params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
-            }
-          />
-        </div>
+      <div className="flex-1 md:px-20">
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+          getRowClassName={(params) =>
+            params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
+          }
+        />
       </div>
     </>
   );

@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 
 import { useEffect, useState } from 'react';
-import Sidebar from '../../components/admin/Sidebar';
 import PageTitle from '../../helper-components/PageTitle';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
@@ -111,7 +110,6 @@ export default function CreateProduct() {
     <div>
       <PageTitle title="Create product" />
       <div className="flex flex-col md:flex-row">
-        <Sidebar />
         <form className="flex justify-center flex-1 w-96">
           <FormGroup margin="dense" size="small" className="space-y-4 w-80">
             <OutlinedInput

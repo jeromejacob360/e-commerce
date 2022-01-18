@@ -2,12 +2,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, InputAdornment, MenuItem, Select } from '@mui/material';
 import PageTitle from '../../helper-components/PageTitle';
 import CategoryIcon from '@mui/icons-material/Category';
-import Sidebar from '../admin/Sidebar';
 import { useEffect, useState } from 'react';
 import { getOrderDetails, updateOrder } from '../../redux/actions/orderActions';
 import { useSnackbar } from 'notistack';
 
-export default function ProcessOrder({ match }) {
+export default function ProcessOrder({ propsFromRouter }) {
+  const { match } = propsFromRouter;
   const { user } = useSelector((state) => state.user);
   const shippingInfo = user.shippingInfo || {};
   const dispatch = useDispatch();
@@ -43,7 +43,6 @@ export default function ProcessOrder({ match }) {
     <div>
       <PageTitle title="Process order" />
       <div className="flex flex-col md:flex-row ">
-        <Sidebar />
         {order && (
           <div className="xl:px-40 px-10 mt-10 flex-1 md:grid md:grid-cols-[2fr_1fr]">
             <div className="md:mr-10 SHIPPING">

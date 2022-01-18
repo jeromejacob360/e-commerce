@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 
 import { useEffect, useState } from 'react';
-import Sidebar from '../../components/admin/Sidebar';
 import PageTitle from '../../helper-components/PageTitle';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
@@ -35,7 +34,9 @@ const initialState = {
   images: [],
 };
 
-export default function UpdateProduct({ match, history }) {
+export default function UpdateProduct({ propsFromRouter }) {
+  const { history, match } = propsFromRouter;
+
   const categories = [
     'Laptop',
     'Footwear',
@@ -45,7 +46,6 @@ export default function UpdateProduct({ match, history }) {
     'Camera',
     'SmartPhones',
   ];
-
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -146,7 +146,6 @@ export default function UpdateProduct({ match, history }) {
     <>
       <PageTitle title="Update product" />
       <div className="flex flex-col md:flex-row">
-        <Sidebar />
         <form className="flex justify-center flex-1">
           <FormGroup margin="dense" size="small" className="space-y-4 w-80">
             <OutlinedInput

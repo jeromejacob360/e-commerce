@@ -10,7 +10,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import Sidebar from './Sidebar';
 import PageTitle from '../../helper-components/PageTitle';
 import { useSnackbar } from 'notistack';
 import { Button } from '@mui/material';
@@ -90,7 +89,7 @@ export default function ProductsList() {
       headerAlign: 'center',
       renderCell: (params) => {
         return (
-          <div className="flex flex-1 justify-center">
+          <div className="flex justify-center flex-1">
             <span>{params.value}</span>
           </div>
         );
@@ -112,7 +111,7 @@ export default function ProductsList() {
       },
       renderCell: (params) => {
         return (
-          <div className="flex flex-1 justify-center">
+          <div className="flex justify-center flex-1">
             <span>{params.value}</span>
           </div>
         );
@@ -127,7 +126,7 @@ export default function ProductsList() {
       sortable: false,
       renderCell: (params) => {
         return (
-          <div className="text-gray-500 flex flex-1 items-center justify-between px-2">
+          <div className="flex items-center justify-between flex-1 px-2 text-gray-500">
             <Link to={`/admin/product/${params.row.id}`}>
               <EditIcon />
             </Link>
@@ -146,20 +145,17 @@ export default function ProductsList() {
   return (
     <>
       <PageTitle title="All Products" />
-      <div className="flex flex-col md:flex-row">
-        <Sidebar />
-        <div className="flex-1 md:px-20">
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-            getRowClassName={(params) =>
-              params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
-            }
-          />
-        </div>
+      <div className="flex-1 md:px-20">
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+          getRowClassName={(params) =>
+            params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
+          }
+        />
       </div>
     </>
   );

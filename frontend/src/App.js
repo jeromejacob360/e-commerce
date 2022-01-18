@@ -25,13 +25,8 @@ import OrderSuccess from './components/OrderSuccess';
 import FourOFour from './components/404';
 import MyOrders from './components/MyOrders';
 import OrderDetails from './components/orderDetails';
-import Dashboard from './components/admin/Dashboard';
 import AdminRoute from './helper-components/AdminRoute';
-import ProductsList from './components/admin/ProductsList';
-import CreateProduct from './components/admin/CreateProduct';
-import UpdateProduct from './components/admin/UpdateProduct';
-import OrdersList from './components/admin/OrderList';
-import ProcessOrder from './components/admin/ProcessOrder';
+import DashboardWrapper from './components/admin/DashboardWrapper';
 
 function App() {
   const dispatch = useDispatch();
@@ -87,19 +82,7 @@ function App() {
               <Route exact path="/me/update" component={UpdateProfile} />
               <Route exact path="/orders/me" component={MyOrders} />
               <Route exact path="/order/:id" component={OrderDetails} />
-              <AdminRoute>
-                <Route exact path="/admin/dashboard" component={Dashboard} />
-                <Route exact path="/admin/products" component={ProductsList} />
-                <Route exact path="/admin/product" component={CreateProduct} />
-                <Route
-                  exact
-                  path="/admin/product/:id"
-                  component={UpdateProduct}
-                />
-
-                <Route exact path="/admin/orders" component={OrdersList} />
-                <Route exact path="/admin/order/:id" component={ProcessOrder} />
-              </AdminRoute>
+              <AdminRoute path="/admin" component={DashboardWrapper} />
             </ProtectedRoute>
             {!stripeApiKey && <Route component={FourOFour} />}
           </Switch>
