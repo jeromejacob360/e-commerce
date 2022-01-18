@@ -43,7 +43,9 @@ export default function Account() {
       </Link>
 
       <div className="flex justify-center w-full mt-4 space-x-6">
-        <Button variant="outlined">My Orders</Button>
+        <Button component={Link} to="/orders/me" variant="outlined">
+          My Orders
+        </Button>
         <Button variant="outlined">Change password</Button>
       </div>
     </div>

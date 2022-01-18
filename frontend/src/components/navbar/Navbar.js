@@ -173,7 +173,7 @@ const ResponsiveAppBar = () => {
                 component={Link}
                 to="/cart"
                 sx={{ mr: 3 }}
-                badgeContent={cartItems.length}
+                badgeContent={cartItems?.length}
                 color="error"
               >
                 <LocalMallIcon

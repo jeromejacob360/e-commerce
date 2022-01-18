@@ -60,6 +60,9 @@ export const cartReducer = (
         error: null,
       };
 
+    case 'CLEAR_CART':
+      return {};
+
     default:
       return state;
   }

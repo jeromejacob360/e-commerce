@@ -30,6 +30,8 @@ import AdminRoute from './helper-components/AdminRoute';
 import ProductsList from './components/admin/ProductsList';
 import CreateProduct from './components/admin/CreateProduct';
 import UpdateProduct from './components/admin/UpdateProduct';
+import OrdersList from './components/admin/OrderList';
+import ProcessOrder from './components/admin/ProcessOrder';
 
 function App() {
   const dispatch = useDispatch();
@@ -37,12 +39,16 @@ function App() {
   const [stripeApiKey, setStripeApiKey] = useState('');
 
   useEffect(() => {
-    dispatch(loadCart());
+    if (isAuthenticated === true) {
+      dispatch(loadCart());
+    }
   }, [dispatch, isAuthenticated]);
 
   useEffect(() => {
-    getStripeApiKey();
-  }, []);
+    if (isAuthenticated) {
+      getStripeApiKey();
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     dispatch(loadUser());
@@ -90,6 +96,9 @@ function App() {
                   path="/admin/product/:id"
                   component={UpdateProduct}
                 />
+
+                <Route exact path="/admin/orders" component={OrdersList} />
+                <Route exact path="/admin/order/:id" component={ProcessOrder} />
               </AdminRoute>
             </ProtectedRoute>
             {!stripeApiKey && <Route component={FourOFour} />}

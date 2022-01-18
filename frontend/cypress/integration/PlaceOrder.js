@@ -13,14 +13,15 @@ describe('Trying to place an order', () => {
   });
 
   it('should add an item to cart if the cart is empty', () => {
-    cy.visit('/cart')
-      .wait(500)
+    cy.get('[data-testid="LocalMallIcon"]').click();
+    cy.url()
+      .should('include', 'cart')
       .get('body')
       .then((body) => {
         if (body.text().includes('Your cart is empty')) {
           console.log('Cart is empty, adding stuff');
           cy.visit('/');
-          cy.contains('white sweater', { matchCase: false }).click();
+          cy.contains('shoe', { matchCase: false }).click();
           cy.contains('add to cart', { matchCase: false }).click();
         } else {
           console.log('Cart is not empty');
@@ -29,13 +30,13 @@ describe('Trying to place an order', () => {
   });
 
   it('Places an order', () => {
-    cy.visit('/cart');
+    cy.get('[data-testid="LocalMallIcon"]').click();
     cy.contains('place order', { matchCase: false }).click();
     cy.contains('continue', { matchCase: false }).click();
     cy.contains('proceed to payment', { matchCase: false }).click();
 
     // Payment page
-    cy.get('[type="submit"]').should('be.disabled');
+    cy.get('[type="submit"]', { timeout: 6000 }).should('be.disabled');
     cy.getStripeIframe('Secure card number input frame')
       .find(`[data-elements-stable-field-name="cardNumber"]`)
       .should('be.visible')

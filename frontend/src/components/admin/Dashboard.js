@@ -33,6 +33,7 @@ export default function Dashboard() {
   );
 
   const { loading, products } = useSelector((state) => state.products);
+  const { orders } = useSelector((state) => state.allOrders);
 
   const dispatch = useDispatch();
 
@@ -96,7 +97,7 @@ export default function Dashboard() {
             >
               <div className="flex flex-col items-center space-x-2">
                 <p>Orders </p>
-                <p>3 </p>
+                <p>{orders?.length} </p>
               </div>
             </Link>
             <Link

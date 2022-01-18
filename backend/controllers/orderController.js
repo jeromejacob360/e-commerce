@@ -72,7 +72,7 @@ exports.getUserOrders = catchAsyncErrors(async (req, res, next) => {
 
 // Get all orders (admin only)
 exports.getAllOrders = catchAsyncErrors(async (req, res, next) => {
-  const orders = await Order.find().populate('user', '-password', '-role');
+  const orders = await Order.find().populate('user', '-role');
 
   if (!orders) {
     return next(new ErrorHandler(404, 'Orders not found'));
@@ -107,15 +107,16 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
       await updateStock(o.product, o.quantity);
     });
   }
-  order.orderStatus = req.body.status;
+  order.orderStatus = req.body.orderStatus;
 
   if (req.body.status === 'Delivered') {
     order.deliveredAt = Date.now();
   }
 
-  await order.save({ validateBeforeSave: false });
+  const savedDoc = await order.save({ validateBeforeSave: false });
   res.status(200).json({
     success: true,
+    updatedDocument: savedDoc,
   });
 });
 

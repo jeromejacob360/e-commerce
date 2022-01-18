@@ -5,7 +5,7 @@ export const userReducer = (state = { user: {} }, action) => {
     case 'LOGIN_REQUEST':
       return {
         loading: true,
-        isAuthenticated: false,
+        isAuthenticated: null,
       };
 
     case 'LOAD_USER_SUCCESS':
