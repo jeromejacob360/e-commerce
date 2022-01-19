@@ -2,9 +2,12 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
+const path = require('path');
 
-const dotenv = require('dotenv');
-dotenv.config({ path: '../backend/config/config.env' });
+// In heroku, we will set NODE_ENV
+if (process.env.NODE_ENV !== 'PRODUCTION') {
+  require('dotenv').config({ path: '../backend/config/config.env' });
+}
 
 const errorMiddleware = require('./middlewares/error');
 const app = express();
@@ -26,6 +29,12 @@ app.use('/api', userRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', cartRoutes);
 app.use('/api', paymentRoutes);
+
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+app.get('*', (req, res) =>
+  res.sendFile(path.resolve(__dirname, '../frontend/build/index.html')),
+);
 
 // Error handler
 app.use(errorMiddleware);

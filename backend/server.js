@@ -1,8 +1,11 @@
 const app = require('./app');
-const dotenv = require('dotenv');
 const connectToDb = require('./config/database');
 const cloudinary = require('cloudinary');
-dotenv.config({ path: '../backend/config/config.env' });
+
+// In heroku, we will set NODE_ENV
+if (process.env.NODE_ENV !== 'PRODUCTION') {
+  require('dotenv').config({ path: '../backend/config/config.env' });
+}
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
