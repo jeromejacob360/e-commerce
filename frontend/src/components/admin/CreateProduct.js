@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors, createProduct } from '../../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Loading from '../../helper-components/loading/Loading';
+import Sidebar from './Sidebar';
 
 const initialState = {
   name: '',
@@ -102,126 +103,139 @@ export default function CreateProduct() {
     display: 'none',
   });
 
-  if (loading) {
-    return <Loading />;
-  }
-
   return (
-    <div>
-      <PageTitle title="Create product" />
-      <div className="flex flex-col md:flex-row">
-        <form className="flex justify-center flex-1 w-96">
-          <FormGroup margin="dense" size="small" className="space-y-4 w-80">
-            <OutlinedInput
-              type="text"
-              placeholder="Product name"
-              autoComplete="off"
-              name="name"
-              value={product.name}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <DriveFileRenameOutlineIcon />
-                </InputAdornment>
-              }
-            />
-            <OutlinedInput
-              type="number"
-              placeholder="Price"
-              name="price"
-              autoComplete="off"
-              value={product.price}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <CurrencyRupeeIcon />
-                </InputAdornment>
-              }
-            />
-
-            <OutlinedInput
-              type="number"
-              placeholder="Stock"
-              name="stock"
-              value={product.stock}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <Inventory2Icon />
-                </InputAdornment>
-              }
-            />
-
-            <OutlinedInput
-              type="text"
-              placeholder="Description"
-              multiline
-              name="description"
-              value={product.description}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <DescriptionIcon />
-                </InputAdornment>
-              }
-            />
-            <Select
-              name="category"
-              displayEmpty
-              renderValue={(value) =>
-                value ? value : <div className="text-gray-400">Category</div>
-              }
-              value={product.category}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <CategoryIcon />
-                </InputAdornment>
-              }
-            >
-              {categories.map((category) => (
-                <MenuItem key={category} value={category}>
-                  {category}
-                </MenuItem>
-              ))}
-            </Select>
-            <label htmlFor="contained-button-file">
-              <Input
-                accept="image/*"
-                id="contained-button-file"
-                multiple
-                type="file"
-                onChange={handleImageChange}
-              />
-              <Button fullWidth variant="outlined" component="span">
-                Select images
-              </Button>
-            </label>
-
-            <div className="flex px-2 space-x-1 overflow-x-auto h-28">
-              {product.images.length > 0 &&
-                product.images.map((image, index) => (
-                  <img
-                    className="object-cover h-20 cursor-pointer w-14"
-                    key={index}
-                    src={image.url}
-                    onClick={() => deleteImage(index)}
-                    alt="Product Preview"
+    <div className="flex flex-col md:flex-row">
+      <Sidebar />
+      <div className="flex-1 xl:px-20">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <PageTitle title="Create product" />
+            <div className="flex flex-col md:flex-row">
+              <form className="flex justify-center flex-1 w-96">
+                <FormGroup
+                  margin="dense"
+                  size="small"
+                  className="space-y-4 w-80"
+                >
+                  <OutlinedInput
+                    type="text"
+                    placeholder="Product name"
+                    autoComplete="off"
+                    name="name"
+                    value={product.name}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <DriveFileRenameOutlineIcon />
+                      </InputAdornment>
+                    }
                   />
-                ))}
-            </div>
+                  <OutlinedInput
+                    type="number"
+                    placeholder="Price"
+                    name="price"
+                    autoComplete="off"
+                    value={product.price}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CurrencyRupeeIcon />
+                      </InputAdornment>
+                    }
+                  />
 
-            <Button
-              type="submit"
-              onClick={handleSubmit}
-              fullWidth
-              variant="contained"
-              color="primary"
-            >
-              Create
-            </Button>
-          </FormGroup>
-        </form>
+                  <OutlinedInput
+                    type="number"
+                    placeholder="Stock"
+                    name="stock"
+                    value={product.stock}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <Inventory2Icon />
+                      </InputAdornment>
+                    }
+                  />
+
+                  <OutlinedInput
+                    type="text"
+                    placeholder="Description"
+                    multiline
+                    name="description"
+                    value={product.description}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <DescriptionIcon />
+                      </InputAdornment>
+                    }
+                  />
+                  <Select
+                    name="category"
+                    displayEmpty
+                    renderValue={(value) =>
+                      value ? (
+                        value
+                      ) : (
+                        <div className="text-gray-400">Category</div>
+                      )
+                    }
+                    value={product.category}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CategoryIcon />
+                      </InputAdornment>
+                    }
+                  >
+                    {categories.map((category) => (
+                      <MenuItem key={category} value={category}>
+                        {category}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <label htmlFor="contained-button-file">
+                    <Input
+                      accept="image/*"
+                      id="contained-button-file"
+                      multiple
+                      type="file"
+                      onChange={handleImageChange}
+                    />
+                    <Button fullWidth variant="outlined" component="span">
+                      Select images
+                    </Button>
+                  </label>
+
+                  <div className="flex px-2 space-x-1 overflow-x-auto h-28">
+                    {product.images.length > 0 &&
+                      product.images.map((image, index) => (
+                        <img
+                          className="object-cover h-20 cursor-pointer w-14"
+                          key={index}
+                          src={image.url}
+                          onClick={() => deleteImage(index)}
+                          alt="Product Preview"
+                        />
+                      ))}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    onClick={handleSubmit}
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                  >
+                    Create
+                  </Button>
+                </FormGroup>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

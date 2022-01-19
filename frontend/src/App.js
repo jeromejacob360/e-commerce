@@ -1,7 +1,7 @@
 import './App.css';
 import Navbar from './components/navbar/Navbar';
 import Home from './components/home/Home';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import ProductDetails from './components/productDetails/ProductDetails';
 import Products from './components/products/products';
@@ -26,7 +26,15 @@ import FourOFour from './components/404';
 import MyOrders from './components/MyOrders';
 import OrderDetails from './components/orderDetails';
 import AdminRoute from './helper-components/AdminRoute';
-import DashboardWrapper from './components/admin/DashboardWrapper';
+import Dashboard from './components/admin/Dashboard';
+import ProductsList from './components/admin/ProductsList';
+import UpdateProduct from './components/admin/UpdateProduct';
+import CreateProduct from './components/admin/CreateProduct';
+import OrdersList from './components/admin/OrderList';
+import UsersList from './components/admin/UsersList';
+import ReviewsList from './components/admin/ReviewsList';
+import ProcessOrder from './components/admin/ProcessOrder';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   const dispatch = useDispatch();
@@ -61,7 +69,7 @@ function App() {
         <Navbar />
         {stripeApiKey && (
           <Elements stripe={loadStripe(stripeApiKey)}>
-            <ProtectedRoute exact path="/payment" component={Payment} />
+            <Route exact path="/payment" component={Payment} />
           </Elements>
         )}
         <div className="max max-w-[1920px] mx-auto">
@@ -72,23 +80,57 @@ function App() {
             <Route exact path="/products" component={Products} />
             <Route exact path="/products/:keyword" component={Products} />
             <Route exact path="/product/:id" component={ProductDetails} />
-
             <ProtectedRoute exact path="/cart" component={Cart} />
             <ProtectedRoute exact path="/account" component={Profile} />
-            <ProtectedRoute exact path="/checkout" component={Checkout} />
             <ProtectedRoute
               exact
               path="/checkout/confirm"
               component={Confirm}
             />
+            <ProtectedRoute exact path="/checkout" component={Checkout} />
             <ProtectedRoute exact path="/success" component={OrderSuccess} />
             <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
             <ProtectedRoute exact path="/orders/me" component={MyOrders} />
             <ProtectedRoute exact path="/order/:id" component={OrderDetails} />
-            <ProtectedRoute>
-              <AdminRoute path="/admin" component={DashboardWrapper} />
-            </ProtectedRoute>
-            {!stripeApiKey && <Route component={FourOFour} />}
+            <ProtectedRoute
+              exact
+              path="/admin/dashboard"
+              component={Dashboard}
+            />
+            <ProtectedRoute
+              exact
+              path="/admin/products"
+              component={ProductsList}
+            />
+            <ProtectedRoute
+              exact
+              path="/admin/product/:id"
+              component={UpdateProduct}
+            />
+            <ProtectedRoute
+              exact
+              path="/admin/product"
+              component={CreateProduct}
+            />
+            <ProtectedRoute exact path="/admin/orders" component={OrdersList} />
+            <ProtectedRoute exact path="/admin/users" component={UsersList} />
+            <ErrorBoundary>
+              <ProtectedRoute
+                exact
+                path="/admin/reviews"
+                component={ReviewsList}
+              />
+            </ErrorBoundary>
+            <ProtectedRoute
+              exact
+              path="/admin/order/:id"
+              component={ProcessOrder}
+            />
+            <Route
+              component={
+                window.location.pathname === '/payment' ? null : FourOFour
+              }
+            />
           </Switch>
         </div>
       </BrowserRouter>

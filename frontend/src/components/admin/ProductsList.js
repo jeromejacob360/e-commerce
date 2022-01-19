@@ -13,6 +13,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PageTitle from '../../helper-components/PageTitle';
 import { useSnackbar } from 'notistack';
 import { Button } from '@mui/material';
+import Sidebar from './Sidebar';
 
 export default function ProductsList() {
   const dispatch = useDispatch();
@@ -141,24 +142,30 @@ export default function ProductsList() {
     },
   ];
 
-  if (loading) {
-    return <Loading />;
-  }
   return (
-    <>
-      <PageTitle title="All Products" />
-      <div className="flex-1">
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          disableSelectionOnClick
-          autoHeight
-          getRowClassName={(params) =>
-            params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
-          }
-        />
+    <div className="flex flex-col md:flex-row">
+      <Sidebar />
+      <div className="flex-1 xl:px-20">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <PageTitle title="All Products" />
+            <div className="flex-1">
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                autoHeight
+                getRowClassName={(params) =>
+                  params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
+                }
+              />
+            </div>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 }

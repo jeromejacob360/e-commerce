@@ -25,6 +25,7 @@ import {
 } from '../../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Loading from '../../helper-components/loading/Loading';
+import Sidebar from './Sidebar';
 const initialState = {
   name: '',
   price: '',
@@ -136,150 +137,163 @@ export default function UpdateProduct({ history, match }) {
     display: 'none',
   });
 
-  if (loading) {
-    return <Loading />;
-  }
-
   return (
-    <>
-      <PageTitle title="Update product" />
-      <div className="flex flex-col md:flex-row">
-        <form className="flex justify-center flex-1">
-          <FormGroup margin="dense" size="small" className="space-y-4 w-80">
-            <OutlinedInput
-              disabled={uploading}
-              type="text"
-              placeholder="Product name"
-              autoComplete="off"
-              name="name"
-              value={product.name}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <DriveFileRenameOutlineIcon />
-                </InputAdornment>
-              }
-            />
-            <OutlinedInput
-              disabled={uploading}
-              type="number"
-              placeholder="Price"
-              name="price"
-              autoComplete="off"
-              value={product.price}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <CurrencyRupeeIcon />
-                </InputAdornment>
-              }
-            />
-
-            <OutlinedInput
-              disabled={uploading}
-              type="text"
-              placeholder="Description"
-              multiline
-              name="description"
-              value={product.description}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <DescriptionIcon />
-                </InputAdornment>
-              }
-            />
-            <OutlinedInput
-              disabled={uploading}
-              type="number"
-              placeholder="Stock"
-              name="stock"
-              value={product.stock}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <Inventory2Icon />
-                </InputAdornment>
-              }
-            />
-            <Select
-              disabled={uploading}
-              name="category"
-              displayEmpty
-              renderValue={(value) =>
-                value ? value : <div className="text-gray-400">Category</div>
-              }
-              value={product.category}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <CategoryIcon />
-                </InputAdornment>
-              }
-            >
-              {categories.map((category) => (
-                <MenuItem key={category} value={category}>
-                  {category}
-                </MenuItem>
-              ))}
-            </Select>
-
-            <label htmlFor="contained-button-file">
-              <Input
-                disabled={uploading}
-                accept="image/*"
-                id="contained-button-file"
-                multiple
-                type="file"
-                onChange={handleImageChange}
-              />
-
-              <Button
-                disabled={uploading}
-                fullWidth
-                variant="outlined"
-                component="span"
-              >
-                add images
-              </Button>
-            </label>
-
-            <h4>Selected images (click to remove)</h4>
-            <div className="flex px-2 space-x-1 overflow-x-auto h-28">
-              {product.images &&
-                product.images.map((image, index) => (
-                  <img
-                    className={`object-cover h-20 ${
-                      uploading ? 'opacity-10' : 'cursor-pointer'
-                    } w-14`}
-                    key={index}
-                    src={image.url}
-                    onClick={() => deleteImage(index)}
-                    alt="Product Preview"
+    <div className="flex flex-col md:flex-row">
+      <Sidebar />
+      <div className="flex-1 xl:px-20">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <PageTitle title="Update product" />
+            <div className="flex flex-col md:flex-row">
+              <form className="flex justify-center flex-1">
+                <FormGroup
+                  margin="dense"
+                  size="small"
+                  className="space-y-4 w-80"
+                >
+                  <OutlinedInput
+                    disabled={uploading}
+                    type="text"
+                    placeholder="Product name"
+                    autoComplete="off"
+                    name="name"
+                    value={product.name}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <DriveFileRenameOutlineIcon />
+                      </InputAdornment>
+                    }
                   />
-                ))}
-            </div>
+                  <OutlinedInput
+                    disabled={uploading}
+                    type="number"
+                    placeholder="Price"
+                    name="price"
+                    autoComplete="off"
+                    value={product.price}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CurrencyRupeeIcon />
+                      </InputAdornment>
+                    }
+                  />
 
-            <Button
-              type="submit"
-              onClick={handleSubmit}
-              disabled={uploading}
-              fullWidth
-              variant="contained"
-              color="primary"
-            >
-              update
-            </Button>
-          </FormGroup>
-        </form>
+                  <OutlinedInput
+                    disabled={uploading}
+                    type="text"
+                    placeholder="Description"
+                    multiline
+                    name="description"
+                    value={product.description}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <DescriptionIcon />
+                      </InputAdornment>
+                    }
+                  />
+                  <OutlinedInput
+                    disabled={uploading}
+                    type="number"
+                    placeholder="Stock"
+                    name="stock"
+                    value={product.stock}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <Inventory2Icon />
+                      </InputAdornment>
+                    }
+                  />
+                  <Select
+                    disabled={uploading}
+                    name="category"
+                    displayEmpty
+                    renderValue={(value) =>
+                      value ? (
+                        value
+                      ) : (
+                        <div className="text-gray-400">Category</div>
+                      )
+                    }
+                    value={product.category}
+                    onChange={setValue}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <CategoryIcon />
+                      </InputAdornment>
+                    }
+                  >
+                    {categories.map((category) => (
+                      <MenuItem key={category} value={category}>
+                        {category}
+                      </MenuItem>
+                    ))}
+                  </Select>
+
+                  <label htmlFor="contained-button-file">
+                    <Input
+                      disabled={uploading}
+                      accept="image/*"
+                      id="contained-button-file"
+                      multiple
+                      type="file"
+                      onChange={handleImageChange}
+                    />
+
+                    <Button
+                      disabled={uploading}
+                      fullWidth
+                      variant="outlined"
+                      component="span"
+                    >
+                      add images
+                    </Button>
+                  </label>
+
+                  <h4>Selected images (click to remove)</h4>
+                  <div className="flex px-2 space-x-1 overflow-x-auto h-28">
+                    {product.images &&
+                      product.images.map((image, index) => (
+                        <img
+                          className={`object-cover h-20 ${
+                            uploading ? 'opacity-10' : 'cursor-pointer'
+                          } w-14`}
+                          key={index}
+                          src={image.url}
+                          onClick={() => deleteImage(index)}
+                          alt="Product Preview"
+                        />
+                      ))}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    onClick={handleSubmit}
+                    disabled={uploading}
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                  >
+                    update
+                  </Button>
+                </FormGroup>
+              </form>
+            </div>
+            {uploading && (
+              <div className="fixed bottom-10 left-10">
+                <Fab color="secondary" aria-label="add">
+                  <CircularProgress value={80} />
+                </Fab>
+              </div>
+            )}
+          </div>
+        )}
       </div>
-      {uploading && (
-        <div className="fixed bottom-10 left-10">
-          <Fab color="secondary" aria-label="add">
-            <CircularProgress value={80} />
-          </Fab>
-        </div>
-      )}
-    </>
+    </div>
   );
 }

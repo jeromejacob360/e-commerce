@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack';
 import Loading from '../../helper-components/loading/Loading';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { DataGrid } from '@mui/x-data-grid';
+import Sidebar from './Sidebar';
 
 export default function ReviewsList() {
   const [pId, setPId] = useState('');
@@ -61,10 +62,6 @@ export default function ReviewsList() {
       });
     }
   }, [error, enqueueSnackbar, dispatch, success, reviewDeleteError]);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   const rows = [];
   reviews &&
@@ -140,48 +137,57 @@ export default function ReviewsList() {
   ];
 
   return (
-    <>
-      <PageTitle title="Reviews" />
-      <div className="flex-1">
-        <form className="flex my-10 items-center px-10 justify-center flex-1 md:w-[900px] w-full mx-auto">
-          <TextField
-            sx={{
-              mr: 2,
-            }}
-            size="small"
-            label="Product id"
-            value={pId}
-            onChange={(e) => setPId(e.target.value)}
-            onClick={(e) => e.target.select()}
-          />
+    <div className="flex flex-col md:flex-row">
+      <Sidebar />
+      <div className="flex-1 xl:px-20">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <PageTitle title="Reviews" />
+            <div className="flex-1">
+              <form className="flex my-10 items-center px-10 justify-center flex-1 md:w-[900px] w-full mx-auto">
+                <TextField
+                  sx={{
+                    mr: 2,
+                  }}
+                  size="small"
+                  label="Product id"
+                  value={pId}
+                  onChange={(e) => setPId(e.target.value)}
+                  onClick={(e) => e.target.select()}
+                />
 
-          <Button
-            type="submit"
-            onClick={handleSubmit}
-            variant="contained"
-            color="primary"
-          >
-            Search
-          </Button>
-        </form>
+                <Button
+                  type="submit"
+                  onClick={handleSubmit}
+                  variant="contained"
+                  color="primary"
+                >
+                  Search
+                </Button>
+              </form>
+            </div>
+            {reviews && reviews?.length > 0 && (
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                autoHeight
+                getRowClassName={(params) =>
+                  params.row.rating < 1 ? 'bg-red-400 bg-opacity-10' : ''
+                }
+              />
+            )}
+            {reviews.length === 0 && (
+              <h1 className="text-2xl text-center text-gray-500">
+                There are no reviews for the product yet
+              </h1>
+            )}
+          </div>
+        )}
       </div>
-      {reviews && reviews?.length > 0 && (
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          disableSelectionOnClick
-          autoHeight
-          getRowClassName={(params) =>
-            params.row.rating < 1 ? 'bg-red-400 bg-opacity-10' : ''
-          }
-        />
-      )}
-      {reviews.length === 0 && (
-        <h1 className="text-2xl text-center text-gray-500">
-          There are no reviews for the product yet
-        </h1>
-      )}
-    </>
+    </div>
   );
 }

@@ -10,6 +10,7 @@ import PageTitle from '../../helper-components/PageTitle';
 import { useSnackbar } from 'notistack';
 import { Button } from '@mui/material';
 import { deleteOrder, getAllOrders } from '../../redux/actions/orderActions';
+import Sidebar from './Sidebar';
 
 export default function OrdersList() {
   const dispatch = useDispatch();
@@ -108,20 +109,29 @@ export default function OrdersList() {
     return <Loading />;
   }
   return (
-    <>
-      <PageTitle title="All Orders" />
-      <div className="flex-1">
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          disableSelectionOnClick
-          autoHeight
-          getRowClassName={(params) =>
-            params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
-          }
-        />
+    <div className="flex flex-col md:flex-row">
+      <Sidebar />
+      <div className="flex-1 xl:px-20">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <PageTitle title="All Orders" />
+            <div className="flex-1">
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                autoHeight
+                getRowClassName={(params) =>
+                  params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
+                }
+              />
+            </div>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 }

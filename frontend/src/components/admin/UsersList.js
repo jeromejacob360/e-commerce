@@ -13,6 +13,7 @@ import {
   fetchAllUsers,
   updateUser,
 } from '../../redux/actions/userActions';
+import Sidebar from './Sidebar';
 
 export default function UsersList() {
   const dispatch = useDispatch();
@@ -141,24 +142,30 @@ export default function UsersList() {
     },
   ];
 
-  if (loading) {
-    return <Loading />;
-  }
   return (
-    <>
-      <PageTitle title="All Users" />
-      <div className="flex-1">
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          disableSelectionOnClick
-          autoHeight
-          getRowClassName={(params) =>
-            params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
-          }
-        />
+    <div className="flex flex-col md:flex-row">
+      <Sidebar />
+      <div className="flex-1 xl:px-20">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <PageTitle title="All Users" />
+            <div className="flex-1">
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                autoHeight
+                getRowClassName={(params) =>
+                  params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
+                }
+              />
+            </div>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 }
