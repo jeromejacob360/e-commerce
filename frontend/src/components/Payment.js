@@ -38,7 +38,7 @@ export default function Payment({ history }) {
   const { enqueueSnackbar } = useSnackbar();
 
   // convert image object to string
-  const cartItems = cartItemWithImageObj.map((item) => ({
+  const cartItems = cartItemWithImageObj?.map((item) => ({
     ...item,
     image: item.image.url,
   }));
@@ -83,7 +83,6 @@ export default function Payment({ history }) {
 
   function validateCardNumber(error, complete) {
     if (verifyComplete(error, complete)) {
-      console.log('validateCardNumber');
       setValidated({
         ...validated,
         cardNumber: true,
@@ -92,7 +91,6 @@ export default function Payment({ history }) {
   }
   function validatecardExpiry(error, complete) {
     if (verifyComplete(error, complete)) {
-      console.log('validatecardExpiry');
       setValidated({
         ...validated,
         cardExpiry: true,
@@ -100,7 +98,6 @@ export default function Payment({ history }) {
     }
   }
   function validatecardCvc(error, complete) {
-    console.log('validatecardCvc');
     if (verifyComplete(error, complete)) {
       setValidated({
         ...validated,
@@ -157,6 +154,9 @@ export default function Payment({ history }) {
         };
 
         dispatch(createOrder(order));
+        dispatch({
+          type: 'CLEAR_CART',
+        });
         setDisablePayBtn(false);
         history.push('/success');
       } else {

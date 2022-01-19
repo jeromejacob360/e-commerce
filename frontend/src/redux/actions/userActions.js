@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Login a user
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: 'LOGIN_REQUEST' });
@@ -18,6 +19,7 @@ export const login = (email, password) => async (dispatch) => {
   }
 };
 
+// Logout
 export const logoutUser = () => async (dispatch) => {
   try {
     dispatch({ type: 'LOGOUT_REQUEST' });
@@ -36,6 +38,7 @@ export const logoutUser = () => async (dispatch) => {
   }
 };
 
+// Load user to state
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: 'LOAD_USER_REQUEST' });
@@ -54,6 +57,7 @@ export const loadUser = () => async (dispatch) => {
   }
 };
 
+// New user register
 export const register = (user) => async (dispatch) => {
   try {
     dispatch({ type: 'REGISTER_REQUEST' });
@@ -72,6 +76,7 @@ export const register = (user) => async (dispatch) => {
   }
 };
 
+// Save shipping info
 export const saveShippingInfo = (address) => async (dispatch) => {
   try {
     dispatch({ type: 'SAVE_SHIPPING_INFO_REQUEST' });
@@ -88,4 +93,66 @@ export const saveShippingInfo = (address) => async (dispatch) => {
       payload: error.response.data.message,
     });
   }
+};
+
+// Get all users
+export const fetchAllUsers = () => async (dispatch) => {
+  try {
+    dispatch({ type: 'ALL_USERS_REQUEST' });
+
+    const { data } = await axios.get(`/api/admin/users`);
+
+    dispatch({
+      type: 'ALL_USERS_SUCCESS',
+      payload: data.users,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'ALL_USERS_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Delete a user
+export const deleteUser = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: 'DELETE_USER_REQUEST' });
+
+    const { data } = await axios.delete(`/api/admin/user/` + id);
+
+    dispatch({
+      type: 'DELETE_USER_SUCCESS',
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'DELETE_USER_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Change user role - Admin
+export const updateUser = (id, role) => async (dispatch) => {
+  try {
+    dispatch({ type: 'UPDATE_USER_REQUEST' });
+
+    const { data } = await axios.put(`/api/admin/user/` + id, { role });
+
+    dispatch({
+      type: 'UPDATE_USER_SUCCESS',
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'UPDATE_USER_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Clearing Errors
+export const clearErrors = () => async (dispatch) => {
+  dispatch({ type: 'CLEAR_ERRORS' });
 };

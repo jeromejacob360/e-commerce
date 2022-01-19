@@ -70,7 +70,7 @@ export default function CreateProduct() {
       });
       return;
     }
-    dispatch(createProduct(product));
+    dispatch(createProduct({ ...product, rating: 0 }));
   }
 
   function setValue(e) {
@@ -140,6 +140,19 @@ export default function CreateProduct() {
             />
 
             <OutlinedInput
+              type="number"
+              placeholder="Stock"
+              name="stock"
+              value={product.stock}
+              onChange={setValue}
+              startAdornment={
+                <InputAdornment position="start">
+                  <Inventory2Icon />
+                </InputAdornment>
+              }
+            />
+
+            <OutlinedInput
               type="text"
               placeholder="Description"
               multiline
@@ -149,18 +162,6 @@ export default function CreateProduct() {
               startAdornment={
                 <InputAdornment position="start">
                   <DescriptionIcon />
-                </InputAdornment>
-              }
-            />
-            <OutlinedInput
-              type="number"
-              placeholder="Stock"
-              name="stock"
-              value={product.stock}
-              onChange={setValue}
-              startAdornment={
-                <InputAdornment position="start">
-                  <Inventory2Icon />
                 </InputAdornment>
               }
             />

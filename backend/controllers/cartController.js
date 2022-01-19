@@ -89,6 +89,7 @@ exports.getCart = catchAsyncErrors(async (req, res, next) => {
       message: 'Cart is empty',
       cart: [],
     });
+    return;
   }
 
   res.status(200).json({

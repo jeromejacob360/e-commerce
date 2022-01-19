@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAdminProducts } from '../../redux/actions/productActions';
 import Loading from '../../helper-components/loading/Loading';
 import PageTitle from '../../helper-components/PageTitle';
+import { fetchAllUsers } from '../../redux/actions/userActions';
+import { getAllOrders } from '../../redux/actions/orderActions';
 
 export default function Dashboard() {
   ChartJS.register(
@@ -32,13 +34,22 @@ export default function Dashboard() {
   );
 
   const { loading, products } = useSelector((state) => state.products);
+  const { users } = useSelector((state) => state.allUsers);
   const { orders } = useSelector((state) => state.allOrders);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchAdminProducts());
+    dispatch(fetchAllUsers());
+    dispatch(getAllOrders());
   }, [dispatch]);
+
+  const totalAmount =
+    orders &&
+    orders.reduce((acc, order) => {
+      return acc + order.totalPrice;
+    }, 0);
 
   const outOfStockCount = products.filter(
     (product) => product.stock === 0,
@@ -50,7 +61,7 @@ export default function Dashboard() {
       {
         label: 'TOTAL AMOUNT',
         backgroundColor: ['green'],
-        data: [20, 100],
+        data: [20, totalAmount],
       },
     ],
   };
@@ -75,7 +86,7 @@ export default function Dashboard() {
       <PageTitle title="Admin dashboard" />
       <h4 className="py-2 mt-10 mb-10 text-2xl text-center text-white bg-orange-400 md:py-10">
         <p>Total amount </p>
-        <p>2000</p>
+        <p>{totalAmount}</p>
       </h4>
       <div className="flex flex-col items-center justify-between my-10 md:text-2xl sm:flex-row">
         <Link
@@ -84,7 +95,7 @@ export default function Dashboard() {
         >
           <div className="flex flex-col items-center space-x-2">
             <p>Products </p>
-            <p>{products.length}</p>
+            <p>{products?.length}</p>
           </div>
         </Link>
         <Link
@@ -102,14 +113,14 @@ export default function Dashboard() {
         >
           <div className="flex flex-col items-center space-x-2">
             <p>Users </p>
-            <p>3 </p>
+            <p>{users?.length} </p>
           </div>
         </Link>
       </div>
-      <div className="w-full mx-auto my-10 md:w-3/4">
+      <div className="w-full px-4 mx-auto my-10 md:w-3/4">
         <Line data={LineData} />
       </div>
-      <div className="w-full mx-auto my-10 md:w-3/4">
+      <div className="w-full px-4 mx-auto my-10 sm:px-20 md:w-3/4">
         <Doughnut data={doughnutData} />
       </div>
     </div>

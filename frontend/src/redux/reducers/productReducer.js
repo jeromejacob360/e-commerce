@@ -134,6 +134,67 @@ export const newReviewReducer = (state = { reviews: [] }, action) => {
         loading: false,
         error: action.payload,
       };
+
+    case 'CLEAR_NEW_REVIEW':
+      return {
+        loading: false,
+      };
+
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+// Get all reviews of a product
+export const productReviewsReducer = (state = { reviews: [] }, action) => {
+  switch (action.type) {
+    case 'PRODUCT_REVIEWS_REQUEST':
+      return { loading: true };
+    case 'PRODUCT_REVIEWS_SUCCESS':
+      return {
+        loading: false,
+        ...action.payload,
+      };
+    case 'PRODUCT_REVIEWS_FAILURE':
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+// Delete a review
+export const reviewReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'DELETE_REVIEW_REQUEST':
+      return { loading: true };
+    case 'DELETE_REVIEW_SUCCESS':
+      return {
+        loading: false,
+        ...action.payload,
+      };
+    case 'DELETE_REVIEW_FAILURE':
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    case 'CLEAR_REVIEWS':
+      return {};
+
     case 'CLEAR_ERRORS':
       return {
         ...state,

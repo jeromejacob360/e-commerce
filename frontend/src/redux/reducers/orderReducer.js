@@ -115,6 +115,15 @@ export const orderReducer = (state = {}, action) => {
         loading: false,
         error: action.payload,
       };
+    case 'UPDATE_ORDER_RESET':
+      return {
+        isUpdated: false,
+      };
+
+    case 'DELETE_ORDER_RESET':
+      return {
+        isDeleted: false,
+      };
     case 'CLEAR_ERRORS':
       return {
         ...state,

@@ -26,9 +26,12 @@ export default function OrdersList() {
       enqueueSnackbar('Delete operation failed', { variant: 'error' });
       dispatch(clearErrors());
     }
+
     if (isDeleted) {
-      enqueueSnackbar('Order deleted successfully', { variant: 'success' });
-      dispatch(clearErrors());
+      enqueueSnackbar('Order deleted', { variant: 'success' });
+      dispatch({
+        type: 'DELETE_ORDER_RESET',
+      });
     }
   }, [error, enqueueSnackbar, dispatch, isDeleted]);
 
@@ -107,7 +110,7 @@ export default function OrdersList() {
   return (
     <>
       <PageTitle title="All Orders" />
-      <div className="flex-1 md:px-20">
+      <div className="flex-1">
         <DataGrid
           rows={rows}
           columns={columns}

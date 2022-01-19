@@ -5,7 +5,6 @@ import Loading from './loading/Loading';
 
 export default function ProtectedRoute({ component: Component, ...rest }) {
   const { isAuthenticated, loading } = useSelector((state) => state.user);
-  console.log(`isAuthenticated`, isAuthenticated);
 
   if (loading) {
     return <Loading />;

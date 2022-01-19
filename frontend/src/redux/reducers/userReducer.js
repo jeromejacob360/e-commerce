@@ -78,6 +78,77 @@ export const userReducer = (state = { user: {} }, action) => {
         ...state,
         error: null,
       };
+
+    default:
+      return state;
+  }
+};
+
+export const allUsersReducer = (state = { users: [] }, action) => {
+  switch (action.type) {
+    case 'ALL_USERS_REQUEST':
+      return {
+        loading: true,
+      };
+
+    case 'ALL_USERS_SUCCESS':
+      return {
+        loading: false,
+        users: action.payload,
+      };
+
+    case 'ALL_USERS_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const profileReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case 'UPDATE_USER_REQUEST':
+    case 'DELETE_USER_REQUEST':
+      return {
+        loading: true,
+      };
+
+    case 'UPDATE_USER_SUCCESS':
+    case 'DELETE_USER_SUCCESS':
+      return {
+        loading: false,
+        ...action.payload,
+      };
+
+    case 'UPDATE_USER_FAILURE':
+    case 'DELETE_USER_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case 'RESET_PROFILE_UPDATE':
+    case 'RESET_PROFILE_DELETE':
+      return {
+        loading: false,
+      };
+
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+
     default:
       return state;
   }

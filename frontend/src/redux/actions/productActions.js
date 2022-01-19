@@ -4,7 +4,7 @@ import axios from 'axios';
 export function fetchProducts(
   keyword = '',
   page = 1,
-  price = [0, 25000],
+  price = [0, 50000],
   category,
   rating,
 ) {
@@ -52,6 +52,48 @@ export function fetchProductDetails(id) {
       dispatch({
         type: 'PRODUCT_DETAILS_FAILURE',
         payload: error,
+      });
+    }
+  };
+}
+
+export function fetchProductReviews(id) {
+  return async function (dispatch) {
+    try {
+      dispatch({ type: 'PRODUCT_REVIEWS_REQUEST' });
+
+      const { data } = await axios.get('/api/reviews/?id=' + id);
+
+      dispatch({
+        type: 'PRODUCT_REVIEWS_SUCCESS',
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'PRODUCT_REVIEWS_FAILURE',
+        payload: error.response.data.message,
+      });
+    }
+  };
+}
+
+export function deleteReview(pId, rId) {
+  return async function (dispatch) {
+    try {
+      dispatch({ type: 'DELETE_REVIEW_REQUEST' });
+
+      const { data } = await axios.delete(
+        `/api/reviews/?productId=${pId}&reviewId=${rId}`,
+      );
+
+      dispatch({
+        type: 'DELETE_REVIEW_SUCCESS',
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'DELETE_REVIEW_FAILURE',
+        payload: error.response.data.message,
       });
     }
   };

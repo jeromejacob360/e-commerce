@@ -249,10 +249,9 @@ exports.deleteProductReview = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler('Review not found', 404));
 
   product.reviews = product.reviews.filter(
-    (review) => review._id !== req.query.reviewId,
+    (review) => review._id.toString() !== req.query.reviewId,
   );
   product.numOfReviews = product.numOfReviews - 1;
-  console.log(`numOfReviews`, product.numOfReviews);
 
   // Calculate overall rating
   if (product.numOfReviews === 0) product.rating = 0;

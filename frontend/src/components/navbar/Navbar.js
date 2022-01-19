@@ -22,11 +22,7 @@ const pages = ['Products', 'Pricing', 'Search'];
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [options, setOptions] = useState([
-    { name: 'Orders', function: orders },
-    { name: 'Account', function: account },
-    { name: 'Logout', function: logout },
-  ]);
+  const [options, setOptions] = useState([]);
 
   const { user } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
@@ -51,6 +47,14 @@ const ResponsiveAppBar = () => {
     if (user && user.role === 'admin') {
       setOptions([
         { name: 'Dashboard', function: dashboard },
+        { name: 'Orders', function: orders },
+        { name: 'Account', function: account },
+        { name: 'Logout', function: logout },
+      ]);
+    }
+
+    if (user && user.role === 'user') {
+      setOptions([
         { name: 'Orders', function: orders },
         { name: 'Account', function: account },
         { name: 'Logout', function: logout },

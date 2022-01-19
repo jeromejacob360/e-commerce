@@ -34,9 +34,7 @@ const initialState = {
   images: [],
 };
 
-export default function UpdateProduct({ propsFromRouter }) {
-  const { history, match } = propsFromRouter;
-
+export default function UpdateProduct({ history, match }) {
   const categories = [
     'Laptop',
     'Footwear',

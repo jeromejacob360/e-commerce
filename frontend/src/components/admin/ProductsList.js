@@ -88,9 +88,11 @@ export default function ProductsList() {
       flex: 0.5,
       headerAlign: 'center',
       renderCell: (params) => {
+        console.log(`params.row`, params.row);
+        const rating = params.row.rating;
         return (
           <div className="flex justify-center flex-1">
-            <span>{params.value}</span>
+            <span>{rating ? rating : 'Nil'}</span>
           </div>
         );
       },
@@ -121,7 +123,7 @@ export default function ProductsList() {
       field: 'actions',
       flex: 0.3,
       headerName: 'Actions',
-      minWidth: 70,
+      minWidth: 120,
       type: 'text',
       sortable: false,
       renderCell: (params) => {
@@ -145,7 +147,7 @@ export default function ProductsList() {
   return (
     <>
       <PageTitle title="All Products" />
-      <div className="flex-1 md:px-20">
+      <div className="flex-1">
         <DataGrid
           rows={rows}
           columns={columns}

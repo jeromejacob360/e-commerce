@@ -45,7 +45,7 @@ export default function Products({ match }) {
   const md = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [price, setPrice] = useState([100, 25000]);
+  const [price, setPrice] = useState([0, 50000]);
   const [category, setCategory] = useState('');
   const [rating, setRating] = useState(0);
 
@@ -107,7 +107,7 @@ export default function Products({ match }) {
                   onChange={(event, value) => setPrice(value)}
                   valueLabelDisplay="auto"
                   min={0}
-                  max={25000}
+                  max={50000}
                   step={500}
                 />
               </Box>

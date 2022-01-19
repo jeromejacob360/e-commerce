@@ -27,7 +27,9 @@ class ApiFeatures {
 
     // Filter for price and rating
     let queryStr = JSON.stringify(queryObj);
+    console.log(`queryStr`, queryStr);
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
+    console.log(`queryStr`, queryStr);
 
     this.query = this.query.find(JSON.parse(queryStr));
 

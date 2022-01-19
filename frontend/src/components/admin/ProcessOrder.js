@@ -6,25 +6,24 @@ import { useEffect, useState } from 'react';
 import { getOrderDetails, updateOrder } from '../../redux/actions/orderActions';
 import { useSnackbar } from 'notistack';
 
-export default function ProcessOrder({ propsFromRouter }) {
-  const { match } = propsFromRouter;
+export default function ProcessOrder({ match }) {
   const { user } = useSelector((state) => state.user);
   const shippingInfo = user.shippingInfo || {};
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { order } = useSelector((state) => state.orderDetails);
-  const { isUpdated, isDeleted } = useSelector((state) => state.order);
+  const { isUpdated } = useSelector((state) => state.order);
   const [status, setStatus] = useState('');
 
   useEffect(() => {
     dispatch(getOrderDetails(match.params.id));
     if (isUpdated) {
       enqueueSnackbar('Order status updated', { variant: 'success' });
+      dispatch({
+        type: 'UPDATE_ORDER_RESET',
+      });
     }
-    if (isDeleted) {
-      enqueueSnackbar('Order deleted', { variant: 'success' });
-    }
-  }, [dispatch, match.params.id, isUpdated, enqueueSnackbar, isDeleted]);
+  }, [dispatch, match.params.id, isUpdated, enqueueSnackbar]);
 
   useEffect(() => {
     if (order?.orderStatus) {

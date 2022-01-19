@@ -76,6 +76,9 @@ export default function ProductDetails({ match }) {
       enqueueSnackbar('Thanks for your review', {
         variant: 'success',
       });
+      dispatch({
+        type: 'CLEAR_NEW_REVIEW',
+      });
     }
   }, [reviewError, dispatch, enqueueSnackbar, success, cartError]);
 
@@ -168,7 +171,7 @@ export default function ProductDetails({ match }) {
           </div>
           <br />
           <div className="flex flex-col items-center justify-between mb-4 sm:flex-row sm:space-x-4">
-            <div className="inline-flex items-center py-1 my-4 border border-yellow-600 rounded-md px-2">
+            <div className="inline-flex items-center px-2 py-1 my-4 border border-yellow-600 rounded-md">
               <Button
                 disabled={!product.stock}
                 onClick={decreaseQuantity}
