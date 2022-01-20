@@ -44,10 +44,10 @@ export default function ProcessOrder({ match }) {
   const address = `${shippingInfo.area}, ${shippingInfo.street}, ${shippingInfo.city}, ${shippingInfo.district}, ${shippingInfo.state}`;
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col">
       <PageTitle title="Process order" />
       <div className="flex-1 xl:px-20">
-        <div>
+        <div className="flex flex-col sm:flex-row 2xl:px-10">
           <Sidebar />
           <div className="flex flex-col md:flex-row ">
             {order && (

@@ -29,10 +29,9 @@ export default function ProductDetails({ match }) {
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
-  const {
-    orders,
-    //  loading: myOrdersLoading
-  } = useSelector((state) => state.myOrders);
+  const { orders, loading: myOrdersLoading } = useSelector(
+    (state) => state.myOrders,
+  );
   const {
     loading: reviewLoading,
     success,
@@ -137,8 +136,16 @@ export default function ProductDetails({ match }) {
         });
       if (hasOrdered > 0) return;
     });
-    console.log(`hasOrdered`, hasOrdered);
-    setRatingDialogOpen(true);
+    if (hasOrdered) {
+      setRatingDialogOpen(true);
+    } else {
+      enqueueSnackbar(
+        'You cannot review untill this product gets delivered to you',
+        {
+          variant: 'error',
+        },
+      );
+    }
   }
 
   if (loading || reviewLoading) {
