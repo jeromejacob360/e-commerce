@@ -53,6 +53,9 @@ const productSchema = new Schema({
         type: String,
         required: [true, 'Review comment is required'],
       },
+      avatar: {
+        type: String,
+      },
     },
   ],
   createdBy: {

@@ -58,14 +58,14 @@ exports.removeFromCart = catchAsyncErrors(async (req, res, next) => {
   const { productId } = req.body;
   const cart = await Cart.findOne({ userId: req.user.id });
   if (!cart) {
-    return next(new ErrorHandler(404, 'Cart not found'));
+    return next(new ErrorHandler('Cart not found', 404));
   }
 
   const product = cart.items.find(
     (item) => item.productId.toString() === productId,
   );
   if (!product) {
-    return next(new ErrorHandler(404, 'Product not found'));
+    return next(new ErrorHandler('Product not found', 404));
   }
 
   cart.items = cart.items.filter(

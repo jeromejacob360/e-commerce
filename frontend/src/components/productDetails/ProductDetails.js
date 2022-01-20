@@ -21,17 +21,17 @@ export default function ProductDetails({ match }) {
   const [quantity, setQuantity] = useState(1);
   const [addedQuantity, setAddedQuantity] = useState(0);
   const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
+  const [reviewed, setReviewed] = useState(false);
 
   const watching = useRef(false);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
+  const { user } = useSelector((state) => state.user);
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
-  const { orders, loading: myOrdersLoading } = useSelector(
-    (state) => state.myOrders,
-  );
+  const { orders } = useSelector((state) => state.myOrders);
   const {
     loading: reviewLoading,
     success,
@@ -45,16 +45,20 @@ export default function ProductDetails({ match }) {
   } = useSelector((state) => state.cart);
 
   useEffect(() => {
-    dispatch(getMyOrders());
-  }, [dispatch]);
+    product?.reviews.forEach((review) => {
+      if (review?.userId === user?._id) {
+        setReviewed(true);
+      }
+    });
+  }, [product?.reviews, user?._id]);
 
   useEffect(() => {
+    dispatch(getMyOrders());
     dispatch(fetchProductDetails(match.params.id));
     if (error) {
       dispatch(clearErrors());
       enqueueSnackbar(error, {
         variant: 'error',
-        autoHideDuration: 3000,
       });
       setTimeout(() => {
         window.history.back();
@@ -67,12 +71,11 @@ export default function ProductDetails({ match }) {
       dispatch(clearCartErrors());
       enqueueSnackbar(cartError, {
         variant: 'error',
-        autoHideDuration: 3000,
       });
     }
     if (reviewError) {
       dispatch(clearCartErrors());
-      enqueueSnackbar(reviewError.message, {
+      enqueueSnackbar(reviewError, {
         variant: 'error',
       });
     }
@@ -106,7 +109,6 @@ export default function ProductDetails({ match }) {
     if (completed && watching.current) {
       enqueueSnackbar('Item added to cart', {
         variant: 'success',
-        autoHideDuration: 3000,
       });
       watching.current = false;
     }
@@ -140,7 +142,7 @@ export default function ProductDetails({ match }) {
       setRatingDialogOpen(true);
     } else {
       enqueueSnackbar(
-        'You cannot review untill this product gets delivered to you',
+        'Buy this product to add a review. If ordered, please wait until delivery',
         {
           variant: 'error',
         },
@@ -174,7 +176,7 @@ export default function ProductDetails({ match }) {
             {product.description}
           </div>
           <div className="flex items-baseline space-x-4">
-            <h5 className="text-3xl">${product.price}</h5>
+            <h5 className="text-3xl">₹{product.price}</h5>
             <span>
               {product.stock > 0 ? (
                 <span className="text-lg font-bold text-green-500">
@@ -234,11 +236,13 @@ export default function ProductDetails({ match }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-center pt-6">
-        <Button variant="outlined" onClick={handleSubmitReviewClick}>
-          Submit a review
-        </Button>
-      </div>
+      {!reviewed && (
+        <div className="flex justify-center pt-6">
+          <Button variant="outlined" onClick={handleSubmitReviewClick}>
+            Submit a review
+          </Button>
+        </div>
+      )}
 
       {product.reviews.length > 0 ? (
         <>

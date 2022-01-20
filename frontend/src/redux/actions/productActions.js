@@ -31,7 +31,7 @@ export function fetchProducts(
     } catch (error) {
       dispatch({
         type: 'ALL_PRODUCT_FAILURE',
-        payload: error,
+        payload: error.response.data.message,
       });
     }
   };
@@ -51,7 +51,7 @@ export function fetchProductDetails(id) {
     } catch (error) {
       dispatch({
         type: 'PRODUCT_DETAILS_FAILURE',
-        payload: error,
+        payload: error.response.data.message,
       });
     }
   };
@@ -112,7 +112,7 @@ export function fetchAdminProducts() {
     } catch (error) {
       dispatch({
         type: 'ADMIN_PRODUCTS_FAILURE',
-        payload: error,
+        payload: error.response.data.message,
       });
     }
   };
@@ -132,7 +132,7 @@ export function createProduct(product) {
     } catch (error) {
       dispatch({
         type: 'NEW_PRODUCT_FAILURE',
-        payload: error,
+        payload: error.response.data.message,
       });
     }
     dispatch({ type: 'CLEAR_PRODUCT' });
@@ -156,7 +156,7 @@ export function updateProduct(product) {
     } catch (error) {
       dispatch({
         type: 'UPDATE_PRODUCT_FAILURE',
-        payload: error,
+        payload: error.response.data.message,
       });
     }
     dispatch({ type: 'CLEAR_PRODUCT' });
@@ -177,7 +177,7 @@ export function deleteProduct(productId) {
     } catch (error) {
       dispatch({
         type: 'DELETE_PRODUCT_FAILURE',
-        payload: error,
+        payload: error.response.data.message,
       });
     }
     dispatch({ type: 'CLEAR_PRODUCT' });
@@ -185,29 +185,31 @@ export function deleteProduct(productId) {
 }
 
 // Add a review
-export const addReview = (productId, rating, review) => async (dispatch) => {
-  dispatch({
-    type: 'NEW_REVIEW_REQUEST',
-  });
-
-  try {
-    const { data } = await axios.put('/api/review', {
-      productId,
-      rating,
-      reviewMessage: review,
+export const addReview =
+  (productId, rating, review, avatar) => async (dispatch) => {
+    dispatch({
+      type: 'NEW_REVIEW_REQUEST',
     });
 
-    dispatch({
-      type: 'NEW_REVIEW_SUCCESS',
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: 'NEW_REVIEW_FAILURE',
-      payload: error,
-    });
-  }
-};
+    try {
+      const { data } = await axios.put('/api/review', {
+        productId,
+        rating,
+        reviewMessage: review,
+        avatar,
+      });
+
+      dispatch({
+        type: 'NEW_REVIEW_SUCCESS',
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'NEW_REVIEW_FAILURE',
+        payload: error.response.data.message,
+      });
+    }
+  };
 
 // Clear errors
 export const clearErrors = () => (dispatch) => {

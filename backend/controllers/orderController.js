@@ -43,7 +43,13 @@ exports.getOrder = catchAsyncErrors(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
 
   if (!order) {
-    return next(new ErrorHandler(404, 'Order not found'));
+    console.log('Order not found');
+    return next(new ErrorHandler('Order not found', 404));
+  }
+
+  if (order.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    console.log('You can view your order only');
+    return next(new ErrorHandler('You can view your order only', 404));
   }
 
   res.status(200).json({
@@ -58,7 +64,7 @@ exports.getUserOrders = catchAsyncErrors(async (req, res, next) => {
   const orders = await Order.find({ user: req.user.id }).populate('user');
 
   if (!orders) {
-    return next(new ErrorHandler(404, 'Orders not found'));
+    return next(new ErrorHandler('Orders not found', 404));
   }
 
   res.status(200).json({
@@ -73,7 +79,7 @@ exports.getAllOrders = catchAsyncErrors(async (req, res, next) => {
   const orders = await Order.find().populate('user', '-role');
 
   if (!orders) {
-    return next(new ErrorHandler(404, 'Orders not found'));
+    return next(new ErrorHandler('Orders not found', 404));
   }
 
   // Find total order amount
@@ -93,10 +99,10 @@ exports.getAllOrders = catchAsyncErrors(async (req, res, next) => {
 exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
   if (!order) {
-    return next(new ErrorHandler(404, 'Order not found'));
+    return next(new ErrorHandler('Order not found', 404));
   }
   if (order.status === 'Delivered') {
-    return next(new ErrorHandler(400, 'Order already delivered'));
+    return next(new ErrorHandler('Order already delivered', 400));
   }
 
   // Update stock
@@ -128,7 +134,7 @@ async function updateStock(id, quantity) {
 exports.deleteOrder = catchAsyncErrors(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
   if (!order) {
-    return next(new ErrorHandler(404, 'Order not found'));
+    return next(new ErrorHandler('Order not found', 404));
   }
 
   await order.remove();

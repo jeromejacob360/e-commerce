@@ -160,13 +160,14 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
 // Add a product review
 exports.addProductReview = catchAsyncErrors(async (req, res, next) => {
-  const { productId, rating, reviewMessage } = req.body;
+  const { productId, rating, reviewMessage, avatar } = req.body;
 
   const review = {
     userId: req.user.id,
     name: req.user.name,
     rating: rating * 1,
     reviewMessage,
+    avatar,
   };
 
   const product = await Product.findById(productId);

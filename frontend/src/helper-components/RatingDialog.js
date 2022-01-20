@@ -7,11 +7,18 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Rating } from '@mui/material';
 import { addReview } from '../redux/actions/productActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function RatingDialog({ open = false, setOpen, productId }) {
-  const [rating, setRating] = React.useState(5);
-  const [review, setReview] = React.useState('');
+export default function RatingDialog({
+  open = false,
+  setOpen,
+  productId,
+  existingReview = { rating: 5, reviewMessage: '' },
+}) {
+  const [rating, setRating] = React.useState(existingReview.rating);
+  const [review, setReview] = React.useState(existingReview.reviewMessage);
+
+  const { user } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -22,7 +29,7 @@ export default function RatingDialog({ open = false, setOpen, productId }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setOpen(false);
-    dispatch(addReview(productId, rating, review));
+    dispatch(addReview(productId, rating, review, user?.avatar?.url));
   };
 
   return (

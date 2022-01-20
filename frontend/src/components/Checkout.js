@@ -44,17 +44,14 @@ export default function Checkout({ history }) {
     ) {
       enqueueSnackbar('Please fill all the fields', {
         variant: 'error',
-        autoHideDuration: 3000,
       });
     } else if (address.mobile.length !== 10) {
       enqueueSnackbar('Phone number should be 10 digits long', {
         variant: 'error',
-        autoHideDuration: 3000,
       });
     } else if (address.pinCode.length !== 6) {
       enqueueSnackbar('Please enter valid pin code', {
         variant: 'error',
-        autoHideDuration: 3000,
       });
     } else {
       dispatch(saveShippingInfo(address));

@@ -12,8 +12,7 @@ import { SnackbarProvider } from 'notistack';
 
 const options = {
   position: positions.BOTTOM_LEFT,
-  timeout: 5000,
-  offset: '30px',
+  autoHideDuration: 2000,
   transition: transitions.SCALE,
 };
 

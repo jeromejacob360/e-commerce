@@ -32,7 +32,6 @@ export default function LoginSignup({ history }) {
     if (error) {
       enqueueSnackbar(error, {
         variant: 'error',
-        autoHideDuration: 3000,
         action,
       });
     }

@@ -23,6 +23,7 @@ module.exports = (err, req, res, next) => {
   }
 
   if (err instanceof ErrorHandler) {
+    console.log(`errrrrrrrrrrr`, err);
     res.status(err.statusCode).json({
       name: err.name,
       type: 'SYNC ERROR',

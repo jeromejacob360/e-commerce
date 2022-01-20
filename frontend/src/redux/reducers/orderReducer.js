@@ -148,7 +148,10 @@ export const orderReducer = (state = {}, action) => {
 };
 
 // get order details
-export const orderDetailsReducer = (state = { order: {} }, action) => {
+export const orderDetailsReducer = (
+  state = { order: {}, error: false, loading: false },
+  action,
+) => {
   switch (action.type) {
     case 'ORDER_DETAILS_REQUEST':
       return {
@@ -164,6 +167,7 @@ export const orderDetailsReducer = (state = { order: {} }, action) => {
         message,
       };
     case 'ORDER_DETAILS_FAILURE':
+      console.log(`action.payload`, action);
       return {
         ...state,
         loading: false,
@@ -176,7 +180,7 @@ export const orderDetailsReducer = (state = { order: {} }, action) => {
       };
 
     case 'CLEAR_STATE':
-      return { order: {} };
+      return { order: {}, error: false, loading: false };
     default:
       return state;
   }
