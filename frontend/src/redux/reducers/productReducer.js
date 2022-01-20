@@ -23,6 +23,9 @@ export const productsReducer = (state = { products: [] }, action) => {
         ...state,
         error: null,
       };
+
+    case 'CLEAR_STATE':
+      return { products: [] };
     default:
       return state;
   }
@@ -115,6 +118,8 @@ export const detailsReducer = (state = { products: [] }, action) => {
         ...state,
         error: null,
       };
+    case 'CLEAR_STATE':
+      return { products: [] };
     default:
       return state;
   }
@@ -145,6 +150,8 @@ export const newReviewReducer = (state = { reviews: [] }, action) => {
         ...state,
         error: null,
       };
+    case 'CLEAR_STATE':
+      return { reviews: [] };
     default:
       return state;
   }
@@ -171,6 +178,8 @@ export const productReviewsReducer = (state = { reviews: [] }, action) => {
         ...state,
         error: null,
       };
+    case 'CLEAR_STATE':
+      return { reviews: [] };
     default:
       return state;
   }
@@ -200,6 +209,8 @@ export const reviewReducer = (state = {}, action) => {
         ...state,
         error: null,
       };
+    case 'CLEAR_STATE':
+      return {};
     default:
       return state;
   }

@@ -29,6 +29,9 @@ export const logoutUser = () => async (dispatch) => {
     dispatch({
       type: 'LOGOUT_SUCCESS',
     });
+    dispatch({
+      type: 'CLEAR_STATE',
+    });
   } catch (error) {
     dispatch({
       type: 'LOGOUT_FAILURE',

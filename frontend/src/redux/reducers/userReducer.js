@@ -79,6 +79,9 @@ export const userReducer = (state = { user: {} }, action) => {
         error: null,
       };
 
+    case 'CLEAR_STATE':
+      return { user: {} };
+
     default:
       return state;
   }
@@ -108,7 +111,8 @@ export const allUsersReducer = (state = { users: [] }, action) => {
         ...state,
         error: null,
       };
-
+    case 'CLEAR_STATE':
+      return { users: [] };
     default:
       return state;
   }
@@ -148,6 +152,8 @@ export const profileReducer = (state = { user: {} }, action) => {
         ...state,
         error: null,
       };
+    case 'CLEAR_STATE':
+      return { user: {} };
 
     default:
       return state;

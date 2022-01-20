@@ -23,6 +23,9 @@ export const newOrderReducer = (state = {}, action) => {
         ...state,
         error: null,
       };
+    case 'CLEAR_STATE':
+      return {};
+
     default:
       return state;
   }
@@ -55,6 +58,9 @@ export const myOrdersReducer = (state = { orders: [] }, action) => {
         ...state,
         error: null,
       };
+
+    case 'CLEAR_STATE':
+      return { orders: [] };
     default:
       return state;
   }
@@ -85,6 +91,9 @@ export const allOrdersReducer = (state = {}, action) => {
         error: null,
         success: false,
       };
+
+    case 'CLEAR_STATE':
+      return {};
     default:
       return state;
   }
@@ -130,6 +139,9 @@ export const orderReducer = (state = {}, action) => {
         error: null,
         success: false,
       };
+
+    case 'CLEAR_STATE':
+      return {};
     default:
       return state;
   }
@@ -162,6 +174,9 @@ export const orderDetailsReducer = (state = { order: {} }, action) => {
         ...state,
         error: null,
       };
+
+    case 'CLEAR_STATE':
+      return { order: {} };
     default:
       return state;
   }
