@@ -2,7 +2,8 @@
   "name": "e-commerce",
   "version": "1.0.0",
   "engines": {
-    "node": "14.x"
+    "node": "14.x",
+    "npm": "8.x"
   },
   "description": "**For Backend** - `cd backend npm install`",
   "main": "backend/server.js",
