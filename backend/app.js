@@ -6,7 +6,7 @@ const path = require('path');
 
 // In heroku, we will set NODE_ENV
 if (process.env.NODE_ENV !== 'PRODUCTION') {
-  require('dotenv').config({ path: '../backend/config/config.env' });
+  require('dotenv').config({ path: './backend/config/config.env' });
 }
 
 const errorMiddleware = require('./middlewares/error');
