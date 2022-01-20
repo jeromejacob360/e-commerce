@@ -6,15 +6,19 @@ import { useEffect, useState } from 'react';
 import { getOrderDetails, updateOrder } from '../../redux/actions/orderActions';
 import { useSnackbar } from 'notistack';
 import Sidebar from './Sidebar';
+import { Link } from 'react-router-dom';
 
 export default function ProcessOrder({ match }) {
-  const { user } = useSelector((state) => state.user);
-  const shippingInfo = user.shippingInfo || {};
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
+  const [status, setStatus] = useState('');
+
+  const { user } = useSelector((state) => state.user);
   const { order } = useSelector((state) => state.orderDetails);
   const { isUpdated } = useSelector((state) => state.order);
-  const [status, setStatus] = useState('');
+
+  const shippingInfo = user.shippingInfo || {};
 
   useEffect(() => {
     dispatch(getOrderDetails(match.params.id));
@@ -41,13 +45,13 @@ export default function ProcessOrder({ match }) {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <Sidebar />
+      <PageTitle title="Process order" />
       <div className="flex-1 xl:px-20">
         <div>
-          <PageTitle title="Process order" />
+          <Sidebar />
           <div className="flex flex-col md:flex-row ">
             {order && (
-              <div className="xl:px-40 px-10 mt-10 flex-1 md:grid md:grid-cols-[2fr_1fr]">
+              <div className="xl:px-40 sm:px-10 px-4 mt-10 flex-1 md:grid md:grid-cols-[2fr_1fr]">
                 <div className="md:mr-10 SHIPPING">
                   <div className="px-4 ADDRESS">
                     <h3 className="px-10 pb-2 mb-4 text-xl text-center border-b">
@@ -73,40 +77,77 @@ export default function ProcessOrder({ match }) {
                     </div>
                   </div>
                   <div>
-                    <div className="flex flex-col mt-3 text-xl">
-                      <div className="flex my-2">
-                        <h4>Payment status:&nbsp; </h4>
-                        <p
-                          className={
-                            order.paymentInfo &&
+                    <div>
+                      <div className="flex flex-col mt-3 text-xl">
+                        <div className="flex my-2">
+                          <h4>Payment status:&nbsp; </h4>
+                          <p
+                            className={
+                              order.paymentInfo &&
+                              order.paymentInfo.status === 'succeeded'
+                                ? 'text-green-700'
+                                : 'text-red-700'
+                            }
+                          >
+                            {order.paymentInfo &&
                             order.paymentInfo.status === 'succeeded'
-                              ? 'text-green-700'
-                              : 'text-red-700'
-                          }
-                        >
-                          {order.paymentInfo &&
-                          order.paymentInfo.status === 'succeeded'
-                            ? 'PAID,'
-                            : 'NOT PAID,'}
-                        </p>
+                              ? 'PAID,'
+                              : 'NOT PAID,'}
+                          </p>
+                        </div>
+                        <div className="flex">
+                          <h4>Order status:&nbsp; </h4>
+                          <p
+                            className={`uppercase ${
+                              order.orderStatus &&
+                              order.orderStatus === 'Delivered'
+                                ? 'text-green-700'
+                                : 'text-red-700'
+                            }`}
+                          >
+                            {order.orderStatus && order.orderStatus}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex">
-                        <h4>Order status:&nbsp; </h4>
-                        <p
-                          className={`uppercase ${
-                            order.orderStatus &&
-                            order.orderStatus === 'Delivered'
-                              ? 'text-green-700'
-                              : 'text-red-700'
-                          }`}
-                        >
-                          {order.orderStatus && order.orderStatus}
-                        </p>
+                    </div>
+                    <div className="CART">
+                      <h4 className="pb-2 my-10 text-xl text-center border-b">
+                        Order Items
+                      </h4>
+                      {order?.orderItems?.map((item) => {
+                        return (
+                          <div
+                            key={item.productId}
+                            className="flex items-center justify-between mb-4"
+                          >
+                            <Link to={`/product/${item.productId}`}>
+                              <img
+                                src={item.image}
+                                className="object-cover w-20 mr-2 h-28"
+                                alt=""
+                              />
+                            </Link>
+                            <span>{item.name}</span>
+                            <div className="space-x-2">
+                              <span>{item.quantity}</span>
+                              <span>x</span>
+                              <span>₹{item.price}</span>
+                              <span>=</span>
+                              <span className="text-base">
+                                ₹{item.price * item.quantity}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      <div className="py-3 text-right border-t border-b">
+                        Total:&nbsp;₹{order.itemsPrice}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="px-10 mb-10 PAYMENT">
+
+                <div className="mb-10 sm:px-10 PAYMENT">
                   <h4 className="pb-2 mb-4 text-xl text-center border-b">
                     Order Summary
                   </h4>
@@ -127,10 +168,11 @@ export default function ProcessOrder({ match }) {
                     <span>₹{order.totalPrice}</span>
                   </div>
                   {order.orderStatus !== 'Delivered' && (
-                    <>
+                    <div className="flex flex-col items-center">
                       <Select
+                        value={status}
                         onChange={(e) => setStatus(e.target.value.toString())}
-                        sx={{ my: 10, width: '400px' }}
+                        sx={{ my: 10, width: '300px' }}
                         name="category"
                         displayEmpty
                         renderValue={() => <div>{status}</div>}
@@ -158,7 +200,7 @@ export default function ProcessOrder({ match }) {
                       >
                         Update
                       </Button>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>

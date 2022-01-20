@@ -15,6 +15,7 @@ import { useSnackbar } from 'notistack';
 import Metadata from '../../helper-components/metadata';
 import { addToCart, clearCartErrors } from '../../redux/actions/cartActions';
 import RatingDialog from '../../helper-components/RatingDialog';
+import { getMyOrders } from '../../redux/actions/orderActions';
 
 export default function ProductDetails({ match }) {
   const [quantity, setQuantity] = useState(1);
@@ -22,17 +23,21 @@ export default function ProductDetails({ match }) {
   const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
 
   const watching = useRef(false);
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
-
+  const {
+    orders,
+    //  loading: myOrdersLoading
+  } = useSelector((state) => state.myOrders);
   const {
     loading: reviewLoading,
     success,
     error: reviewError,
   } = useSelector((state) => state.newReview);
-
   const {
     cartItems,
     error: cartError,
@@ -40,9 +45,9 @@ export default function ProductDetails({ match }) {
     completed,
   } = useSelector((state) => state.cart);
 
-  const { enqueueSnackbar } = useSnackbar();
-
-  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getMyOrders());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchProductDetails(match.params.id));
@@ -118,6 +123,22 @@ export default function ProductDetails({ match }) {
 
   async function handleAddToCart(quantity) {
     dispatch(addToCart(product._id, quantity));
+  }
+
+  function handleSubmitReviewClick() {
+    // Find if the user has ordered the product
+    let hasOrdered = 0;
+    orders.forEach((order) => {
+      if (order.orderStatus === 'Delivered')
+        order.orderItems.forEach((item) => {
+          if (item.productId === product._id) {
+            return hasOrdered++;
+          }
+        });
+      if (hasOrdered > 0) return;
+    });
+    console.log(`hasOrdered`, hasOrdered);
+    setRatingDialogOpen(true);
   }
 
   if (loading || reviewLoading) {
@@ -207,7 +228,7 @@ export default function ProductDetails({ match }) {
         </div>
       </div>
       <div className="flex justify-center pt-6">
-        <Button variant="outlined" onClick={() => setRatingDialogOpen(true)}>
+        <Button variant="outlined" onClick={handleSubmitReviewClick}>
           Submit a review
         </Button>
       </div>

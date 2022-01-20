@@ -104,14 +104,14 @@ export default function CreateProduct() {
   });
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <div className="flex-1 xl:px-20">
+    <div className="flex flex-col">
+      <PageTitle title="Create product" />
+      <div className="flex flex-col sm:flex-row 2xl:px-10">
+        <Sidebar />
         {loading ? (
           <Loading />
         ) : (
-          <div>
-            <PageTitle title="Create product" />
+          <div className="flex-1">
             <div className="flex flex-col md:flex-row">
               <form className="flex justify-center flex-1 w-96">
                 <FormGroup

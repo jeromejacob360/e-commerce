@@ -53,7 +53,19 @@ export default function OrdersList() {
     });
 
   const columns = [
-    { field: 'id', headerName: 'Order ID', minWidth: 200, flex: 1 },
+    {
+      field: 'id',
+      headerName: 'Order ID',
+      minWidth: 200,
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <div className="flex items-center justify-between flex-1 px-2 text-gray-500">
+            <Link to={`/admin/order/${params.row.id}`}>{params.row.id}</Link>
+          </div>
+        );
+      },
+    },
     { field: 'name', headerName: 'Items', minWidth: 200, flex: 1 },
 
     {
@@ -106,14 +118,14 @@ export default function OrdersList() {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <div className="flex-1 xl:px-20">
+    <div className="flex flex-col">
+      <PageTitle title="All Orders" />
+      <div className="flex flex-col sm:flex-row 2xl:px-10">
+        <Sidebar />
         {loading ? (
           <Loading />
         ) : (
-          <div>
-            <PageTitle title="All Orders" />
+          <div className="flex-1">
             <div className="flex-1">
               <DataGrid
                 rows={rows}

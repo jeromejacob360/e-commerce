@@ -1,7 +1,7 @@
 import './App.css';
 import Navbar from './components/navbar/Navbar';
 import Home from './components/home/Home';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import ProductDetails from './components/productDetails/ProductDetails';
 import Products from './components/products/products';
@@ -74,6 +74,11 @@ function App() {
             <Route exact path="/products" component={Products} />
             <Route exact path="/products/:keyword" component={Products} />
             <Route exact path="/product/:id" component={ProductDetails} />
+            <ProtectedRoute
+              exact
+              path="/admin/order/:id"
+              component={ProcessOrder}
+            />
             <ProtectedRoute exact path="/cart" component={Cart} />
             <ProtectedRoute exact path="/account" component={Profile} />
             <ProtectedRoute
@@ -115,11 +120,6 @@ function App() {
                 component={ReviewsList}
               />
             </ErrorBoundary>
-            <ProtectedRoute
-              exact
-              path="/admin/order/:id"
-              component={ProcessOrder}
-            />
             <Route
               component={
                 window.location.pathname === '/payment' ? null : FourOFour

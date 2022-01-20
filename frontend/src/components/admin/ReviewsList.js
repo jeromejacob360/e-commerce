@@ -135,14 +135,14 @@ export default function ReviewsList() {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <div className="flex-1 xl:px-20">
+    <div className="flex flex-col">
+      <PageTitle title="Reviews" />
+      <div className="flex flex-col sm:flex-row 2xl:px-10">
+        <Sidebar />
         {loading ? (
           <Loading />
         ) : (
-          <div>
-            <PageTitle title="Reviews" />
+          <div className="flex-1">
             <div className="flex-1">
               <form className="flex my-10 items-center px-10 justify-center flex-1 md:w-[900px] w-full mx-auto">
                 <TextField
@@ -179,7 +179,7 @@ export default function ReviewsList() {
               />
             )}
             {reviews.length === 0 && (
-              <h1 className="text-2xl text-center text-gray-500">
+              <h1 className="text-xl text-center text-gray-500 sm:text-2xl">
                 There are no reviews for the product yet
               </h1>
             )}

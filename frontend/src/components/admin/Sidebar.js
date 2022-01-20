@@ -5,10 +5,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 export default function Sidebar() {
   return (
     <div>
-      <div className="hidden mt-20 sm:block">
+      <div className="hidden mt-4 mr-10 sm:block">
         <SidebarComponent />
       </div>
-      <div className="block mb-4 sm:hidden">
+      <div className="block my-6 sm:hidden">
         <Accordion>
           <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
             <div>Menu</div>

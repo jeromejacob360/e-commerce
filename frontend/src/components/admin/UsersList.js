@@ -143,14 +143,14 @@ export default function UsersList() {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <div className="flex-1 xl:px-20">
+    <div className="flex flex-col">
+      <PageTitle title="All Users" />
+      <div className="flex flex-col sm:flex-row 2xl:px-10">
+        <Sidebar />
         {loading ? (
           <Loading />
         ) : (
-          <div>
-            <PageTitle title="All Users" />
+          <div className="flex-1">
             <div className="flex-1">
               <DataGrid
                 rows={rows}

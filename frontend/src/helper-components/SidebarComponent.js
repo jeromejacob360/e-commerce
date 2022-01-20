@@ -1,41 +1,32 @@
-import { TreeView, TreeItem } from '@material-ui/lab';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ReviewsIcon from '@mui/icons-material/Reviews';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import PeopleIcon from '@mui/icons-material/People';
-import DensitySmallIcon from '@mui/icons-material/DensitySmall';
-import AddIcon from '@mui/icons-material/Add';
+import RedeemIcon from '@mui/icons-material/Redeem';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 export default function SidebarComponent() {
   return (
     <>
-      <div className="flex flex-col items-center sm:items-start pl-4 space-y-8">
+      <div className="flex flex-col items-start pl-4 space-y-8">
         <Link to="/admin/dashboard">
           <p className="flex">
             <DashboardIcon /> <span className="ml-2">Dashboard</span>
           </p>
         </Link>
-        <TreeView
-          aria-label="Admin dashboard sidebar"
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-          sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-        >
-          <TreeItem nodeId="1" label="Products">
-            <div className="my-4">
-              <Link to="/admin/products">
-                <TreeItem nodeId="2" label="All" icon={<DensitySmallIcon />} />
-              </Link>
-            </div>
-
-            <Link to="/admin/product">
-              <TreeItem nodeId="3" label="Create" icon={<AddIcon />} />
-            </Link>
-          </TreeItem>
-        </TreeView>
+        <Link to="/admin/products">
+          <p className="flex items-center space-x-2">
+            <RedeemIcon />
+            <span>All products</span>
+          </p>
+        </Link>
+        <Link to="/admin/product">
+          <p className="flex items-center space-x-2">
+            <AddBoxIcon />
+            <span>Create product</span>
+          </p>
+        </Link>
         <Link to="/admin/orders">
           <p className="flex items-center space-x-2">
             <Inventory2Icon />

@@ -79,14 +79,14 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <div className="flex-1 xl:px-20">
+    <div className="flex flex-col">
+      <PageTitle title="Admin dashboard" />
+      <div className="flex flex-col sm:flex-row 2xl:px-10">
+        <Sidebar />
         {loading ? (
           <Loading />
         ) : (
-          <div>
-            <PageTitle title="Admin dashboard" />
+          <div className="flex-1">
             <h4 className="py-2 mt-10 mb-10 text-2xl text-center text-white bg-orange-400 md:py-10">
               <p>Total amount </p>
               <p>₹{totalAmount}</p>
