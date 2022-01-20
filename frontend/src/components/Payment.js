@@ -170,7 +170,6 @@ export default function Payment({ history }) {
         });
       }
     } catch (error) {
-      console.log(error.message);
       setDisablePayBtn(false);
     }
   }

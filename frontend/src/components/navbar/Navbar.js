@@ -17,7 +17,7 @@ import { logoutUser } from '../../redux/actions/userActions';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Badge } from '@mui/material';
 
-const pages = ['Products', 'Pricing', 'Search'];
+const pages = ['Products', 'Search'];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -31,7 +31,7 @@ const ResponsiveAppBar = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (isAuthenticated && user.role === 'admin') {
+    if (isAuthenticated && user?.role === 'admin') {
       setOptions([
         { name: 'Dashboard', function: dashboard },
         { name: 'Orders', function: orders },
@@ -40,7 +40,7 @@ const ResponsiveAppBar = () => {
       ]);
     }
 
-    if (isAuthenticated && user.role === 'user') {
+    if (isAuthenticated && user?.role === 'user') {
       setOptions([
         { name: 'Orders', function: orders },
         { name: 'Account', function: account },
@@ -67,7 +67,7 @@ const ResponsiveAppBar = () => {
     }
 
     async function logout() {
-      await dispatch(logoutUser());
+      dispatch(logoutUser());
       history.push('/login');
     }
   }, [user, history, dispatch, isAuthenticated]);
@@ -189,7 +189,7 @@ const ResponsiveAppBar = () => {
                 onClick={handleOpenUserMenu}
                 sx={{ p: 0 }}
               >
-                <Avatar alt="Eemy Sharp" src="" />
+                <Avatar alt="Eemy Sharp" src={user?.avatar?.url} />
               </IconButton>
             </Tooltip>
 

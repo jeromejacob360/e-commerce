@@ -89,7 +89,6 @@ export default function ProductsList() {
       flex: 0.5,
       headerAlign: 'center',
       renderCell: (params) => {
-        console.log(`params.row`, params.row);
         const rating = params.row.rating;
         return (
           <div className="flex justify-center flex-1">

@@ -118,7 +118,6 @@ export const getOrderDetails = (id) => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(`error.response`, error.response);
     dispatch({
       type: 'ORDER_DETAILS_FAILURE',
       payload: error.response.data.message,

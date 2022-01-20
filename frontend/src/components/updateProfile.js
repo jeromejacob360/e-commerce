@@ -9,7 +9,6 @@ export default function UpdateProfile() {
 
   function handleUpdate(e) {
     e.preventDefault();
-    console.log('handleUpdate', user);
   }
 
   return (

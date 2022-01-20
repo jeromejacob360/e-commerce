@@ -18,11 +18,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
 
   apiFeature.paginate(limit);
 
-  try {
-    products = await apiFeature.query.clone();
-  } catch (error) {
-    console.log(error);
-  } // TODO no need of try catch block in catchasyncerrors function
+  products = await apiFeature.query.clone();
 
   res.status(200).json({
     success: true,
@@ -61,8 +57,6 @@ exports.getProduct = catchAsyncErrors(async (req, res, next) => {
 // Create a product (admin only)
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   const { images } = req.body;
-
-  console.log(`images`, images);
 
   const urlArray = [];
 
@@ -153,7 +147,6 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
   const { images } = product;
   for (let i = 0; i < images.length; i++) {
-    console.log(`images[i].public_id`, images[i].public_id);
     await cloudinary.v2.uploader.destroy(images[i].public_id);
   }
 
@@ -212,7 +205,6 @@ exports.addProductReview = catchAsyncErrors(async (req, res, next) => {
       product,
     });
   } catch (error) {
-    console.log('error', error.message);
     return next(new ErrorHandler(error.message, 400));
   }
 });

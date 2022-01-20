@@ -15,7 +15,6 @@ export function addToCart(productId, quantity) {
         payload: data.cart,
       });
     } catch (error) {
-      console.log(`error.response`, error.response);
       dispatch({
         type: 'ADD_TO_CART_FAILURE',
         payload: error.response.data.message,
@@ -38,7 +37,6 @@ export function removeFromCart(productId) {
         payload: data.cart,
       });
     } catch (error) {
-      console.log(`error.response`, error.response);
       dispatch({
         type: 'REMOVE_FROM_CART_FAILURE',
         payload: error.response.data.message,

@@ -45,7 +45,6 @@ exports.addProductToCart = catchAsyncErrors(async (req, res, next) => {
     });
   }
 
-  console.log('Not found');
   cart.items.push(productToCart);
   await cart.save();
   return res.status(201).json({

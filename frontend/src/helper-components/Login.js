@@ -15,7 +15,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
 
 export default function Login() {
-  console.log(`LOGIN PAGE`);
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');

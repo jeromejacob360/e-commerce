@@ -110,7 +110,6 @@ export function fetchAdminProducts() {
         payload: data,
       });
     } catch (error) {
-      console.log(`error`, error);
       dispatch({
         type: 'ADMIN_PRODUCTS_FAILURE',
         payload: error,
@@ -167,7 +166,6 @@ export function updateProduct(product) {
 // Delete a product (admin only)
 export function deleteProduct(productId) {
   return async function (dispatch) {
-    console.log(`productId`, productId);
     try {
       dispatch({ type: 'DELETE_PRODUCT_REQUEST' });
       const { data } = await axios.delete('/api/admin/product/' + productId);

@@ -5,7 +5,6 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 
 // Create new order
 exports.createOrder = catchAsyncErrors(async (req, res, next) => {
-  console.log('Creating order');
   try {
     const {
       shippingInfo,
@@ -35,7 +34,6 @@ exports.createOrder = catchAsyncErrors(async (req, res, next) => {
       order,
     });
   } catch (err) {
-    console.log(err.message);
     return next(new ErrorHandler(err.message, 500));
   }
 });

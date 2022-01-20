@@ -25,7 +25,6 @@ import OrderSuccess from './components/OrderSuccess';
 import FourOFour from './components/404';
 import MyOrders from './components/MyOrders';
 import OrderDetails from './components/orderDetails';
-import AdminRoute from './helper-components/AdminRoute';
 import Dashboard from './components/admin/Dashboard';
 import ProductsList from './components/admin/ProductsList';
 import UpdateProduct from './components/admin/UpdateProduct';
@@ -44,14 +43,9 @@ function App() {
   useEffect(() => {
     if (isAuthenticated === true) {
       dispatch(loadCart());
-    }
-  }, [dispatch, isAuthenticated]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
       getStripeApiKey();
     }
-  }, [isAuthenticated]);
+  }, [dispatch, isAuthenticated]);
 
   useEffect(() => {
     dispatch(loadUser());

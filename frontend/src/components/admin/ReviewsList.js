@@ -41,8 +41,6 @@ export default function ReviewsList() {
   }
 
   function deleteHandler(rId) {
-    console.log(`rId`, rId);
-    console.log(`pId`, pId);
     dispatch(deleteReview(pId, rId));
   }
 
