@@ -23,7 +23,6 @@ export const login = (email, password) => async (dispatch) => {
 export const logoutUser = () => async (dispatch) => {
   try {
     dispatch({ type: 'LOGOUT_REQUEST' });
-    dispatch({ type: 'CLEAR_CART' });
 
     await axios.get(`/api/logout`);
 

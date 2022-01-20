@@ -24,27 +24,14 @@ const ResponsiveAppBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [options, setOptions] = useState([]);
 
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
-  function orders() {
-    history.push('/orders/me');
-  }
-
-  function account() {
-    history.push('/account');
-  }
-
-  async function logout() {
-    await dispatch(logoutUser());
-    history.push('/login');
-  }
-
   useEffect(() => {
-    if (user && user.role === 'admin') {
+    if (isAuthenticated && user.role === 'admin') {
       setOptions([
         { name: 'Dashboard', function: dashboard },
         { name: 'Orders', function: orders },
@@ -53,12 +40,16 @@ const ResponsiveAppBar = () => {
       ]);
     }
 
-    if (user && user.role === 'user') {
+    if (isAuthenticated && user.role === 'user') {
       setOptions([
         { name: 'Orders', function: orders },
         { name: 'Account', function: account },
         { name: 'Logout', function: logout },
       ]);
+    }
+
+    if (!isAuthenticated) {
+      setOptions([{ name: 'Login', function: login }]);
     }
     function dashboard() {
       handleCloseUserMenu();
@@ -66,6 +57,9 @@ const ResponsiveAppBar = () => {
     }
     function orders() {
       history.push('/orders/me');
+    }
+    function login() {
+      history.push('/login');
     }
 
     function account() {
@@ -76,7 +70,7 @@ const ResponsiveAppBar = () => {
       await dispatch(logoutUser());
       history.push('/login');
     }
-  }, [user, history, dispatch]);
+  }, [user, history, dispatch, isAuthenticated]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

@@ -59,6 +59,8 @@ export function loadCart() {
 
 export function clearCartErrors() {
   return async function (dispatch) {
-    dispatch({ type: 'CLEAR_CART_ERRORS' });
+    dispatch({
+      type: 'CLEAR_CART_ERRORS',
+    });
   };
 }

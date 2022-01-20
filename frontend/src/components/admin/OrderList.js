@@ -105,9 +105,6 @@ export default function OrdersList() {
     },
   ];
 
-  if (loading) {
-    return <Loading />;
-  }
   return (
     <div className="flex flex-col md:flex-row">
       <Sidebar />

@@ -46,7 +46,7 @@ export default function Account() {
         <Button component={Link} to="/orders/me" variant="outlined">
           My Orders
         </Button>
-        <Button variant="outlined">Change password</Button>
+        {/* <Button variant="outlined">Change password</Button> */}
       </div>
     </div>
   );
