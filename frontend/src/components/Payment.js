@@ -14,7 +14,7 @@ import {
 } from '@stripe/react-stripe-js';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import Loading from '../helper-components/loading/Loading';
+import Loading from '../helper-components/Loading';
 import { useSnackbar } from 'notistack';
 import { createOrder } from '../redux/actions/orderActions';
 import { removeFromCart } from '../redux/actions/cartActions';

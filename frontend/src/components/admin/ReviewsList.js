@@ -8,7 +8,7 @@ import {
   fetchProductReviews,
 } from '../../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
-import Loading from '../../helper-components/loading/Loading';
+import Loading from '../../helper-components/Loading';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { DataGrid } from '@mui/x-data-grid';
 import Sidebar from './Sidebar';

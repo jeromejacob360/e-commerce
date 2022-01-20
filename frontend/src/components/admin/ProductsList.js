@@ -5,7 +5,7 @@ import {
   deleteProduct,
   fetchAdminProducts,
 } from '../../redux/actions/productActions';
-import Loading from '../../helper-components/loading/Loading';
+import Loading from '../../helper-components/Loading';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors } from '../../redux/actions/productActions';
-import Loading from '../../helper-components/loading/Loading';
+import Loading from '../../helper-components/Loading';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';

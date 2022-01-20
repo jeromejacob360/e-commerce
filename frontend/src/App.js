@@ -1,12 +1,11 @@
-import './App.css';
-import Navbar from './components/navbar/Navbar';
-import Home from './components/home/Home';
+import Navbar from './components/Navbar';
+import Home from './components/Home';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
-import ProductDetails from './components/productDetails/ProductDetails';
-import Products from './components/products/products';
-import Search from './components/search/search';
-import LoginSignup from './components/user/LoginSignup';
+import ProductDetails from './components/ProductDetails';
+import Products from './components/products';
+import Search from './components/search';
+import LoginSignup from './components/LoginSignup';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadUser } from './redux/actions/userActions';

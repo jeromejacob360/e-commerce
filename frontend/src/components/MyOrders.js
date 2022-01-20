@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors, getMyOrders } from '../redux/actions/orderActions';
 import { DataGrid } from '@mui/x-data-grid';
-import Loading from '../helper-components/loading/Loading';
+import Loading from '../helper-components/Loading';
 import { useSnackbar } from 'notistack';
 import Metadata from '../helper-components/metadata';
 import { Link } from 'react-router-dom';
@@ -88,7 +88,7 @@ export default function MyOrders() {
 
   return (
     <div>
-      <h1 className="text-2xl text-center py-2 my-4 font-bold">My Orders</h1>
+      <h1 className="py-2 my-4 text-2xl font-bold text-center">My Orders</h1>
       <Metadata title={'Orders - ' + user.name} />
       <DataGrid
         rows={rows}

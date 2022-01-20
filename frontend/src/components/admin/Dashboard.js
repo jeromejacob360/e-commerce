@@ -14,7 +14,7 @@ import {
 } from 'chart.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAdminProducts } from '../../redux/actions/productActions';
-import Loading from '../../helper-components/loading/Loading';
+import Loading from '../../helper-components/Loading';
 import PageTitle from '../../helper-components/PageTitle';
 import { fetchAllUsers } from '../../redux/actions/userActions';
 import { getAllOrders } from '../../redux/actions/orderActions';

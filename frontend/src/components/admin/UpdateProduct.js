@@ -24,7 +24,7 @@ import {
   updateProduct,
 } from '../../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
-import Loading from '../../helper-components/loading/Loading';
+import Loading from '../../helper-components/Loading';
 import Sidebar from './Sidebar';
 const initialState = {
   name: '',

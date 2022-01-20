@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors, getOrderDetails } from '../redux/actions/orderActions';
 import { useSnackbar } from 'notistack';
-import Loading from '../helper-components/loading/Loading';
+import Loading from '../helper-components/Loading';
 import Metadata from '../helper-components/metadata';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
