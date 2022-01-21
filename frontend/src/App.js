@@ -65,7 +65,7 @@ function App() {
             <Route exact path="/payment" component={Payment} />
           </Elements>
         )}
-        <div className="max max-w-[1920px] mx-auto">
+        <div className="max max-w-[1920px] mx-auto mt-24">
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={LoginSignup} />

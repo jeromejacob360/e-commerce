@@ -22,12 +22,15 @@ export default function ReviewsList() {
   const { loading, error, reviews } = useSelector(
     (state) => state.productReviews,
   );
+  console.log(`reviews`, reviews);
   const { success, error: reviewDeleteError } = useSelector(
     (state) => state.reviews,
   );
 
   useEffect(() => {
-    if (pId) if (pId.length === 24) dispatch(fetchProductReviews(pId));
+    if (pId?.length === 24) {
+      dispatch(fetchProductReviews(pId));
+    }
   }, [dispatch, pId, success]);
 
   function handleSubmit(e) {
@@ -70,8 +73,8 @@ export default function ReviewsList() {
         Rating: review.rating,
         Review:
           review.reviewMessage.length > 20
-            ? review.reviewMessage.subString(10) + '...'
-            : review.reviewMessage,
+            ? review?.reviewMessage?.substring(10) + '...'
+            : review?.reviewMessage,
       });
     });
 
@@ -79,14 +82,14 @@ export default function ReviewsList() {
     {
       field: 'id',
       headerName: 'Review ID',
-      minWidth: 200,
+      minWidth: 250,
       flex: 1,
     },
 
     {
       field: 'User',
       headerName: 'User',
-      minWidth: 100,
+      minWidth: 150,
       flex: 0.5,
     },
     {
@@ -117,14 +120,16 @@ export default function ReviewsList() {
 
     {
       field: 'actions',
+      headerAlign: 'center',
       flex: 0.3,
       headerName: 'Actions',
-      minWidth: 120,
+      minWidth: 80,
       type: 'text',
       sortable: false,
       renderCell: (params) => {
         return (
-          <div className="flex items-center justify-between flex-1 px-2 text-gray-500">
+          <div className="flex justify-center flex-1">
+            {/* <div className="flex items-center justify-between flex-1 px-2 text-gray-500"> */}
             <Button onClick={() => deleteHandler(params.row.id)}>
               <DeleteOutlineIcon />
             </Button>
@@ -142,47 +147,53 @@ export default function ReviewsList() {
         {loading ? (
           <Loading />
         ) : (
-          <div className="flex-1">
-            <div className="flex-1">
-              <form className="flex my-10 items-center px-10 justify-center flex-1 md:w-[900px] w-full mx-auto">
-                <TextField
-                  sx={{
-                    mr: 2,
-                  }}
-                  size="small"
-                  label="Product id"
-                  value={pId}
-                  onChange={(e) => setPId(e.target.value)}
-                  onClick={(e) => e.target.select()}
-                />
-
-                <Button
-                  type="submit"
-                  onClick={handleSubmit}
-                  variant="contained"
-                  color="primary"
-                >
-                  Search
-                </Button>
-              </form>
-            </div>
-            {reviews && reviews?.length > 0 && (
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={10}
-                disableSelectionOnClick
-                autoHeight
-                getRowClassName={(params) =>
-                  params.row.rating < 1 ? 'bg-red-400 bg-opacity-10' : ''
-                }
+          <div className="flex flex-col flex-1 sm:ml-44">
+            <form className="flex my-10 items-center px-10 justify-center flex-1 md:w-[900px] w-full mx-auto">
+              <TextField
+                sx={{
+                  mr: 2,
+                }}
+                size="small"
+                label="Product id"
+                value={pId}
+                onChange={(e) => setPId(e.target.value)}
+                onClick={(e) => e.target.select()}
               />
+
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+              >
+                Search
+              </Button>
+            </form>
+            {reviews ? (
+              reviews?.length > 0 && (
+                <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  pageSize={10}
+                  disableSelectionOnClick
+                  autoHeight
+                  getRowClassName={(params) =>
+                    params.row.rating < 1 ? 'bg-red-400 bg-opacity-10' : ''
+                  }
+                />
+              )
+            ) : (
+              <h4 className="text-xl text-center text-gray-600">
+                No reviews found
+              </h4>
             )}
-            {reviews.length === 0 && (
-              <h1 className="text-xl text-center text-gray-500 sm:text-2xl">
-                There are no reviews for the product yet
-              </h1>
-            )}
+            {reviews
+              ? reviews.length === 0 && (
+                  <h1 className="text-xl text-center text-gray-500 sm:text-2xl">
+                    There are no reviews for the product yet
+                  </h1>
+                )
+              : null}
           </div>
         )}
       </div>

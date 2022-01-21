@@ -64,13 +64,6 @@ export default function UsersList() {
       headerName: 'User ID',
       minWidth: 200,
       flex: 1,
-      renderCell: (params) => {
-        return (
-          <Link to={`/user/${params.row.id}`}>
-            <span>{params.value}</span>
-          </Link>
-        );
-      },
     },
 
     {
@@ -134,9 +127,11 @@ export default function UsersList() {
           return null;
         }
         return (
-          <Button onClick={() => deleteHandler(params.row.id)}>
-            <DeleteOutlineIcon />
-          </Button>
+          <div className="flex justify-center flex-1">
+            <Button onClick={() => deleteHandler(params.row.id)}>
+              <DeleteOutlineIcon />
+            </Button>
+          </div>
         );
       },
     },
@@ -150,19 +145,17 @@ export default function UsersList() {
         {loading ? (
           <Loading />
         ) : (
-          <div className="flex-1">
-            <div className="flex-1">
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={10}
-                disableSelectionOnClick
-                autoHeight
-                getRowClassName={(params) =>
-                  params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
-                }
-              />
-            </div>
+          <div className="flex-1 sm:ml-44">
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={10}
+              disableSelectionOnClick
+              autoHeight
+              getRowClassName={(params) =>
+                params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
+              }
+            />
           </div>
         )}
       </div>

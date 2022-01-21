@@ -4,8 +4,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 export default function Sidebar() {
   return (
-    <div>
-      <div className="hidden mt-4 mr-10 sm:block w-[180px]">
+    <div className="static sm:fixed top-40">
+      <div className="hidden mt-4  sm:block w-[180px]">
         <SidebarComponent />
       </div>
       <div className="block my-6 sm:hidden">

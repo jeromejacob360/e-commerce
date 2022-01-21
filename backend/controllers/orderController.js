@@ -106,14 +106,14 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
   }
 
   // Update stock
-  if (req.body.status === 'Shipped') {
-    order.orderItems.forEach(async (o) => {
-      await updateStock(o.product, o.quantity);
+  if (req.body.orderStatus === 'Shipped') {
+    order.orderItems.forEach(async (orderItem) => {
+      await updateStock(orderItem.productId.toString(), orderItem.quantity);
     });
   }
   order.orderStatus = req.body.orderStatus;
 
-  if (req.body.status === 'Delivered') {
+  if (req.body.orderStatus === 'Delivered') {
     order.deliveredAt = Date.now();
   }
 
@@ -126,7 +126,12 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
 
 async function updateStock(id, quantity) {
   const product = await Product.findById(id);
-  product.Stock -= quantity;
+
+  if (!product) {
+    return next(new ErrorHandler('Product not found', 404));
+  }
+
+  product.stock -= quantity;
   await product.save({ validateBeforeSave: false });
 }
 

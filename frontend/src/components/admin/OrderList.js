@@ -56,7 +56,7 @@ export default function OrdersList() {
     {
       field: 'id',
       headerName: 'Order ID',
-      minWidth: 200,
+      minWidth: 230,
       flex: 1,
       renderCell: (params) => {
         return (
@@ -125,19 +125,17 @@ export default function OrdersList() {
         {loading ? (
           <Loading />
         ) : (
-          <div className="flex-1">
-            <div className="flex-1">
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={10}
-                disableSelectionOnClick
-                autoHeight
-                getRowClassName={(params) =>
-                  params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
-                }
-              />
-            </div>
+          <div className="flex-1 sm:ml-44">
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={10}
+              disableSelectionOnClick
+              autoHeight
+              getRowClassName={(params) =>
+                params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
+              }
+            />
           </div>
         )}
       </div>

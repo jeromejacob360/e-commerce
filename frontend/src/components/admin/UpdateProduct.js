@@ -145,7 +145,7 @@ export default function UpdateProduct({ history, match }) {
         {loading ? (
           <Loading />
         ) : (
-          <div className="flex-1">
+          <div className="flex-1 sm:ml-44">
             <div className="flex flex-col md:flex-row">
               <form className="flex justify-center flex-1">
                 <FormGroup

@@ -149,7 +149,7 @@ export default function ProductsList() {
         {loading ? (
           <Loading />
         ) : (
-          <div className="flex-1">
+          <div className="flex-1 sm:ml-44">
             <DataGrid
               rows={rows}
               columns={columns}

@@ -52,7 +52,7 @@ export default function Dashboard() {
       return acc + order.totalPrice;
     }, 0);
 
-  const outOfStockCount = products.filter(
+  const outOfStockCount = products?.filter(
     (product) => product.stock === 0,
   ).length;
 
@@ -73,7 +73,7 @@ export default function Dashboard() {
       {
         backgroundColor: ['#5f5d63', '#6800B4'],
         hoverBackgroundColor: ['#38363d', '#35014F'],
-        data: [outOfStockCount, products.length - outOfStockCount],
+        data: [outOfStockCount, products?.length - outOfStockCount],
       },
     ],
   };
@@ -81,12 +81,12 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col">
       <PageTitle title="Admin dashboard" />
-      <div className="flex flex-col sm:flex-row 2xl:px-10">
+      <div className="flex flex-col md:flex-row 2xl:px-10">
         <Sidebar />
         {loading ? (
           <Loading />
         ) : (
-          <div className="flex-1">
+          <div className="flex-1 sm:ml-44">
             <h4 className="py-2 mt-10 mb-10 text-2xl text-center text-white bg-orange-400 md:py-10">
               <p>Total amount </p>
               <p>₹{totalAmount}</p>
@@ -123,7 +123,7 @@ export default function Dashboard() {
             <div className="w-full px-4 mx-auto my-10 md:w-3/4">
               <Line data={LineData} />
             </div>
-            <div className="w-full px-4 mx-auto my-10 sm:px-20 md:w-3/4">
+            <div className="w-full mx-auto my-10 lg:px-[20%] px-20 md:w-3/4">
               <Doughnut data={doughnutData} />
             </div>
           </div>
