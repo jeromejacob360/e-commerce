@@ -19,7 +19,7 @@ export default function ProductsList() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { loading, products } = useSelector((state) => state.products);
-  const { success, error } = useSelector((state) => state.product);
+  const { success, error, message } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(fetchAdminProducts());
@@ -31,10 +31,10 @@ export default function ProductsList() {
       dispatch(clearErrors());
     }
     if (success) {
-      enqueueSnackbar('Product deleted successfully', { variant: 'success' });
+      enqueueSnackbar(message, { variant: 'success' });
       dispatch(clearErrors());
     }
-  }, [error, enqueueSnackbar, dispatch, success]);
+  }, [dispatch, enqueueSnackbar, error, message, success]);
 
   function deleteHandler(id) {
     dispatch(deleteProduct(id));
@@ -60,7 +60,7 @@ export default function ProductsList() {
       flex: 1,
       renderCell: (params) => {
         return (
-          <Link to={`/product/${params.row.id}`}>
+          <Link data-testid="productLink" to={`/product/${params.row.id}`}>
             <span>{params.value}</span>
           </Link>
         );
@@ -132,7 +132,10 @@ export default function ProductsList() {
             <Link to={`/admin/product/${params.row.id}`}>
               <EditIcon />
             </Link>
-            <Button onClick={() => deleteHandler(params.row.id)}>
+            <Button
+              data-testid="product-delete-button"
+              onClick={() => deleteHandler(params.row.id)}
+            >
               <DeleteOutlineIcon />
             </Button>
           </div>

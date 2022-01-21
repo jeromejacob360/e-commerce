@@ -17,7 +17,7 @@ import { addToCart, clearCartErrors } from '../redux/actions/cartActions';
 import RatingDialog from '../helper-components/RatingDialog';
 import { getMyOrders } from '../redux/actions/orderActions';
 
-export default function ProductDetails({ match }) {
+export default function ProductDetails({ match, history }) {
   const [quantity, setQuantity] = useState(1);
   const [addedQuantity, setAddedQuantity] = useState(0);
   const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
@@ -27,7 +27,7 @@ export default function ProductDetails({ match }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
@@ -68,16 +68,36 @@ export default function ProductDetails({ match }) {
 
   useEffect(() => {
     if (cartError) {
-      dispatch(clearCartErrors());
-      enqueueSnackbar(cartError, {
-        variant: 'error',
-      });
+      console.log(`cartError`, cartError);
+      if (cartError === 'Please login to continue!') {
+        dispatch(clearCartErrors());
+        enqueueSnackbar(
+          <div className="flex items-center">
+            <p className="mr-4">Please login to continue!</p>
+            <Button
+              variant="contained"
+              sx={{ color: 'white' }}
+              onClick={() => history.push('/login')}
+            >
+              Login
+            </Button>
+          </div>,
+          {
+            variant: 'error',
+          },
+        );
+      } else {
+        dispatch(clearCartErrors());
+        enqueueSnackbar(cartError, {
+          variant: 'error',
+        });
+      }
     }
     if (reviewError) {
-      dispatch(clearCartErrors());
       enqueueSnackbar(reviewError, {
         variant: 'error',
       });
+      dispatch(clearCartErrors());
     }
     if (success) {
       enqueueSnackbar('Thanks for your review', {
@@ -87,7 +107,7 @@ export default function ProductDetails({ match }) {
         type: 'CLEAR_NEW_REVIEW',
       });
     }
-  }, [reviewError, dispatch, enqueueSnackbar, success, cartError]);
+  }, [reviewError, dispatch, enqueueSnackbar, success, cartError, history]);
 
   //find the item in the cart
   useEffect(() => {
@@ -129,7 +149,7 @@ export default function ProductDetails({ match }) {
   function handleSubmitReviewClick() {
     // Find if the user has ordered the product
     let hasOrdered = 0;
-    orders.forEach((order) => {
+    orders?.forEach((order) => {
       if (order.orderStatus === 'Delivered')
         order.orderItems.forEach((item) => {
           if (item.productId === product._id) {

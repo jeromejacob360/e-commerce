@@ -210,6 +210,7 @@ export default function UpdateProduct({ history, match }) {
                     }
                   />
                   <Select
+                    data-testid="categories dropdown"
                     disabled={uploading}
                     name="category"
                     displayEmpty
@@ -237,6 +238,7 @@ export default function UpdateProduct({ history, match }) {
 
                   <label htmlFor="contained-button-file">
                     <Input
+                      data-testid="select-images-button"
                       disabled={uploading}
                       accept="image/*"
                       id="contained-button-file"
@@ -272,6 +274,7 @@ export default function UpdateProduct({ history, match }) {
                   </div>
 
                   <Button
+                    data-testid="submit-update-product"
                     type="submit"
                     onClick={handleSubmit}
                     disabled={uploading}

@@ -24,12 +24,14 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import 'cypress-file-upload';
+
 Cypress.Commands.add('login', (email, password) => {
   cy.visit('/login');
   cy.get('[placeholder="Email"]').type('jerome@gmail.com');
   cy.get('[placeholder="password"]').type('123123');
   cy.get('[type="submit"]').click();
-  cy.location('pathname').should('eq', '/');
+  cy.url().should('eq', Cypress.config().baseUrl);
 });
 
 Cypress.Commands.add('getStripeIframe', (title) => {

@@ -68,7 +68,7 @@ const ResponsiveAppBar = () => {
 
     async function logout() {
       dispatch(logoutUser());
-      history.push('/login');
+      window.location.href = '/login';
     }
   }, [user, history, dispatch, isAuthenticated]);
 
@@ -192,7 +192,7 @@ const ResponsiveAppBar = () => {
                 onClick={handleOpenUserMenu}
                 sx={{ p: 0 }}
               >
-                <Avatar alt="Eemy Sharp" src={user?.avatar?.url} />
+                <Avatar alt="Navbar user avatar" src={user?.avatar?.url} />
               </IconButton>
             </Tooltip>
 

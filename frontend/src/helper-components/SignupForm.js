@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   FormGroup,
+  IconButton,
   Input,
   InputAdornment,
   OutlinedInput,
@@ -11,6 +12,9 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import LockIcon from '@mui/icons-material/Lock';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useState } from 'react';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 
 export default function SignupForm({
   user,
@@ -18,9 +22,12 @@ export default function SignupForm({
   handleSubmit,
   buttonText = 'Signup',
 }) {
+  const [showPw, setShowPw] = useState(false);
+
   function setValue(e) {
     setUser({ ...user, [e.target.name]: e.target.value });
   }
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -61,9 +68,9 @@ export default function SignupForm({
         />
 
         <OutlinedInput
-          type="password"
-          placeholder="password"
           name="password"
+          type={showPw ? 'text' : 'password'}
+          placeholder="password"
           value={user.password}
           onChange={setValue}
           startAdornment={
@@ -71,10 +78,17 @@ export default function SignupForm({
               <LockIcon />
             </InputAdornment>
           }
-          aria-describedby="outlined-weight-helper-text"
-          inputProps={{
-            'aria-label': 'weight',
-          }}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPw(!showPw)}
+                edge="end"
+              >
+                {showPw ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
         />
         <Box
           sx={{

@@ -235,11 +235,16 @@ exports.deleteProductReview = catchAsyncErrors(async (req, res, next) => {
       new ErrorHandler(`Product not found with id of ${req.query.id}`, 404),
     );
 
-  let reviews = product.reviews.filter(
+  let review = product.reviews.filter(
     (review) => review._id.toString() === req.query.reviewId.toString(),
   );
-  if (reviews.length === 0)
+  if (review.length === 0) {
     return next(new ErrorHandler('Review not found', 404));
+  }
+
+  if (req.user._id.toString() !== review.userId && req.user.role !== 'admin') {
+    return next(new ErrorHandler("You cannot delete other's review", 405));
+  }
 
   product.reviews = product.reviews.filter(
     (review) => review._id.toString() !== req.query.reviewId,

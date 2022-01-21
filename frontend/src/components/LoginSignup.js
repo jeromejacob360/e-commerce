@@ -52,7 +52,7 @@ export default function LoginSignup({ history }) {
   }
 
   return (
-    <Box className="flex justify-center mt-20">
+    <Box className="flex justify-center mt-40">
       <Paper elevation={2}>
         <Box px={2} pb={3}>
           <Box className="flex justify-between mt-2 mb-8">

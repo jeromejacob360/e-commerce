@@ -19,7 +19,7 @@ export default function ReviewCard({ review }) {
     <>
       <div
         onClick={() => setReviewDialogOpen(true)}
-        className="relative flex flex-col items-center w-[350px] px-4 py-2 mb-4 space-y-4 bg-gray-100 border rounded-lg shadow-md cursor-pointer"
+        className="relative flex flex-col items-center w-[350px] px-4 py-2 mb-4 space-y-4 border rounded-lg cursor-pointer"
       >
         <Avatar
           src={review.avatar}

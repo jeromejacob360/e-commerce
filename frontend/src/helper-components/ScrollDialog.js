@@ -74,8 +74,7 @@ export default function ScrollDialog({ review, open = false, setOpen }) {
         </DialogTitle>
         <DialogContent dividers>
           <DialogContentText ref={descriptionElementRef} tabIndex={-1}>
-            {/*  TODO view full review */}
-            <div>{review.reviewMessage}</div>
+            <span>{review.reviewMessage}</span>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

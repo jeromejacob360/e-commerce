@@ -21,6 +21,7 @@ ReactDOM.render(
     <AlertProvider template={AlertTemplate} {...options}>
       <ThemeProvider theme={theme}>
         <SnackbarProvider
+          preventDuplicate
           maxSnack={1}
           TransitionComponent={Grow}
           hideIconVariant

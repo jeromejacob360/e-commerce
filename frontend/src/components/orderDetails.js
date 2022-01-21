@@ -124,12 +124,14 @@ export default function OrderDetails({ match, history }) {
                     className="flex items-center justify-between px-4 my-2"
                     key={item?._id}
                   >
-                    <img
-                      className="object-cover h-40 w-28"
-                      src={item?.image}
-                      alt="Product"
-                    />
-                    <Link to={`/product/${item?.product}`}>{item?.name}</Link>{' '}
+                    <Link to={`/product/${item?.productId}`}>
+                      <img
+                        className="object-cover h-40 w-28"
+                        src={item?.image}
+                        alt="Product"
+                      />
+                    </Link>
+                    <span>{item?.name}</span>{' '}
                     <span>
                       {item?.quantity} X ₹{item?.price} ={' '}
                       <span>₹{item?.price * item?.quantity}</span>

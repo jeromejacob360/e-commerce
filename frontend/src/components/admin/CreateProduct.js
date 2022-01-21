@@ -193,6 +193,7 @@ export default function CreateProduct() {
                 </Select>
                 <label htmlFor="contained-button-file">
                   <Input
+                    data-testid="select-images-button"
                     accept="image/*"
                     id="contained-button-file"
                     multiple
@@ -218,6 +219,7 @@ export default function CreateProduct() {
                 </div>
 
                 <Button
+                  data-testid="submit-create-button"
                   type="submit"
                   onClick={handleSubmit}
                   fullWidth
