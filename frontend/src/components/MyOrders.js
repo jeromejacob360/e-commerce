@@ -38,7 +38,15 @@ export default function MyOrders() {
     });
 
   const columns = [
-    { field: 'id', headerName: 'Order ID', minWidth: 200, flex: 1 },
+    {
+      field: 'id',
+      headerName: 'Order ID',
+      minWidth: 200,
+      flex: 1,
+      renderCell: (params) => {
+        return <Link to={`/order/${params.id}`}>{params.id}</Link>;
+      },
+    },
 
     {
       field: 'status',

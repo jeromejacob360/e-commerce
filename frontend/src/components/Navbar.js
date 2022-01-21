@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { logoutUser } from '../redux/actions/userActions';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
-import { Badge, Slide } from '@mui/material';
+import { Badge } from '@mui/material';
 
 const pages = ['Products', 'Search'];
 

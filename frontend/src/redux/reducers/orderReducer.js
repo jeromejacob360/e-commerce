@@ -167,7 +167,6 @@ export const orderDetailsReducer = (
         message,
       };
     case 'ORDER_DETAILS_FAILURE':
-      console.log(`action.payload`, action);
       return {
         ...state,
         loading: false,

@@ -1,10 +1,12 @@
 import PageTitle from '../../helper-components/PageTitle';
-import { Button, TextField } from '@mui/material';
+import { Button, MenuItem, Select } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearErrors,
   deleteReview,
+  fetchAdminProducts,
+  fetchProductDetails,
   fetchProductReviews,
 } from '../../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
@@ -12,6 +14,7 @@ import Loading from '../../helper-components/Loading';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { DataGrid } from '@mui/x-data-grid';
 import Sidebar from './Sidebar';
+import ProductCard from '../../helper-components/productCard';
 
 export default function ReviewsList() {
   const [pId, setPId] = useState('');
@@ -22,26 +25,21 @@ export default function ReviewsList() {
   const { loading, error, reviews } = useSelector(
     (state) => state.productReviews,
   );
-  console.log(`reviews`, reviews);
+  const { product, loading: detailsLoading } = useSelector(
+    (state) => state.productDetails,
+  );
   const { success, error: reviewDeleteError } = useSelector(
     (state) => state.reviews,
   );
+  const { products } = useSelector((state) => state.products);
 
   useEffect(() => {
     if (pId?.length === 24) {
       dispatch(fetchProductReviews(pId));
+      dispatch(fetchProductDetails(pId));
     }
+    dispatch(fetchAdminProducts());
   }, [dispatch, pId, success]);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (pId.length !== 24) {
-      return enqueueSnackbar('Please enter a valid product id', {
-        variant: 'error',
-      });
-    }
-    dispatch(fetchProductReviews(pId));
-  }
 
   function deleteHandler(rId) {
     dispatch(deleteReview(pId, rId));
@@ -129,7 +127,6 @@ export default function ReviewsList() {
       renderCell: (params) => {
         return (
           <div className="flex justify-center flex-1">
-            {/* <div className="flex items-center justify-between flex-1 px-2 text-gray-500"> */}
             <Button onClick={() => deleteHandler(params.row.id)}>
               <DeleteOutlineIcon />
             </Button>
@@ -148,27 +145,58 @@ export default function ReviewsList() {
           <Loading />
         ) : (
           <div className="flex flex-col flex-1 sm:ml-44">
-            <form className="flex my-10 items-center px-10 justify-center flex-1 md:w-[900px] w-full mx-auto">
-              <TextField
-                sx={{
-                  mr: 2,
-                }}
-                size="small"
-                label="Product id"
-                value={pId}
-                onChange={(e) => setPId(e.target.value)}
-                onClick={(e) => e.target.select()}
-              />
+            <div className="flex flex-col sm:mx-10 xl:flex-row">
+              <form className="flex flex-col items-center justify-center flex-1 w-full my-10 sm:flex-row">
+                <Select
+                  sx={{
+                    m: 2,
+                    width: {
+                      xs: '100%',
+                      md: '600px',
+                    },
+                  }}
+                  name="category"
+                  displayEmpty
+                  renderValue={(value) =>
+                    value ? (
+                      value
+                    ) : (
+                      <div className="text-gray-400">Select a product</div>
+                    )
+                  }
+                  value={pId}
+                  onChange={(e) => setPId(e.target.value)}
+                >
+                  {products &&
+                    products.map((product) => {
+                      return (
+                        <MenuItem key={product._id} value={product._id}>
+                          <div className="flex items-center justify-between w-[500px] pr-4">
+                            <span>{product._id}</span>
+                            <img
+                              className="object-cover w-8 h-8"
+                              src={product.images[0].url}
+                              alt=""
+                            />
+                            <span>{product.name}</span>
+                            <span>{product.rating}</span>
+                          </div>
+                        </MenuItem>
+                      );
+                    })}
+                </Select>
+              </form>
 
-              <Button
-                type="submit"
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-              >
-                Search
-              </Button>
-            </form>
+              {product ? (
+                <div className="flex items-center justify-center">
+                  <ProductCard product={product} />
+                </div>
+              ) : detailsLoading ? (
+                <Loading />
+              ) : (
+                <div className="h-[400px] w-80"></div>
+              )}
+            </div>
             {reviews ? (
               reviews?.length > 0 && (
                 <DataGrid
@@ -188,7 +216,8 @@ export default function ReviewsList() {
               </h4>
             )}
             {reviews
-              ? reviews.length === 0 && (
+              ? reviews.length === 0 &&
+                pId && (
                   <h1 className="text-xl text-center text-gray-500 sm:text-2xl">
                     There are no reviews for the product yet
                   </h1>

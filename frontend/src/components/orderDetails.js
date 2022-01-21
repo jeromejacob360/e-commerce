@@ -55,9 +55,17 @@ export default function OrderDetails({ match, history }) {
                     }
                   >
                     {order?.paymentInfo?.status === 'succeeded'
-                      ? 'PAID,'
-                      : 'NOT PAID,'}
+                      ? 'PAID'
+                      : 'NOT PAID'}
                   </p>
+                  <span className="text-base text-gray-600 normal-case">
+                    {order?.paymentInfo?.status === 'succeeded' && (
+                      <span>
+                        &nbsp;on{' '}
+                        {new Date(order.paidAt).toLocaleString().toString()}
+                      </span>
+                    )}
+                  </span>
                 </div>
                 <div className="flex">
                   <h4>Order status:&nbsp; </h4>
@@ -68,7 +76,18 @@ export default function OrderDetails({ match, history }) {
                         : 'text-red-700'
                     }`}
                   >
-                    {order?.orderStatus && order?.orderStatus}
+                    {`${order?.orderStatus}`}
+                    <span className="text-base text-gray-600 normal-case">
+                      {order?.orderStatus === 'Delivered' && (
+                        <span>
+                          {' '}
+                          on{' '}
+                          {new Date(order.deliveredAt)
+                            .toLocaleString()
+                            .toString()}
+                        </span>
+                      )}
+                    </span>
                   </p>
                 </div>
               </div>

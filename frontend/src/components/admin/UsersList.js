@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors } from '../../redux/actions/productActions';
 import Loading from '../../helper-components/Loading';
 import { DataGrid } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import PageTitle from '../../helper-components/PageTitle';
 import { useSnackbar } from 'notistack';
