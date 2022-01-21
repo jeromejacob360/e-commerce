@@ -27,7 +27,7 @@ export default function ProductDetails({ match, history }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
