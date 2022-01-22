@@ -204,10 +204,11 @@ export const reviewReducer = (state = {}, action) => {
     case 'CLEAR_REVIEWS':
       return {};
 
-    case 'CLEAR_ERRORS':
+    case 'CLEAR_PRODUCT_ERRORS':
       return {
         ...state,
         error: null,
+        success: null,
       };
     case 'CLEAR_STATE':
       return {};

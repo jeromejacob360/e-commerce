@@ -78,6 +78,7 @@ export function fetchProductReviews(id) {
 }
 
 export function deleteReview(pId, rId) {
+  console.log(`pId, rId`, pId, rId);
   return async function (dispatch) {
     try {
       dispatch({ type: 'DELETE_REVIEW_REQUEST' });
@@ -214,4 +215,8 @@ export const addReview =
 // Clear errors
 export const clearErrors = () => (dispatch) => {
   dispatch({ type: 'CLEAR_ERRORS' });
+};
+
+export const clearProductErrors = () => (dispatch) => {
+  dispatch({ type: 'CLEAR_PRODUCT_ERRORS' });
 };

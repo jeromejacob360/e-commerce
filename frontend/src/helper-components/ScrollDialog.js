@@ -5,9 +5,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Rating } from '@mui/material';
 import RatingDialog from './RatingDialog';
+import {
+  clearProductErrors,
+  deleteReview,
+} from '../redux/actions/productActions';
+import { useSnackbar } from 'notistack';
+import Loading from './Loading';
 
 export default function ScrollDialog({ review, open = false, setOpen }) {
   const [ownReview, setOwnReview] = React.useState(false);
@@ -15,12 +21,33 @@ export default function ScrollDialog({ review, open = false, setOpen }) {
 
   const { product } = useSelector((state) => state.productDetails);
   const { user } = useSelector((state) => state.user);
+  const { loading, error, success, message } = useSelector(
+    (state) => state.reviews,
+  );
+  const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     if (review?.userId === user?._id) {
       setOwnReview(true);
     }
   }, [review?.userId, user?._id]);
+
+  React.useEffect(() => {
+    if (error) {
+      enqueueSnackbar(error, {
+        variant: 'error',
+      });
+      dispatch(clearProductErrors());
+    }
+    if (success) {
+      enqueueSnackbar(message, {
+        variant: 'success',
+      });
+      setOpen(false);
+      dispatch(clearProductErrors());
+    }
+  }, [dispatch, enqueueSnackbar, error, message, setOpen, success]);
 
   function editClick() {
     setEditReview(true);
@@ -30,6 +57,9 @@ export default function ScrollDialog({ review, open = false, setOpen }) {
     setOpen(false);
   };
 
+  const handleDelete = () => {
+    dispatch(deleteReview(product._id, review._id));
+  };
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
     if (open) {
@@ -39,6 +69,10 @@ export default function ScrollDialog({ review, open = false, setOpen }) {
       }
     }
   }, [open]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>
@@ -79,7 +113,7 @@ export default function ScrollDialog({ review, open = false, setOpen }) {
         </DialogContent>
         <DialogActions>
           {ownReview && <Button onClick={editClick}>Edit</Button>}
-          {ownReview && <Button onClick={handleClose}>Delete</Button>}
+          {ownReview && <Button onClick={handleDelete}>Delete</Button>}
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>

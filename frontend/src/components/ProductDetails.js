@@ -32,6 +32,7 @@ export default function ProductDetails({ match, history }) {
     (state) => state.productDetails,
   );
   const { orders } = useSelector((state) => state.myOrders);
+  const { success: reviewSuccess } = useSelector((state) => state.reviews);
   const {
     loading: reviewLoading,
     success,
@@ -64,11 +65,17 @@ export default function ProductDetails({ match, history }) {
         window.history.back();
       }, 3000);
     }
-  }, [dispatch, error, enqueueSnackbar, match.params.id, success]);
+  }, [
+    dispatch,
+    error,
+    enqueueSnackbar,
+    match.params.id,
+    success,
+    reviewSuccess,
+  ]);
 
   useEffect(() => {
     if (cartError) {
-      console.log(`cartError`, cartError);
       if (cartError === 'Please login to continue!') {
         dispatch(clearCartErrors());
         enqueueSnackbar(

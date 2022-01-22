@@ -68,7 +68,8 @@ const ResponsiveAppBar = () => {
 
     async function logout() {
       dispatch(logoutUser());
-      window.location.href = '/login';
+      history.push('/logout');
+      // window.location.href = '/login';
     }
   }, [user, history, dispatch, isAuthenticated]);
 
