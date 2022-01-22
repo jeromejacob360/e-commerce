@@ -4,7 +4,7 @@ import axios from 'axios';
 export function fetchProducts(
   keyword = '',
   page = 1,
-  price = [0, 50000],
+  price = [0, 10000],
   category,
   rating,
 ) {
@@ -78,7 +78,6 @@ export function fetchProductReviews(id) {
 }
 
 export function deleteReview(pId, rId) {
-  console.log(`pId, rId`, pId, rId);
   return async function (dispatch) {
     try {
       dispatch({ type: 'DELETE_REVIEW_REQUEST' });

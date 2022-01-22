@@ -43,12 +43,10 @@ exports.getOrder = catchAsyncErrors(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
 
   if (!order) {
-    console.log('Order not found');
     return next(new ErrorHandler('Order not found', 404));
   }
 
   if (order.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    console.log('You can view your order only');
     return next(new ErrorHandler('You can view your order only', 404));
   }
 
@@ -106,7 +104,7 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
   }
 
   // Update stock
-  if (req.body.orderStatus === 'Shipped') {
+  if (req.body.orderStatus === 'Processing') {
     order.orderItems.forEach(async (orderItem) => {
       await updateStock(orderItem.productId.toString(), orderItem.quantity);
     });

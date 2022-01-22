@@ -108,7 +108,7 @@ export default function ScrollDialog({ review, open = false, setOpen }) {
         </DialogTitle>
         <DialogContent dividers>
           <DialogContentText ref={descriptionElementRef} tabIndex={-1}>
-            <span>{review.reviewMessage}</span>
+            <span className="whitespace-pre-wrap">{review.reviewMessage}</span>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -23,7 +23,9 @@ export default function ProductDetails({ match, history }) {
   const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
   const [reviewed, setReviewed] = useState(false);
 
+  const reviewsRef = useRef();
   const watching = useRef(false);
+
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -46,16 +48,6 @@ export default function ProductDetails({ match, history }) {
   } = useSelector((state) => state.cart);
 
   useEffect(() => {
-    product?.reviews.forEach((review) => {
-      if (review?.userId === user?._id) {
-        setReviewed(true);
-      } else {
-        setReviewed(false);
-      }
-    });
-  }, [product?.reviews, user?._id, reviewSuccess]);
-
-  useEffect(() => {
     dispatch(getMyOrders());
     dispatch(fetchProductDetails(match.params.id));
     if (error) {
@@ -75,6 +67,13 @@ export default function ProductDetails({ match, history }) {
     success,
     reviewSuccess,
   ]);
+
+  useEffect(() => {
+    const reviewed = product?.reviews.some(
+      (review) => review?.userId === user?._id,
+    );
+    setReviewed(reviewed);
+  }, [product?.reviews, user, reviewSuccess]);
 
   useEffect(() => {
     if (cartError) {
@@ -187,12 +186,12 @@ export default function ProductDetails({ match, history }) {
     <div className="my-10">
       <Metadata title={product.name + '--Virtual shop'} />
       <div className="flex flex-col items-center justify-center px-5 border-b lg:flex-row">
-        <div className="max-w-[200px]">
+        <div className="max-w-[300px]">
           <Carousel>
             {product.images.map((image, index) => (
               <img
                 alt="product"
-                className="object-cover w-auto h-full"
+                className="object-contain w-full h-full cursor-pointer"
                 key={index}
                 src={image.url}
               />
@@ -220,7 +219,12 @@ export default function ProductDetails({ match, history }) {
           </div>
           <br />
           {product.reviews.length > 0 ? (
-            <div className="flex items-center">
+            <div
+              onClick={() =>
+                reviewsRef.current.scrollIntoView({ behavior: 'smooth' })
+              }
+              className="flex items-center cursor-pointer"
+            >
               <Rating
                 sx={{ marginRight: '10px' }}
                 value={product.rating}
@@ -280,7 +284,10 @@ export default function ProductDetails({ match, history }) {
       {product.reviews.length > 0 ? (
         <>
           <h3 className="my-4 text-xl text-center">Reviews</h3>
-          <div className="flex flex-col items-center justify-center w-screen overflow-auto md:items-stretch md:flex-row">
+          <div
+            ref={reviewsRef}
+            className="flex flex-col items-center justify-center w-screen overflow-auto md:items-stretch md:flex-row sm:space-x-2"
+          >
             {product.reviews.map((review, index) => (
               <ReviewCard review={review} key={index} />
             ))}

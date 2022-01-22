@@ -131,21 +131,6 @@ export default function Checkout({ history }) {
               value={address.state}
               onChange={setValue}
             />
-            {/* <TextField
-              id="outlined-select-state"
-              select
-              label="Select state"
-              name="state"
-              value={address.state}
-              onChange={setValue}
-            >
-              {State.getStatesOfCountry('IN').map((state) => (
-                <MenuItem key={state.name} value={state.name}>
-                  {state.name}
-                </MenuItem>
-              ))}
-            </TextField> */}
-            {/* // TODO: Add state dropdown */}
             <Button
               type="submit"
               onClick={handleSubmit}

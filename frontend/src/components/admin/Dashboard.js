@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Doughnut, Line } from 'react-chartjs-2';
 import {
@@ -33,10 +33,13 @@ export default function Dashboard() {
     Tooltip,
     Legend,
   );
-
   const { loading, products } = useSelector((state) => state.products);
   const { users } = useSelector((state) => state.allUsers);
   const { orders } = useSelector((state) => state.allOrders);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [shippedLength, setShippedLength] = useState(0);
+  const [deliveredLength, setDeliveredLength] = useState(0);
+  const [cumulativeOrderAmounts, setCumulativeOrderAmounts] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -46,34 +49,59 @@ export default function Dashboard() {
     dispatch(getAllOrders());
   }, [dispatch]);
 
-  const totalAmount =
-    orders &&
-    orders.reduce((acc, order) => {
-      return acc + order.totalPrice;
-    }, 0);
+  useEffect(() => {
+    const totalAmount =
+      orders &&
+      orders.reduce((acc, order) => {
+        return acc + order.totalPrice;
+      }, 0);
 
-  const outOfStockCount = products?.filter(
-    (product) => product.stock === 0,
-  ).length;
+    setTotalAmount(totalAmount);
+
+    const shippedLength = orders?.filter(
+      (order) => order.orderStatus === 'Shipped',
+    ).length;
+    setShippedLength(shippedLength);
+
+    const deliveredLength = orders?.filter(
+      (order) => order.orderStatus === 'Delivered',
+    ).length;
+    setDeliveredLength(deliveredLength);
+
+    let cumulativeOrderAmounts = [];
+    orders?.reduce(
+      (acc, order, i) => (cumulativeOrderAmounts[i] = order?.totalPrice + acc),
+      0,
+    );
+    setCumulativeOrderAmounts(cumulativeOrderAmounts);
+  }, [orders]);
 
   const LineData = {
-    labels: ['Initial Amount', 'Amount Earned'],
+    labels: orders?.map((order) =>
+      new Date(order?.paidAt).toLocaleDateString(),
+    ),
     datasets: [
       {
-        label: 'TOTAL AMOUNT',
-        backgroundColor: ['green'],
-        data: [20, totalAmount],
+        label: 'TOTAL TURNOVER IN RUPEES',
+        data: cumulativeOrderAmounts,
+        fill: true,
+        lineTension: 0.5,
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        borderColor: 'rgba(75,192,192,1)',
       },
     ],
   };
 
   const doughnutData = {
-    labels: ['Out of stock', 'In stock'],
+    labels: ['Processing', 'Shipped', 'Delivered'],
     datasets: [
       {
-        backgroundColor: ['#5f5d63', '#6800B4'],
-        hoverBackgroundColor: ['#38363d', '#35014F'],
-        data: [outOfStockCount, products?.length - outOfStockCount],
+        backgroundColor: ['blue', 'gray', 'green'],
+        data: [
+          orders?.length - shippedLength - deliveredLength,
+          shippedLength,
+          deliveredLength,
+        ],
       },
     ],
   };
@@ -91,7 +119,7 @@ export default function Dashboard() {
               <p>Total amount </p>
               <p>₹{totalAmount}</p>
             </h4>
-            <div className="flex flex-col items-center justify-between my-10 md:text-2xl sm:flex-row">
+            <div className="flex items-center justify-between px-4 my-10 md:text-2xl xl:mx-40 lg:mx-28 md:mx-10">
               <Link
                 className="grid w-24 h-24 my-2 bg-blue-300 rounded-full md:w-40 md:h-40 place-items-center"
                 to="/admin/products"

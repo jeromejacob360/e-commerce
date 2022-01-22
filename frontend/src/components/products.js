@@ -20,32 +20,21 @@ import Loading from '../helper-components/Loading';
 import ProductCard from '../helper-components/productCard';
 import { clearErrors, fetchProducts } from '../redux/actions/productActions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useAlert } from 'react-alert';
+import { useSnackbar } from 'notistack';
 import Metadata from '../helper-components/metadata';
-
-const categories = [
-  'Laptop',
-  'Mobile',
-  'Tablet',
-  'Camera',
-  'Headphone',
-  'Speaker',
-  'Watch',
-  'Accessories',
-  'Others',
-  'All',
-];
+import { categories } from '../data/data';
+const categoryList = [...categories, 'All'];
 
 export default function Products({ match }) {
   const keyword = match.params.keyword;
   const dispatch = useDispatch();
-  const alert = useAlert();
+  const { enqueueSnackbar } = useSnackbar();
   const { loading, products, limit, filteredProductsCount, error } =
     useSelector((state) => state.products);
   const md = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [price, setPrice] = useState([0, 50000]);
+  const [price, setPrice] = useState([0, 10000]);
   const [category, setCategory] = useState('');
   const [rating, setRating] = useState(0);
 
@@ -53,13 +42,24 @@ export default function Products({ match }) {
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      enqueueSnackbar(error, {
+        variant: 'error',
+      });
       dispatch(clearErrors());
     }
     dispatch(
       fetchProducts(keyword, currentPage, price, category, rating, error),
     );
-  }, [dispatch, keyword, currentPage, price, category, rating, error, alert]);
+  }, [
+    dispatch,
+    keyword,
+    currentPage,
+    price,
+    category,
+    rating,
+    error,
+    enqueueSnackbar,
+  ]);
 
   return (
     <Container
@@ -107,7 +107,7 @@ export default function Products({ match }) {
                   onChange={(event, value) => setPrice(value)}
                   valueLabelDisplay="auto"
                   min={0}
-                  max={50000}
+                  max={10000}
                   step={500}
                 />
               </Box>
@@ -124,14 +124,15 @@ export default function Products({ match }) {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>Category</Typography>
+              <Typography>Brand</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <List>
-                {categories.map((categoryItem) => {
+                {categoryList.map((categoryItem) => {
                   return (
                     <ListItem disablePadding key={categoryItem}>
                       <ListItemButton
+                        className="capitalize"
                         onClick={() => setCategory(categoryItem)}
                         sx={{
                           backgroundColor:

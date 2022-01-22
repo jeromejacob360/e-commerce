@@ -10,7 +10,7 @@ export const newOrderReducer = (state = {}, action) => {
       return {
         ...state,
         loading: false,
-        order: action.payload,
+        ...action.payload,
       };
     case 'CREATE_ORDER_FAILURE':
       return {

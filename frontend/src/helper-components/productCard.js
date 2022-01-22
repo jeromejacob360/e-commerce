@@ -11,7 +11,7 @@ export default function ProductCard({ product }) {
       >
         {product?.images?.length > 0 && (
           <img
-            className="object-cover w-auto h-60"
+            className="object-contain w-auto h-60"
             src={product.images[0].url}
             alt="product"
           />

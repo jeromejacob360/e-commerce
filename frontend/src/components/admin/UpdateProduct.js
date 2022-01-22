@@ -262,7 +262,7 @@ export default function UpdateProduct({ history, match }) {
                     {product.images &&
                       product.images.map((image, index) => (
                         <img
-                          className={`object-cover h-20 ${
+                          className={`object-contain h-20 ${
                             uploading ? 'opacity-10' : 'cursor-pointer'
                           } w-14`}
                           key={index}

@@ -122,7 +122,7 @@ export default function ProcessOrder({ match }) {
                           <Link to={`/product/${item.productId}`}>
                             <img
                               src={item.image}
-                              className="object-cover w-20 mr-2 h-28"
+                              className="object-contain w-20 mr-2 h-28"
                               alt=""
                             />
                           </Link>

@@ -20,6 +20,7 @@ import { clearErrors, createProduct } from '../../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Loading from '../../helper-components/Loading';
 import Sidebar from './Sidebar';
+import { categories } from '../../data/data';
 
 const initialState = {
   name: '',
@@ -32,15 +33,6 @@ const initialState = {
 
 export default function CreateProduct() {
   const [product, setProduct] = useState(initialState);
-  const categories = [
-    'Laptop',
-    'Footwear',
-    'Bottom',
-    'Tops',
-    'Attire',
-    'Camera',
-    'SmartPhones',
-  ];
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -171,11 +163,7 @@ export default function CreateProduct() {
                   name="category"
                   displayEmpty
                   renderValue={(value) =>
-                    value ? (
-                      value
-                    ) : (
-                      <div className="text-gray-400">Category</div>
-                    )
+                    value ? value : <div className="text-gray-400">Brand</div>
                   }
                   value={product.category}
                   onChange={setValue}
@@ -186,7 +174,11 @@ export default function CreateProduct() {
                   }
                 >
                   {categories.map((category) => (
-                    <MenuItem key={category} value={category}>
+                    <MenuItem
+                      className="capitalize"
+                      key={category}
+                      value={category}
+                    >
                       {category}
                     </MenuItem>
                   ))}
@@ -209,7 +201,7 @@ export default function CreateProduct() {
                   {product.images.length > 0 &&
                     product.images.map((image, index) => (
                       <img
-                        className="object-cover h-20 cursor-pointer w-14"
+                        className="object-contain h-20 cursor-pointer w-14"
                         key={index}
                         src={image.url}
                         onClick={() => deleteImage(index)}

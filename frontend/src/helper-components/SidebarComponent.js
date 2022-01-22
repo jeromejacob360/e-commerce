@@ -15,31 +15,31 @@ export default function SidebarComponent() {
             <DashboardIcon /> <span className="ml-2">Dashboard</span>
           </p>
         </Link>
-        <Link to="/admin/products">
+        <Link to="/admin/products" className="w-full">
           <p className="flex items-center space-x-2">
             <RedeemIcon />
             <span>All products</span>
           </p>
         </Link>
-        <Link to="/admin/product">
+        <Link to="/admin/product" className="w-full">
           <p className="flex items-center space-x-2">
             <AddBoxIcon />
             <span>Create product</span>
           </p>
         </Link>
-        <Link to="/admin/orders">
+        <Link to="/admin/orders" className="w-full">
           <p className="flex items-center space-x-2">
             <Inventory2Icon />
             <span>Orders</span>
           </p>
         </Link>
-        <Link to="/admin/users">
+        <Link to="/admin/users" className="w-full">
           <p className="flex items-center space-x-2">
             <PeopleIcon />
             <span>Users</span>
           </p>
         </Link>
-        <Link to="/admin/reviews">
+        <Link to="/admin/reviews" className="w-full">
           <p className="flex items-center space-x-2">
             <ReviewsIcon />
             <span>Reviews</span>

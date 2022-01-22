@@ -175,7 +175,7 @@ export default function ReviewsList() {
                           <div className="flex items-center justify-between w-[500px] pr-4">
                             <span>{product._id}</span>
                             <img
-                              className="object-cover w-8 h-8"
+                              className="object-contain w-8 h-8"
                               src={product.images[0].url}
                               alt=""
                             />

@@ -126,7 +126,7 @@ export default function OrderDetails({ match, history }) {
                   >
                     <Link to={`/product/${item?.productId}`}>
                       <img
-                        className="object-cover h-40 w-28"
+                        className="object-contain h-40 w-28"
                         src={item?.image}
                         alt="Product"
                       />

@@ -72,7 +72,7 @@ export default function Confirm({ history }) {
                   <Link to={`/product/${item.productId}`}>
                     <img
                       src={item.image.url}
-                      className="object-cover w-20 mr-2 h-28"
+                      className="object-contain mr-2 w-28 h-28"
                       alt=""
                     />
                   </Link>

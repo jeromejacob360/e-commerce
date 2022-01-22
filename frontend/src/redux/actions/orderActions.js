@@ -28,8 +28,6 @@ export const updateOrder = (id, order) => async (dispatch) => {
       type: 'UPDATE_ORDER_REQUEST',
     });
 
-    console.log(`id, order`, id, order);
-
     const { data } = await axios.put('/api/admin/order/' + id, order);
 
     dispatch({
