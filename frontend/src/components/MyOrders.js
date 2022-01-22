@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors, getMyOrders } from '../redux/actions/orderActions';
 import { DataGrid } from '@mui/x-data-grid';
@@ -11,6 +11,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 export default function MyOrders() {
   const { loading, orders, error } = useSelector((state) => state.myOrders);
   const { user } = useSelector((state) => state.user);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const dispatch = useDispatch();
   const enqueueSnackbar = useSnackbar();
@@ -101,7 +102,9 @@ export default function MyOrders() {
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={10}
+        pageSize={rowsPerPage}
+        onPageSizeChange={(number) => setRowsPerPage(number)}
+        rowsPerPageOptions={[5, 10, 20, 50, 100]}
         disableSelectionOnClick
         autoHeight
       />

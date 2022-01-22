@@ -18,6 +18,7 @@ import ProductCard from '../../helper-components/productCard';
 
 export default function ReviewsList() {
   const [pId, setPId] = useState('');
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
@@ -202,7 +203,9 @@ export default function ReviewsList() {
                 <DataGrid
                   rows={rows}
                   columns={columns}
-                  pageSize={10}
+                  pageSize={rowsPerPage}
+                  onPageSizeChange={(number) => setRowsPerPage(number)}
+                  rowsPerPageOptions={[5, 10, 20, 50, 100]}
                   disableSelectionOnClick
                   autoHeight
                   getRowClassName={(params) =>

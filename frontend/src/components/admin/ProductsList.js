@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearErrors,
@@ -20,6 +20,7 @@ export default function ProductsList() {
   const { enqueueSnackbar } = useSnackbar();
   const { loading, products } = useSelector((state) => state.products);
   const { success, error, message } = useSelector((state) => state.product);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     dispatch(fetchAdminProducts());
@@ -156,7 +157,9 @@ export default function ProductsList() {
             <DataGrid
               rows={rows}
               columns={columns}
-              pageSize={10}
+              pageSize={rowsPerPage}
+              onPageSizeChange={(number) => setRowsPerPage(number)}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]}
               disableSelectionOnClick
               autoHeight
               getRowClassName={(params) =>

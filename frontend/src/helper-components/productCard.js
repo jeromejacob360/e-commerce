@@ -5,7 +5,10 @@ import { Link } from 'react-router-dom';
 export default function ProductCard({ product }) {
   return (
     <Link to={`/product/${product._id}`} className="m-4">
-      <div className="flex flex-col items-center justify-between h-full p-4 border shadow-md w-80">
+      <div
+        className="flex flex-col items-center justify-between h-full p-4 border shadow-md w-80"
+        data-testid="product-card"
+      >
         {product?.images?.length > 0 && (
           <img
             className="object-cover w-auto h-60"

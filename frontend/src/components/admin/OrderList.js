@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors } from '../../redux/actions/productActions';
 import Loading from '../../helper-components/Loading';
@@ -17,6 +17,7 @@ export default function OrdersList() {
   const { enqueueSnackbar } = useSnackbar();
   const { loading, orders } = useSelector((state) => state.allOrders);
   const { isDeleted, error } = useSelector((state) => state.order);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     dispatch(getAllOrders());
@@ -74,16 +75,16 @@ export default function OrdersList() {
       minWidth: 100,
       flex: 0.5,
       cellClassName: (params) => {
-        return params.getValue(params.id, 'status') === 'Delivered'
+        return params.row.status === 'Delivered'
           ? 'text-green-700'
           : 'text-red-800';
       },
     },
     {
       field: 'itemsQty',
-      headerName: 'Quantity',
+      headerName: 'No. of items',
       type: 'number',
-      minWidth: 80,
+      minWidth: 130,
       flex: 0.3,
     },
 
@@ -129,9 +130,11 @@ export default function OrdersList() {
             <DataGrid
               rows={rows}
               columns={columns}
-              pageSize={10}
+              pageSize={rowsPerPage}
               disableSelectionOnClick
               autoHeight
+              onPageSizeChange={(number) => setRowsPerPage(number)}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]}
               getRowClassName={(params) =>
                 params.row.stock < 1 ? 'bg-red-400 bg-opacity-10' : ''
               }

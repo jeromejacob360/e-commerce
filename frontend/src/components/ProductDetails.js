@@ -49,9 +49,11 @@ export default function ProductDetails({ match, history }) {
     product?.reviews.forEach((review) => {
       if (review?.userId === user?._id) {
         setReviewed(true);
+      } else {
+        setReviewed(false);
       }
     });
-  }, [product?.reviews, user?._id]);
+  }, [product?.reviews, user?._id, reviewSuccess]);
 
   useEffect(() => {
     dispatch(getMyOrders());

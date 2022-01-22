@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors } from '../../redux/actions/productActions';
 import Loading from '../../helper-components/Loading';
@@ -20,6 +20,8 @@ export default function UsersList() {
   const { loading, users } = useSelector((state) => state.allUsers);
   const { success, error } = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.user);
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     dispatch(fetchAllUsers());
@@ -148,7 +150,9 @@ export default function UsersList() {
             <DataGrid
               rows={rows}
               columns={columns}
-              pageSize={10}
+              pageSize={rowsPerPage}
+              onPageSizeChange={(number) => setRowsPerPage(number)}
+              rowsPerPageOptions={[5, 10, 20, 50, 100]}
               disableSelectionOnClick
               autoHeight
               getRowClassName={(params) =>
