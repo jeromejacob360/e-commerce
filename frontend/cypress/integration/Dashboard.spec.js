@@ -18,7 +18,7 @@ describe('Testing the dashboard', () => {
     cy.get('[placeholder="Description"]').click().type('Description');
     cy.contains('Category').click();
     cy.contains('Footwear').click();
-    cy.get('[data-testid="select-images-button"]').attachFile('3500.jpg');
+    cy.get('[data-testid="select-images-button"]').attachFile('1.jpg');
     cy.intercept('POST', '/api/admin/product/new').as('uploadRequest');
     cy.get('[data-testid="submit-create-button"]').click();
     cy.wait('@uploadRequest');

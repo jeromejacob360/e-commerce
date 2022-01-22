@@ -39,7 +39,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test-open": "cypress open",
-    "test-run": "cypress run",
+    "test": "cypress run",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
