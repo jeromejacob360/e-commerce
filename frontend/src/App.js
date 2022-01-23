@@ -40,6 +40,12 @@ function App() {
   const { isAuthenticated } = useSelector((state) => state.user);
   const [stripeApiKey, setStripeApiKey] = useState('');
 
+  console.warn = (message) => {
+    if (!message.toLowerCase().includes('stripe')) {
+      console.warn(message);
+    } else return false;
+  };
+
   useEffect(() => {
     if (isAuthenticated === true) {
       dispatch(loadCart());

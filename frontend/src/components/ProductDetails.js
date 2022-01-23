@@ -22,6 +22,7 @@ export default function ProductDetails({ match, history }) {
   const [addedQuantity, setAddedQuantity] = useState(0);
   const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
   const [reviewed, setReviewed] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
   const reviewsRef = useRef();
   const watching = useRef(false);
@@ -69,11 +70,24 @@ export default function ProductDetails({ match, history }) {
   ]);
 
   useEffect(() => {
-    const reviewed = product?.reviews.some(
-      (review) => review?.userId === user?._id,
-    );
-    setReviewed(reviewed);
-  }, [product?.reviews, user, reviewSuccess]);
+    if (product?.reviews.length > 0 && user) {
+      const reviewed = product.reviews.some(
+        (review) => review.userId === user._id,
+      );
+      setReviewed(reviewed);
+
+      if (reviewed) {
+        // Shift my review to first position
+        const reviewIndex = product.reviews.findIndex(
+          (review) => review.userId === user._id,
+        );
+        const temp = [...product.reviews];
+        temp.splice(reviewIndex, 1);
+        temp.unshift(product.reviews[reviewIndex]);
+        setReviews(temp);
+      } else setReviews(product?.reviews);
+    }
+  }, [product?.reviews, user, reviewSuccess, product]);
 
   useEffect(() => {
     if (cartError) {
@@ -281,14 +295,14 @@ export default function ProductDetails({ match, history }) {
         </div>
       )}
 
-      {product.reviews.length > 0 ? (
+      {reviews.length > 0 ? (
         <>
           <h3 className="my-4 text-xl text-center">Reviews</h3>
           <div
             ref={reviewsRef}
             className="flex flex-col items-center justify-center w-screen overflow-auto md:items-stretch md:flex-row sm:space-x-2"
           >
-            {product.reviews.map((review, index) => (
+            {reviews.map((review, index) => (
               <ReviewCard review={review} key={index} />
             ))}
           </div>
