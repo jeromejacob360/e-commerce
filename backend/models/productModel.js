@@ -56,6 +56,10 @@ const productSchema = new Schema({
       avatar: {
         type: String,
       },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   createdBy: {

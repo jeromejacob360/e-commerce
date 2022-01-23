@@ -116,6 +116,25 @@ export const fetchAllUsers = () => async (dispatch) => {
   }
 };
 
+// Get user's reviews
+export const getUserReviews = () => async (dispatch) => {
+  try {
+    dispatch({ type: 'ALL_REVIEWS_REQUEST' });
+
+    const { data } = await axios.get(`/api/me/reviews`);
+
+    dispatch({
+      type: 'ALL_REVIEWS_SUCCESS',
+      payload: data.reviews,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'ALL_REVIEWS_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
+
 // Delete a user
 export const deleteUser = (id) => async (dispatch) => {
   try {

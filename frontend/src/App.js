@@ -33,6 +33,7 @@ import UsersList from './components/admin/UsersList';
 import ReviewsList from './components/admin/ReviewsList';
 import ProcessOrder from './components/admin/ProcessOrder';
 import ErrorBoundary from './components/ErrorBoundary';
+import UserReviews from './components/UserReviews';
 
 function App() {
   const dispatch = useDispatch();
@@ -88,6 +89,7 @@ function App() {
             <ProtectedRoute exact path="/checkout" component={Checkout} />
             <ProtectedRoute exact path="/success" component={OrderSuccess} />
             <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
+            <ProtectedRoute exact path="/me/reviews" component={UserReviews} />
             <ProtectedRoute exact path="/orders/me" component={MyOrders} />
             <ProtectedRoute exact path="/order/:id" component={OrderDetails} />
             <ProtectedRoute

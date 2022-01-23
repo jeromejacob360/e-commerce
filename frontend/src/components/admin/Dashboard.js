@@ -36,7 +36,6 @@ export default function Dashboard() {
   const { loading, products } = useSelector((state) => state.products);
   const { users } = useSelector((state) => state.allUsers);
   const { orders } = useSelector((state) => state.allOrders);
-  const [totalAmount, setTotalAmount] = useState(0);
   const [shippedLength, setShippedLength] = useState(0);
   const [deliveredLength, setDeliveredLength] = useState(0);
   const [cumulativeOrderAmounts, setCumulativeOrderAmounts] = useState(0);
@@ -50,14 +49,6 @@ export default function Dashboard() {
   }, [dispatch]);
 
   useEffect(() => {
-    const totalAmount =
-      orders &&
-      orders.reduce((acc, order) => {
-        return acc + order.totalPrice;
-      }, 0);
-
-    setTotalAmount(totalAmount);
-
     const shippedLength = orders?.filter(
       (order) => order.orderStatus === 'Shipped',
     ).length;
@@ -115,10 +106,6 @@ export default function Dashboard() {
           <Loading />
         ) : (
           <div className="flex-1 sm:ml-44">
-            <h4 className="py-2 mt-10 mb-10 text-2xl text-center text-white bg-orange-400 md:py-10">
-              <p>Total amount </p>
-              <p>₹{totalAmount}</p>
-            </h4>
             <div className="flex items-center justify-between px-4 my-10 md:text-2xl xl:mx-40 lg:mx-28 md:mx-10">
               <Link
                 className="grid w-24 h-24 my-2 bg-blue-300 rounded-full md:w-40 md:h-40 place-items-center"

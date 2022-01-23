@@ -159,3 +159,36 @@ export const profileReducer = (state = { user: {} }, action) => {
       return state;
   }
 };
+
+export const usersReviewsReducer = (state = { reviews: [] }, action) => {
+  switch (action.type) {
+    case 'ALL_REVIEWS_REQUEST':
+      return {
+        loading: true,
+      };
+
+    case 'ALL_REVIEWS_SUCCESS':
+      return {
+        loading: false,
+        reviews: action.payload,
+      };
+
+    case 'ALL_REVIEWS_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+    case 'CLEAR_STATE':
+      return { reviews: [] };
+
+    default:
+      return state;
+  }
+};

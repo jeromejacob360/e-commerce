@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import Loading from '../helper-components/Loading';
 import Metadata from '../helper-components/metadata';
 import { Link } from 'react-router-dom';
+import date from 'date-and-time';
 import { Button } from '@mui/material';
 
 export default function OrderDetails({ match, history }) {
@@ -12,6 +13,7 @@ export default function OrderDetails({ match, history }) {
   const { enqueueSnackbar } = useSnackbar();
   const { loading, order, error } = useSelector((state) => state.orderDetails);
 
+  const { format } = date;
   useEffect(() => {
     dispatch(getOrderDetails(match.params.id));
   }, [dispatch, match.params.id]);
@@ -62,7 +64,10 @@ export default function OrderDetails({ match, history }) {
                     {order?.paymentInfo?.status === 'succeeded' && (
                       <span>
                         &nbsp;on{' '}
-                        {new Date(order.paidAt).toLocaleString().toString()}
+                        {format(
+                          new Date(order.paidAt),
+                          'MMM DD YYYY hh:MM:SS A',
+                        )}
                       </span>
                     )}
                   </span>
@@ -82,9 +87,10 @@ export default function OrderDetails({ match, history }) {
                         <span>
                           {' '}
                           on{' '}
-                          {new Date(order.deliveredAt)
-                            .toLocaleString()
-                            .toString()}
+                          {format(
+                            new Date(order.deliveredAt),
+                            'MMM DD YYYY hh:MM:SS A',
+                          )}
                         </span>
                       )}
                     </span>

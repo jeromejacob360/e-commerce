@@ -72,7 +72,7 @@ export default function ReviewsList() {
         Rating: review.rating,
         Review:
           review.reviewMessage.length > 20
-            ? review?.reviewMessage?.substring(10) + '...'
+            ? review?.reviewMessage?.substring(0, 10) + '...'
             : review?.reviewMessage,
       });
     });

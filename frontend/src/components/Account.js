@@ -37,16 +37,15 @@ export default function Account() {
           </p>
         </div>
       </Paper>
-      <Link to="/me/update">
-        {/* <Button variant="contained"> Edit profile</Button>  */}
-        {/* //TODO add edit profile button< */}
-      </Link>
+      <Link to="/me/update"></Link>
 
       <div className="flex justify-center w-full mt-4 space-x-6">
         <Button component={Link} to="/orders/me" variant="outlined">
           My Orders
         </Button>
-        {/* <Button variant="outlined">Change password</Button> */}
+        <Button component={Link} to="/me/reviews" variant="outlined">
+          My Reviews
+        </Button>
       </div>
     </div>
   );

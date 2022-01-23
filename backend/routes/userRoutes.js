@@ -10,6 +10,7 @@ const {
   updateUserDetailsAdmin,
   deleteUser,
   saveAddress,
+  getUserReviews,
 } = require('../controllers/userController');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
@@ -19,6 +20,7 @@ router.route('/logout').get(logoutUser);
 router.route('/me').get(isAuthenticatedUser, getUserDetails);
 router.route('/me/update').get(isAuthenticatedUser, updateUserDetails);
 router.route('/shipping').post(isAuthenticatedUser, saveAddress);
+router.route('/me/reviews').get(isAuthenticatedUser, getUserReviews);
 
 // Admin routes
 router
