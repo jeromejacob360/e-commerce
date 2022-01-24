@@ -123,31 +123,33 @@ exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
 
 // Get user's reviews
 exports.getUserReviews = catchAsyncErrors(async (req, res, next) => {
-  let reviews = [];
-  Product.find({}, (err, products) => {
-    if (err) return next(new ErrorHandler(error.message, 404));
+  const products = await Product.find(
+    { 'reviews.userId': { $eq: req.user.id } },
+    'description , name , reviews , images',
+  );
 
-    products.forEach((product) =>
-      product.reviews.forEach((review) => {
-        if (review.userId.toString() === req.user.id) {
-          const { reviewMessage, rating, _id, createdAt } = review;
-          reviews.push({
-            reviewMessage,
-            rating,
-            reviewId: _id,
-            productId: product._id.toString(),
-            productName: product.name,
-            productDescription: product.description,
-            image: product?.images[0]?.url,
-            createdAt,
-          });
-        }
-      }),
-    );
-    res.status(200).json({
-      success: true,
-      reviews,
-    });
+  let reviews = [];
+
+  products.forEach((product) =>
+    product.reviews.forEach((review) => {
+      if (review.userId.toString() === req.user.id) {
+        const { reviewMessage, rating, _id, createdAt } = review;
+        reviews.push({
+          reviewMessage,
+          rating,
+          reviewId: _id,
+          createdAt,
+          productId: product._id.toString(),
+          productName: product.name,
+          productDescription: product.description,
+          image: product?.images[0]?.url,
+        });
+      }
+    }),
+  );
+  res.status(200).json({
+    success: true,
+    reviews: reviews,
   });
 });
 

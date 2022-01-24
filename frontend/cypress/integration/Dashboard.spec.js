@@ -9,14 +9,14 @@ describe('Testing the dashboard', () => {
   });
 
   it('Creates a product', () => {
-    cy.get('[alt="Navbar user avatar"]').click();
+    cy.get('[data-testid="userAvatar"]').click();
     cy.contains('Dashboard').click();
     cy.contains('Create product').click();
     cy.get('[placeholder="Product name"]').click().type('Name');
     cy.get('[placeholder="Price"]').click().type('999');
     cy.get('[placeholder="Stock"]').click().type('100');
     cy.get('[placeholder="Description"]').click().type('Description');
-    cy.contains('Category').click();
+    cy.contains('Brandybibkbkvbyigyifyfu').click();
     cy.contains('Footwear').click();
     cy.get('[data-testid="select-images-button"]').attachFile('1.jpg');
     cy.intercept('POST', '/api/admin/product/new').as('uploadRequest');
@@ -27,7 +27,7 @@ describe('Testing the dashboard', () => {
   });
 
   it('Updates the last product in productsList page-1', () => {
-    cy.get('[alt="Navbar user avatar"]').click();
+    cy.get('[data-testid="userAvatar"]').click();
     cy.contains('Dashboard').click();
     cy.contains('All products').click();
     cy.get('[data-testid="EditIcon"]').last().click();
@@ -44,7 +44,7 @@ describe('Testing the dashboard', () => {
     cy.contains('Product updated').should('be.visible');
   });
   it('Deletes the last product in productsList page-1', () => {
-    cy.get('[alt="Navbar user avatar"]').click();
+    cy.get('[data-testid="userAvatar"]').click();
     cy.contains('Dashboard').click();
     cy.contains('All products').click();
     cy.get('[data-testid="DeleteOutlineIcon"]').last().click();

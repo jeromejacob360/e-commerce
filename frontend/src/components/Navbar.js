@@ -15,20 +15,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { logoutUser } from '../redux/actions/userActions';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
-import { Badge } from '@mui/material';
-
-const pages = ['Products', 'Search'];
+import { Badge, TextField, useMediaQuery } from '@mui/material';
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [options, setOptions] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const sm = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    history.push(`/products/${searchText.trim()}`);
+  };
 
   useEffect(() => {
     if (isAuthenticated && user?.role === 'admin') {
@@ -99,19 +104,14 @@ const ResponsiveAppBar = () => {
       position="static"
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar className="justify-between" disableGutters>
           <Link to="/">
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-            >
-              VIRTUAL SHOP
-            </Typography>
+            <h2 className="hidden mr-2 text-2xl text-white sm:flex">
+              VIRTUAL STORE
+            </h2>
           </Link>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {/* FOR SMALL SCREENS */}
+          <div className="flex items-center justify-between flex-1 sm:hidden">
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -136,40 +136,50 @@ const ResponsiveAppBar = () => {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
+              className="block sm:hidden"
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link to={`/${page.toLowerCase()}`}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Link to={`/`}>
+                  <Typography textAlign="center">Home</Typography>
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Link to={`/products`}>
+                  <Typography textAlign="center">Collections</Typography>
+                </Link>
+              </MenuItem>
             </Menu>
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            <Link to="/"> VIRTUAL SHOP</Link>
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                <Link to={`/${page.toLowerCase()}`}>{page}</Link>
-              </Button>
-            ))}
-          </Box>
+            <form className="flex-1 px-2" onSubmit={handleSearch}>
+              <TextField
+                className="p-2 bg-white rounded-md"
+                fullWidth
+                placeholder="Search......"
+                size="small"
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+              />
+            </form>
+          </div>
 
-          <Box sx={{ flexGrow: 0 }}>
+          {/* SEARCH PANEL IN LARGE SCREEN */}
+          <div className="items-center justify-between flex-1 hidden px-10 space-x-4 text-white sm:flex">
+            <Link to={`/products`}>
+              <Typography sx={{ fontSize: '1.25rem' }} textAlign="center">
+                Collections
+              </Typography>
+            </Link>
+            <form onSubmit={handleSearch}>
+              <TextField
+                className="p-2 bg-white rounded-md"
+                fullWidth
+                placeholder="Search......"
+                size="small"
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
+              />
+            </form>
+          </div>
+          <div className="flex items-center">
             <Tooltip title="Go to Cart">
               <Badge
                 component={Link}
@@ -193,7 +203,11 @@ const ResponsiveAppBar = () => {
                 onClick={handleOpenUserMenu}
                 sx={{ p: 0 }}
               >
-                <Avatar alt="Navbar user avatar" src={user?.avatar?.url} />
+                <Avatar
+                  alt={user?.name}
+                  data-testid="userAvatar"
+                  src={user?.avatar?.url}
+                />
               </IconButton>
             </Tooltip>
 
@@ -221,11 +235,11 @@ const ResponsiveAppBar = () => {
                     option.function();
                   }}
                 >
-                  <Typography textAlign="center">{option.name}</Typography>
+                  <h2>{option.name}</h2>
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </div>
         </Toolbar>
       </Container>
     </AppBar>

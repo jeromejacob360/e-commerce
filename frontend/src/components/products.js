@@ -4,12 +4,17 @@ import {
   AccordionSummary,
   Box,
   Container,
+  FormControl,
+  FormHelperText,
+  InputLabel,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
+  MenuItem,
   Pagination,
   Rating,
+  Select,
   Slider,
   Typography,
   useMediaQuery,
@@ -37,6 +42,8 @@ export default function Products({ match }) {
   const [price, setPrice] = useState([0, 10000]);
   const [category, setCategory] = useState('');
   const [rating, setRating] = useState(0);
+  const [sort, setSort] = useState('PriceAsc');
+  const [sortedProducts, setSortedProducts] = useState([]);
 
   const totalPages = Math.ceil(filteredProductsCount / limit || 1);
 
@@ -51,15 +58,38 @@ export default function Products({ match }) {
       fetchProducts(keyword, currentPage, price, category, rating, error),
     );
   }, [
-    dispatch,
-    keyword,
-    currentPage,
-    price,
     category,
-    rating,
-    error,
+    currentPage,
+    dispatch,
     enqueueSnackbar,
+    error,
+    keyword,
+    price,
+    rating,
   ]);
+
+  useEffect(() => {
+    const sortPriceAsc = (a, b) => a.price - b.price;
+    const sortPriceDesc = (a, b) => b.price - a.price;
+
+    const sortRatingAsc = (a, b) => a.rating - b.rating;
+    const sortRatingDesc = (a, b) => b.rating - a.rating;
+
+    if (products.length > 0) {
+      switch (sort) {
+        case 'PriceAsc':
+          setSortedProducts([...products].sort(sortPriceAsc));
+          break;
+
+        case 'PriceDesc':
+          setSortedProducts([...products].sort(sortPriceDesc));
+          break;
+
+        default:
+          return setSortedProducts(products);
+      }
+    }
+  }, [products, sort]);
 
   return (
     <Container
@@ -178,6 +208,60 @@ export default function Products({ match }) {
               </Box>
             </AccordionDetails>
           </Accordion>
+
+          <Accordion
+            sx={{
+              marginBottom: '20px',
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Sort</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box
+                sx={{
+                  width: '100%',
+                }}
+              >
+                <FormControl fullWidth>
+                  <InputLabel id="sort-order-label">Sort</InputLabel>
+                  <Select
+                    labelId="sort-order-label"
+                    id="sort-order"
+                    label="Age"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                  >
+                    <MenuItem>Price high to low</MenuItem>
+                    <MenuItem>Price low to high</MenuItem>
+                    <MenuItem>aaaaaaaaa</MenuItem>
+                    <MenuItem>aaaaaaaaa</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                  <Select
+                    value="sssssssss"
+                    onChange={(e) => setSort(e.target.value)}
+                    displayEmpty
+                    inputProps={{ 'aria-label': 'Without label' }}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                  </Select>
+                  <FormHelperText>Without label</FormHelperText>
+                </FormControl>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
         </Container>
         <Box
           sx={{
@@ -195,7 +279,7 @@ export default function Products({ match }) {
                 marginBottom: '2rem',
               }}
             >
-              {products.map((product) => {
+              {sortedProducts?.map((product) => {
                 return <ProductCard key={product._id} product={product} />;
               })}
             </div>

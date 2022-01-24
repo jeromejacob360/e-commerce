@@ -1,12 +1,5 @@
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Button, TextField, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
-import Metadata from '../helper-components/metadata';
 
 export default function Search({ history }) {
   const [searchText, setSearchText] = useState('');
@@ -18,41 +11,31 @@ export default function Search({ history }) {
   };
 
   return (
-    <Container
+    <Box
+      component="form"
       sx={{
-        height: '100vh',
-        width: '100vw',
         display: 'flex',
+        flexDirection: sm ? 'column' : 'row',
+        alignItems: 'end',
+        width: '100%',
         justifyContent: 'center',
-        alignItems: 'center',
+        padding: sm ? '0 1rem' : '0 2rem',
       }}
+      onSubmit={handleSearch}
     >
-      <Metadata title="Search" />
-      <Box
-        component="form"
-        sx={{
-          display: 'flex',
-          flexDirection: sm ? 'column' : 'row',
-          alignItems: 'end',
-          width: '100%',
-          justifyContent: 'center',
-          padding: sm ? '0 1rem' : '0 2rem',
-        }}
-        onSubmit={handleSearch}
-      >
-        <TextField
-          fullWidth
-          id="outlined-basic"
-          label="Search..."
-          variant="standard"
-          value={searchText}
-          onChange={(event) => setSearchText(event.target.value)}
-        />
+      <TextField
+        autoFocus
+        fullWidth
+        id="outlined-basic"
+        label="Search..."
+        variant="standard"
+        value={searchText}
+        onChange={(event) => setSearchText(event.target.value)}
+      />
 
-        <Button variant="text" size="large" color="primary" type="submit">
-          Search
-        </Button>
-      </Box>
-    </Container>
+      <Button variant="text" size="large" color="primary" type="submit">
+        Search
+      </Button>
+    </Box>
   );
 }

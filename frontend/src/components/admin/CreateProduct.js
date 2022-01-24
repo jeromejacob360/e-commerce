@@ -103,7 +103,7 @@ export default function CreateProduct() {
         {loading ? (
           <Loading />
         ) : (
-          <div className="flex justify-center flex-1 sm:ml-44">
+          <div className="flex justify-center flex-1 mb-10 sm:ml-44">
             <form className="flex justify-center flex-1 w-96">
               <FormGroup margin="dense" size="small" className="space-y-4 w-80">
                 <OutlinedInput

@@ -4,8 +4,5 @@ export const categories = [
   'puma',
   'reebok',
   'sketchers',
-  'clarks',
-  'vans',
-  'converse',
   'under armour',
 ];
