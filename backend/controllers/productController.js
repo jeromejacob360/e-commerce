@@ -9,7 +9,11 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
   const limit = req.query.limit * 1 || 10;
 
-  const apiFeature = new ApiFeatures(Product.find(), req.query)
+  const apiFeature = new ApiFeatures(
+    Product.find(),
+    req.query,
+    req.body.categories,
+  )
     .search()
     .filter();
 

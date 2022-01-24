@@ -12,17 +12,19 @@ export function fetchProducts(
     try {
       dispatch({ type: 'ALL_PRODUCT_REQUEST' });
 
+      let body = {};
+
       let link = `/api/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}`;
 
-      if (category && category !== 'All') {
-        link += `&category=${category.toLowerCase()}`;
+      if (category) {
+        body.categories = category;
       }
 
       if (category && rating !== null) {
         link += `&rating[gte]=${rating}`;
       }
 
-      const { data } = await axios.get(link);
+      const { data } = await axios.post(link, body);
 
       dispatch({
         type: 'ALL_PRODUCT_SUCCESS',

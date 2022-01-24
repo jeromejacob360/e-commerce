@@ -1,7 +1,8 @@
 class ApiFeatures {
-  constructor(query, queryString) {
+  constructor(query, queryString, categories) {
     this.query = query;
     this.queryString = queryString;
+    this.categories = categories;
   }
 
   search() {
@@ -21,7 +22,6 @@ class ApiFeatures {
           },
         ]
       : null;
-    console.log('keyword', keyword);
 
     this.query = this.query.find(keyword ? { $or: keyword } : {});
     return this;
@@ -33,6 +33,11 @@ class ApiFeatures {
     // Remove unnecessary fields from query string
     const excludedFields = ['page', 'keyword', 'limit'];
     excludedFields.forEach((el) => delete queryObj[el]);
+
+    if (this.categories.length > 0) {
+      queryObj.category = {};
+      queryObj.category.$in = this.categories;
+    }
 
     // Filter for price and rating
     let queryStr = JSON.stringify(queryObj);

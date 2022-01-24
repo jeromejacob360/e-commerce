@@ -3,10 +3,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   Container,
-  FormControl,
-  FormHelperText,
-  InputLabel,
   List,
   ListItem,
   ListItemButton,
@@ -28,7 +26,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackbar } from 'notistack';
 import Metadata from '../helper-components/metadata';
 import { categories } from '../data/data';
-const categoryList = [...categories, 'All'];
+import Checkbox from '@mui/material/Checkbox';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
 export default function Products({ match }) {
   const keyword = match.params.keyword;
@@ -40,12 +39,16 @@ export default function Products({ match }) {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 10000]);
-  const [category, setCategory] = useState('');
   const [rating, setRating] = useState(0);
   const [sort, setSort] = useState('PriceAsc');
   const [sortedProducts, setSortedProducts] = useState([]);
+  const [category, setCategory] = useState([]);
 
   const totalPages = Math.ceil(filteredProductsCount / limit || 1);
+
+  useEffect(() => {
+    dispatch(fetchProducts(keyword, currentPage, [0, 10000], category, rating));
+  }, [category, currentPage, dispatch, keyword, rating]);
 
   useEffect(() => {
     if (error) {
@@ -54,19 +57,7 @@ export default function Products({ match }) {
       });
       dispatch(clearErrors());
     }
-    dispatch(
-      fetchProducts(keyword, currentPage, price, category, rating, error),
-    );
-  }, [
-    category,
-    currentPage,
-    dispatch,
-    enqueueSnackbar,
-    error,
-    keyword,
-    price,
-    rating,
-  ]);
+  }, [dispatch, enqueueSnackbar, error]);
 
   useEffect(() => {
     const sortPriceAsc = (a, b) => a.price - b.price;
@@ -75,7 +66,7 @@ export default function Products({ match }) {
     const sortRatingAsc = (a, b) => a.rating - b.rating;
     const sortRatingDesc = (a, b) => b.rating - a.rating;
 
-    if (products.length > 0) {
+    if (products?.length > 0) {
       switch (sort) {
         case 'PriceAsc':
           setSortedProducts([...products].sort(sortPriceAsc));
@@ -85,11 +76,36 @@ export default function Products({ match }) {
           setSortedProducts([...products].sort(sortPriceDesc));
           break;
 
+        case 'RatingAsc':
+          setSortedProducts([...products].sort(sortRatingAsc));
+          break;
+
+        case 'RatingDesc':
+          setSortedProducts([...products].sort(sortRatingDesc));
+          break;
+
         default:
           return setSortedProducts(products);
       }
     }
   }, [products, sort]);
+
+  const handleToggle = (value) => () => {
+    const currentIndex = category.indexOf(value);
+    const newChecked = [...category];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setCategory(newChecked);
+  };
+
+  const fetchProductsOnPriceFilter = (price) => {
+    dispatch(fetchProducts(keyword, currentPage, price, category, rating));
+  };
 
   return (
     <Container
@@ -140,6 +156,19 @@ export default function Products({ match }) {
                   max={10000}
                   step={500}
                 />
+                <div className="flex justify-end">
+                  <Button onClick={() => fetchProductsOnPriceFilter(price)}>
+                    Apply
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setPrice([0, 10000]);
+                      fetchProductsOnPriceFilter([0, 10000]);
+                    }}
+                  >
+                    Clear
+                  </Button>
+                </div>
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -158,22 +187,40 @@ export default function Products({ match }) {
             </AccordionSummary>
             <AccordionDetails>
               <List>
-                {categoryList.map((categoryItem) => {
+                {categories.map((categoryItem) => {
+                  const labelId = `checkbox-list-label-${categoryItem}`;
+
                   return (
-                    <ListItem disablePadding key={categoryItem}>
-                      <ListItemButton
-                        className="capitalize"
-                        onClick={() => setCategory(categoryItem)}
-                        sx={{
-                          backgroundColor:
-                            category === categoryItem ? '#f0f0f0' : '#fff',
-                        }}
-                      >
-                        <ListItemText primary={categoryItem} />
-                      </ListItemButton>
-                    </ListItem>
+                    <div key={categoryItem}>
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          role={undefined}
+                          onClick={handleToggle(categoryItem)}
+                          dense
+                        >
+                          <ListItemIcon>
+                            <Checkbox
+                              edge="start"
+                              checked={category.indexOf(categoryItem) !== -1}
+                              tabIndex={-1}
+                              disableRipple
+                              inputProps={{ 'aria-labelledby': labelId }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText
+                            id={labelId}
+                            primary={`${categoryItem}`}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    </div>
                   );
                 })}
+                {category.length ? (
+                  <div className="flex justify-end">
+                    <Button onClick={() => setCategory([])}>Clear</Button>
+                  </div>
+                ) : null}
               </List>
             </AccordionDetails>
           </Accordion>
@@ -205,6 +252,11 @@ export default function Products({ match }) {
                     width: '100%',
                   }}
                 />
+                {rating ? (
+                  <div className="flex justify-end">
+                    <Button onClick={() => setRating(0)}>Clear</Button>
+                  </div>
+                ) : null}
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -227,38 +279,18 @@ export default function Products({ match }) {
                   width: '100%',
                 }}
               >
-                <FormControl fullWidth>
-                  <InputLabel id="sort-order-label">Sort</InputLabel>
-                  <Select
-                    labelId="sort-order-label"
-                    id="sort-order"
-                    label="Age"
-                    value={sort}
-                    onChange={(e) => setSort(e.target.value)}
-                  >
-                    <MenuItem>Price high to low</MenuItem>
-                    <MenuItem>Price low to high</MenuItem>
-                    <MenuItem>aaaaaaaaa</MenuItem>
-                    <MenuItem>aaaaaaaaa</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
-                  <Select
-                    value="sssssssss"
-                    onChange={(e) => setSort(e.target.value)}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                  <FormHelperText>Without label</FormHelperText>
-                </FormControl>
+                <Select
+                  name="category"
+                  displayEmpty
+                  fullWidth
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                >
+                  <MenuItem value="PriceDesc">Price high to low</MenuItem>
+                  <MenuItem value="PriceAsc">Price low to high</MenuItem>
+                  <MenuItem value="RatingAsc">Rating low to high</MenuItem>
+                  <MenuItem value="RatingDesc">Rating high to low</MenuItem>
+                </Select>
               </Box>
             </AccordionDetails>
           </Accordion>
