@@ -9,10 +9,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  MenuItem,
   Pagination,
   Rating,
-  Select,
   Slider,
   Typography,
   useMediaQuery,
@@ -40,15 +38,38 @@ export default function Products({ match }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 10000]);
   const [rating, setRating] = useState(0);
-  const [sort, setSort] = useState('PriceAsc');
-  const [sortedProducts, setSortedProducts] = useState([]);
+  const [sort, setSort] = useState('Popularity');
   const [category, setCategory] = useState([]);
+  const conditions = [
+    {
+      value: '-numOfReviews',
+      text: 'Popularity',
+    },
+    {
+      value: '-price',
+      text: 'Price high to low',
+    },
+    {
+      value: 'price',
+      text: 'Price low to high',
+    },
+    {
+      value: '-rating',
+      text: 'Rating high to low',
+    },
+    {
+      value: 'rating',
+      text: 'Rating low to high',
+    },
+  ];
 
   const totalPages = Math.ceil(filteredProductsCount / limit || 1);
 
   useEffect(() => {
-    dispatch(fetchProducts(keyword, currentPage, [0, 10000], category, rating));
-  }, [category, currentPage, dispatch, keyword, rating]);
+    dispatch(
+      fetchProducts(keyword, currentPage, [0, 10000], category, rating, sort),
+    );
+  }, [category, currentPage, dispatch, keyword, rating, sort]);
 
   useEffect(() => {
     if (error) {
@@ -58,37 +79,6 @@ export default function Products({ match }) {
       dispatch(clearErrors());
     }
   }, [dispatch, enqueueSnackbar, error]);
-
-  useEffect(() => {
-    const sortPriceAsc = (a, b) => a.price - b.price;
-    const sortPriceDesc = (a, b) => b.price - a.price;
-
-    const sortRatingAsc = (a, b) => a.rating - b.rating;
-    const sortRatingDesc = (a, b) => b.rating - a.rating;
-
-    if (products?.length > 0) {
-      switch (sort) {
-        case 'PriceAsc':
-          setSortedProducts([...products].sort(sortPriceAsc));
-          break;
-
-        case 'PriceDesc':
-          setSortedProducts([...products].sort(sortPriceDesc));
-          break;
-
-        case 'RatingAsc':
-          setSortedProducts([...products].sort(sortRatingAsc));
-          break;
-
-        case 'RatingDesc':
-          setSortedProducts([...products].sort(sortRatingDesc));
-          break;
-
-        default:
-          return setSortedProducts(products);
-      }
-    }
-  }, [products, sort]);
 
   const handleToggle = (value) => () => {
     const currentIndex = category.indexOf(value);
@@ -279,18 +269,35 @@ export default function Products({ match }) {
                   width: '100%',
                 }}
               >
-                <Select
-                  name="category"
-                  displayEmpty
-                  fullWidth
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
-                >
-                  <MenuItem value="PriceDesc">Price high to low</MenuItem>
-                  <MenuItem value="PriceAsc">Price low to high</MenuItem>
-                  <MenuItem value="RatingAsc">Rating low to high</MenuItem>
-                  <MenuItem value="RatingDesc">Rating high to low</MenuItem>
-                </Select>
+                <List>
+                  {conditions.map((condition) => {
+                    return (
+                      <ListItem disablePadding key={condition.value}>
+                        <ListItemButton
+                          onClick={() => setSort(condition.value)}
+                          dense
+                        >
+                          <ListItemIcon>
+                            <Checkbox
+                              edge="start"
+                              checked={sort === condition.value}
+                              tabIndex={-1}
+                              disableRipple
+                              // inputProps={{ 'aria-labelledby': labelId }}
+                            />
+                          </ListItemIcon>
+                          {condition.text}
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })}
+
+                  {category.length ? (
+                    <div className="flex justify-end">
+                      <Button onClick={() => setCategory([])}>Clear</Button>
+                    </div>
+                  ) : null}
+                </List>
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -311,7 +318,7 @@ export default function Products({ match }) {
                 marginBottom: '2rem',
               }}
             >
-              {sortedProducts?.map((product) => {
+              {products?.map((product) => {
                 return <ProductCard key={product._id} product={product} />;
               })}
             </div>

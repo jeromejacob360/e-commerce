@@ -34,7 +34,7 @@ class ApiFeatures {
     const excludedFields = ['page', 'keyword', 'limit'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    if (this.categories.length > 0) {
+    if (this.categories?.length > 0) {
       queryObj.category = {};
       queryObj.category.$in = this.categories;
     }
@@ -45,7 +45,12 @@ class ApiFeatures {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
 
     this.query = this.query.find(JSON.parse(queryStr));
+    return this;
+  }
 
+  sort() {
+    const sort = this.queryString.sort;
+    this.query = this.query.sort(sort);
     return this;
   }
 

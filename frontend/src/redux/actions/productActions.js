@@ -7,6 +7,7 @@ export function fetchProducts(
   price = [0, 10000],
   category,
   rating,
+  sort = 'popularity',
 ) {
   return async function (dispatch) {
     try {
@@ -14,7 +15,7 @@ export function fetchProducts(
 
       let body = {};
 
-      let link = `/api/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}`;
+      let link = `/api/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}&sort=${sort}`;
 
       if (category) {
         body.categories = category;
