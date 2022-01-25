@@ -1,43 +1,35 @@
 import axios from 'axios';
 
 // Get all products
-export function fetchProducts(
-  keyword = '',
-  page = 1,
-  price = [0, 10000],
-  category,
-  rating,
-  sort = '-popularity',
-  limit = 4,
-) {
+export function fetchProducts(queryString) {
   return async function (dispatch) {
-    try {
-      dispatch({ type: 'ALL_PRODUCT_REQUEST' });
+    // try {
+    //   dispatch({ type: 'ALL_PRODUCT_REQUEST' });
 
-      let body = {};
+    //   let body = {};
 
-      let link = `/api/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}&sort=${sort}&limit=${limit}`;
+    // let link = `/api/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}&sort=${sort}&limit=${limit}`;
 
-      if (category) {
-        body.categories = category;
-      }
+    // if (category) {
+    //   body.categories = category;
+    // }
 
-      if (category && rating !== null) {
-        link += `&rating[gte]=${rating}`;
-      }
+    // if (category && rating !== null) {
+    //   link += `&rating[gte]=${rating}`;
+    // }
 
-      const { data } = await axios.post(link, body);
+    const { data } = await axios.get('/api/products' + queryString);
 
-      dispatch({
-        type: 'ALL_PRODUCT_SUCCESS',
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: 'ALL_PRODUCT_FAILURE',
-        payload: error.response.data.message,
-      });
-    }
+    //     dispatch({
+    //       type: 'ALL_PRODUCT_SUCCESS',
+    //       payload: data,
+    //     });
+    //   } catch (error) {
+    //     dispatch({
+    //       type: 'ALL_PRODUCT_FAILURE',
+    //       payload: error.response.data.message,
+    //     });
+    //   }
   };
 }
 

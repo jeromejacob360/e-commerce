@@ -14,14 +14,14 @@ import {
   Slider,
   Typography,
 } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearErrors, fetchProducts } from '../redux/actions/productActions';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchProducts } from '../redux/actions/productActions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useSnackbar } from 'notistack';
 import { categories } from '../data/data';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import { useHistory } from 'react-router-dom';
 
 export default function SortAndFilter({
   keyword,
@@ -29,16 +29,58 @@ export default function SortAndFilter({
   setCurrentPage,
   perPageLimit,
   open,
+  params,
 }) {
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
-  const { error } = useSelector((state) => state.products);
+  const history = useHistory();
 
   const [price, setPrice] = useState([0, 10000]);
   const [rating, setRating] = useState(0);
   const [sort, setSort] = useState('-numOfReviews');
   const [category, setCategory] = useState([]);
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const [queryString, setQueryString] = useState('');
+
+  useEffect(() => {
+    window.onresize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchProducts(window.location.href.split('products')[1]));
+  }, [dispatch, queryString]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [setCurrentPage, keyword, price, category, rating, sort, perPageLimit]);
+
+  useEffect(() => {
+    history.push('/products?' + queryString);
+  }, [dispatch, history, queryString]);
+
+  useEffect(() => {
+    setQueryString(
+      `keyword=${keyword ? keyword : ''}&page=${currentPage}&price[$gte]=${
+        price[0]
+      }&price[$lte]=${
+        price[1]
+      }&rating[$gte]=${rating}&sort=${sort}&limit=${perPageLimit}`,
+    );
+    let categoryString = '';
+    // category.forEach((cat) => (categoryString += `&category=${cat}`));
+    setQueryString((prev) => prev + categoryString);
+  }, [
+    category,
+    currentPage,
+    dispatch,
+    history,
+    keyword,
+    perPageLimit,
+    price,
+    rating,
+    sort,
+  ]);
 
   const conditions = [
     { value: '-numOfReviews', text: 'Popularity' },
@@ -47,21 +89,6 @@ export default function SortAndFilter({
     { value: '-rating', text: 'Rating high to low' },
     { value: 'rating', text: 'Rating low to high' },
   ];
-
-  useEffect(() => {
-    if (error) {
-      enqueueSnackbar(error, {
-        variant: 'error',
-      });
-      dispatch(clearErrors());
-    }
-  }, [dispatch, enqueueSnackbar, error]);
-
-  useEffect(() => {
-    window.onresize = () => {
-      setInnerWidth(window.innerWidth);
-    };
-  }, []);
 
   const handleToggle = (value) => () => {
     const currentIndex = category.indexOf(value);
@@ -75,31 +102,6 @@ export default function SortAndFilter({
 
     setCategory(newChecked);
   };
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [setCurrentPage, keyword, price, category, rating, sort, perPageLimit]);
-
-  const fetchProductsOnPageChange = useCallback(
-    (currentPage) => {
-      dispatch(
-        fetchProducts(
-          keyword,
-          currentPage,
-          price,
-          category,
-          rating,
-          sort,
-          perPageLimit,
-        ),
-      );
-    },
-    [category, dispatch, keyword, perPageLimit, price, rating, sort],
-  );
-
-  useEffect(() => {
-    fetchProductsOnPageChange(currentPage);
-  }, [currentPage, fetchProductsOnPageChange]);
 
   return (
     <Collapse in={innerWidth > 1024 ? true : open}>
