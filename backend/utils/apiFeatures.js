@@ -36,6 +36,7 @@ class ApiFeatures {
 
   filter() {
     console.log('filter');
+    console.log(' ');
     const queryObj = { ...this.queryString };
 
     // Remove unnecessary fields from query string
@@ -46,11 +47,14 @@ class ApiFeatures {
       queryObj.category = {};
       queryObj.category.$in = this.categories;
     }
-
+    console.log('queryObj', queryObj);
     // Filter for price and rating
     let queryStr = JSON.stringify(queryObj);
 
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
+
+    console.log('queryStr', queryStr);
+    console.log(' ');
 
     this.query = this.query.find(JSON.parse(queryStr));
     return this;
