@@ -22,8 +22,7 @@ export default function Home() {
       });
       dispatch(clearErrors());
     }
-    const _ = undefined;
-    dispatch(fetchProducts(_, _, _, _, _, '-popularity', 4));
+    dispatch(fetchProducts());
   }, [dispatch, enqueueSnackbar, error]);
 
   return (

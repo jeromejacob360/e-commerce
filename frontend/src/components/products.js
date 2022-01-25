@@ -78,7 +78,6 @@ export default function Products({ match }) {
             keyword={keyword}
             perPageLimit={perPageLimit}
             open={searchAndFilterOpen}
-            params={match.params}
           />
         </div>
 

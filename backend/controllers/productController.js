@@ -1,32 +1,24 @@
 const Product = require('../models/productModel');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
-const ApiFeatures = require('../utils/apiFeatures');
 const cloudinary = require('cloudinary');
 
 // Get all products from the database
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
-  const limit = req.query.limit * 1 || 8;
 
-  const apiFeature = new ApiFeatures(Product.find(), req.query)
-    .search()
-    .filter()
-    .sort();
+  const { sort, limit, ...find } = req.query;
 
-  let products = await apiFeature.query;
+  console.log('req.query', req.query);
+  const products = await Product.find(find).sort(sort).limit(limit);
   const filteredProductsCount = products.length;
-
-  apiFeature.paginate(limit);
-
-  products = await apiFeature.query.clone();
 
   res.status(200).json({
     success: true,
     products,
     productsCount,
     filteredProductsCount,
-    limit,
+    limit: req.query.limit,
   });
 });
 
