@@ -2,7 +2,6 @@ const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
-const ApiFeatures = require('../utils/apiFeatures');
 
 // Add a product to the cart
 exports.addProductToCart = catchAsyncErrors(async (req, res, next) => {

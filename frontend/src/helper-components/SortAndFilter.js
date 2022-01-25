@@ -12,16 +12,17 @@ import {
   ListItemText,
   Rating,
   Slider,
+  Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearErrors, fetchProducts } from '../redux/actions/productActions';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchProducts } from '../redux/actions/productActions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useSnackbar } from 'notistack';
 import { categories } from '../data/data';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import { useHistory } from 'react-router-dom';
 
 export default function SortAndFilter({
   keyword,
@@ -31,14 +32,72 @@ export default function SortAndFilter({
   open,
 }) {
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
-  const { error } = useSelector((state) => state.products);
+  const history = useHistory();
 
-  const [price, setPrice] = useState([0, 10000]);
-  const [rating, setRating] = useState(0);
-  const [sort, setSort] = useState('-numOfReviews');
-  const [category, setCategory] = useState([]);
+  const readFromLocalStorage = (name) => {
+    return JSON.parse(localStorage.getItem(name));
+  };
+
+  const [price, setPrice] = useState(
+    readFromLocalStorage('price') || [0, 10000],
+  );
+  const [rating, setRating] = useState(localStorage.getItem('rating') || 0);
+  const [sort, setSort] = useState(
+    readFromLocalStorage('sort') || '-popularity',
+  );
+  const [category, setCategory] = useState(
+    readFromLocalStorage('category') || [],
+  );
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const [queryString, setQueryString] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('rating', rating);
+    localStorage.setItem('price', JSON.stringify(price));
+    localStorage.setItem('sort', JSON.stringify(sort));
+    localStorage.setItem('category', JSON.stringify(category));
+  }, [category, price, rating, sort]);
+
+  useEffect(() => {
+    window.onresize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (queryString) dispatch(fetchProducts('/products?' + queryString));
+  }, [dispatch, queryString]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [setCurrentPage, keyword, price, category, rating, sort, perPageLimit]);
+
+  useEffect(() => {
+    history.push('/products?' + queryString);
+  }, [dispatch, history, queryString]);
+
+  useEffect(() => {
+    setQueryString(
+      `keyword=${keyword ? keyword : ''}&page=${currentPage}&price[$gte]=${
+        price[0]
+      }&price[$lte]=${
+        price[1]
+      }&rating[$gte]=${rating}&sort=${sort}&limit=${perPageLimit}`,
+    );
+    let categoryString = '';
+    category.forEach((cat) => (categoryString += `&category[$in]=${cat}`));
+    setQueryString((prev) => prev + categoryString);
+  }, [
+    category,
+    currentPage,
+    dispatch,
+    history,
+    keyword,
+    perPageLimit,
+    price,
+    rating,
+    sort,
+  ]);
 
   const conditions = [
     { value: '-numOfReviews', text: 'Popularity' },
@@ -47,21 +106,6 @@ export default function SortAndFilter({
     { value: '-rating', text: 'Rating high to low' },
     { value: 'rating', text: 'Rating low to high' },
   ];
-
-  useEffect(() => {
-    if (error) {
-      enqueueSnackbar(error, {
-        variant: 'error',
-      });
-      dispatch(clearErrors());
-    }
-  }, [dispatch, enqueueSnackbar, error]);
-
-  useEffect(() => {
-    window.onresize = () => {
-      setInnerWidth(window.innerWidth);
-    };
-  }, []);
 
   const handleToggle = (value) => () => {
     const currentIndex = category.indexOf(value);
@@ -75,31 +119,6 @@ export default function SortAndFilter({
 
     setCategory(newChecked);
   };
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [setCurrentPage, keyword, price, category, rating, sort, perPageLimit]);
-
-  const fetchProductsOnPageChange = useCallback(
-    (currentPage) => {
-      dispatch(
-        fetchProducts(
-          keyword,
-          currentPage,
-          price,
-          category,
-          rating,
-          sort,
-          perPageLimit,
-        ),
-      );
-    },
-    [category, dispatch, keyword, perPageLimit, price, rating, sort],
-  );
-
-  useEffect(() => {
-    fetchProductsOnPageChange(currentPage);
-  }, [currentPage, fetchProductsOnPageChange]);
 
   return (
     <Collapse in={innerWidth > 1024 ? true : open}>
@@ -115,7 +134,20 @@ export default function SortAndFilter({
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography>Price</Typography>
+            <div className="flex items-center space-x-4">
+              {JSON.stringify(price) !== JSON.stringify([0, 10000]) && (
+                <Tooltip title="Clear filter">
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPrice([0, 10000]);
+                    }}
+                    className="w-4 h-4 bg-orange-500 rounded-full shadow-md"
+                  ></div>
+                </Tooltip>
+              )}
+              <Typography>Price</Typography>
+            </div>
           </AccordionSummary>
           <AccordionDetails>
             <Box
@@ -156,7 +188,20 @@ export default function SortAndFilter({
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography>Brand</Typography>
+            <div className="flex items-center space-x-4">
+              {category.length > 0 && (
+                <Tooltip title="Clear filter">
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCategory([]);
+                    }}
+                    className="w-4 h-4 bg-orange-500 rounded-full shadow-md"
+                  ></div>
+                </Tooltip>
+              )}
+              <Typography>Brand</Typography>
+            </div>
           </AccordionSummary>
           <AccordionDetails>
             <List>
@@ -213,7 +258,20 @@ export default function SortAndFilter({
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography>Rating</Typography>
+            <div className="flex items-center space-x-4">
+              {rating > 0 && (
+                <Tooltip title="Clear filter">
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setRating(0);
+                    }}
+                    className="w-4 h-4 bg-orange-500 rounded-full shadow-md"
+                  ></div>
+                </Tooltip>
+              )}
+              <Typography>Rating</Typography>
+            </div>
           </AccordionSummary>
           <AccordionDetails>
             <Box
@@ -223,11 +281,11 @@ export default function SortAndFilter({
             >
               <Rating
                 name="simple-controlled"
-                value={rating}
+                value={parseFloat(rating)}
                 precision={0.5}
                 size="large"
                 onChange={(event, newValue) => {
-                  setRating(newValue);
+                  setRating(newValue ? newValue : 0);
                 }}
                 sx={{
                   width: '100%',
@@ -258,7 +316,21 @@ export default function SortAndFilter({
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography>Sort</Typography>
+            <div className="flex items-center space-x-4">
+              {sort !== '-numOfReviews' && (
+                <Tooltip title="Clear filter">
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSort('-numOfReviews');
+                    }}
+                    className="w-4 h-4 bg-orange-500 rounded-full shadow-md"
+                  ></div>
+                </Tooltip>
+              )}
+
+              <Typography>Sort</Typography>
+            </div>
           </AccordionSummary>
           <AccordionDetails>
             <Box
@@ -272,7 +344,6 @@ export default function SortAndFilter({
                     <ListItem disablePadding key={condition.value}>
                       <ListItemButton
                         onClick={() => {
-                          console.log('condition.value', condition.value);
                           setSort(condition.value);
                         }}
                         dense

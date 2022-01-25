@@ -1,32 +1,16 @@
 import axios from 'axios';
 
 // Get all products
-export function fetchProducts(
-  keyword = '',
-  page = 1,
-  price = [0, 10000],
-  category,
-  rating,
-  sort = '-popularity',
-  limit = 4,
-) {
+export function fetchProducts(queryString) {
+  queryString =
+    queryString ||
+    `/products?keyword=${''}&page=${1}&price[$gte]=${0}&price[$lte]=${10000}&rating[$gte]=${0}&sort=${'-popularity'}&limit=4`;
+
   return async function (dispatch) {
     try {
       dispatch({ type: 'ALL_PRODUCT_REQUEST' });
 
-      let body = {};
-
-      let link = `/api/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}&sort=${sort}&limit=${limit}`;
-
-      if (category) {
-        body.categories = category;
-      }
-
-      if (category && rating !== null) {
-        link += `&rating[gte]=${rating}`;
-      }
-
-      const { data } = await axios.post(link, body);
+      const { data } = await axios.get('/api' + queryString);
 
       dispatch({
         type: 'ALL_PRODUCT_SUCCESS',
