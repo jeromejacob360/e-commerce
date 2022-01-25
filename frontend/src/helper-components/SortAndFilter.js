@@ -15,9 +15,8 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchProducts } from '../redux/actions/productActions';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { categories } from '../data/data';
 import Checkbox from '@mui/material/Checkbox';
@@ -25,14 +24,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import { useHistory } from 'react-router-dom';
 
 export default function SortAndFilter({
-  keyword,
   currentPage,
   setCurrentPage,
   perPageLimit,
   open,
 }) {
-  const dispatch = useDispatch();
   const history = useHistory();
+
+  const { searchQuery } = useSelector((state) => state.products);
 
   const readFromLocalStorage = (name) => {
     return JSON.parse(localStorage.getItem(name));
@@ -49,7 +48,11 @@ export default function SortAndFilter({
     readFromLocalStorage('category') || [],
   );
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-  const [queryString, setQueryString] = useState('');
+  // const [queryString, setQueryString] = useState('');
+
+  const queryString = useRef('');
+
+  const isRendered = useRef(false);
 
   useEffect(() => {
     localStorage.setItem('rating', rating);
@@ -65,39 +68,20 @@ export default function SortAndFilter({
   }, []);
 
   useEffect(() => {
-    if (queryString) dispatch(fetchProducts('/products?' + queryString));
-  }, [dispatch, queryString]);
-
-  useEffect(() => {
     setCurrentPage(1);
-  }, [setCurrentPage, keyword, price, category, rating, sort, perPageLimit]);
+  }, [setCurrentPage, price, category, rating, sort, perPageLimit]);
 
   useEffect(() => {
-    history.push('/products?' + queryString);
-  }, [dispatch, history, queryString]);
+    queryString.current = `/products?keyword=${
+      searchQuery ? searchQuery : ''
+    }&page=${currentPage}&price[$gte]=${price[0]}&price[$lte]=${
+      price[1]
+    }&rating[$gte]=${rating}&sort=${sort}&limit=${perPageLimit}`;
 
-  useEffect(() => {
-    setQueryString(
-      `keyword=${keyword ? keyword : ''}&page=${currentPage}&price[$gte]=${
-        price[0]
-      }&price[$lte]=${
-        price[1]
-      }&rating[$gte]=${rating}&sort=${sort}&limit=${perPageLimit}`,
-    );
     let categoryString = '';
     category.forEach((cat) => (categoryString += `&category[$in]=${cat}`));
-    setQueryString((prev) => prev + categoryString);
-  }, [
-    category,
-    currentPage,
-    dispatch,
-    history,
-    keyword,
-    perPageLimit,
-    price,
-    rating,
-    sort,
-  ]);
+    queryString.current += categoryString;
+  }, [category, currentPage, perPageLimit, price, rating, searchQuery, sort]);
 
   const conditions = [
     { value: '-numOfReviews', text: 'Popularity' },
@@ -111,14 +95,21 @@ export default function SortAndFilter({
     const currentIndex = category.indexOf(value);
     const newChecked = [...category];
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
+    if (currentIndex === -1) newChecked.push(value);
+    else newChecked.splice(currentIndex, 1);
     setCategory(newChecked);
   };
+
+  useEffect(() => {
+    console.log('queryString', queryString);
+    if (isRendered.current) {
+      console.log('isRendered.current', isRendered.current);
+      history.push(queryString.current);
+    } else {
+      console.log('isRendered.current', isRendered.current);
+      isRendered.current = true;
+    }
+  }, [queryString, history, rating, price, sort, category]);
 
   return (
     <Collapse in={innerWidth > 1024 ? true : open}>

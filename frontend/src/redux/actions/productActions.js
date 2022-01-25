@@ -25,6 +25,15 @@ export function fetchProducts(queryString) {
   };
 }
 
+export function setSearchQuery(queryString) {
+  return async function (dispatch) {
+    dispatch({
+      type: 'SET_SEARCH_QUERY',
+      payload: queryString,
+    });
+  };
+}
+
 export function fetchProductDetails(id) {
   return async function (dispatch) {
     try {

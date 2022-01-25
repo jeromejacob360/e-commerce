@@ -6,11 +6,23 @@ const cloudinary = require('cloudinary');
 // Get all products from the database
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
+  let { sort, limit, ...find } = req.query;
+  sort = sort || '-numOfReviews';
+  limit = limit || 10;
 
-  const { sort, limit, ...find } = req.query;
+  const keyword = find.keyword
+    ? [
+        { description: { $regex: find.keyword, $options: 'i' } },
+        { name: { $regex: find.keyword, $options: 'i' } },
+      ]
+    : null;
+  const p = keyword ? { $or: keyword } : {};
 
-  console.log('req.query', req.query);
+  find = { ...find, ...p };
+  console.log('find', find);
+
   const products = await Product.find(find).sort(sort).limit(limit);
+
   const filteredProductsCount = products.length;
 
   res.status(200).json({
@@ -18,7 +30,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
     products,
     productsCount,
     filteredProductsCount,
-    limit: req.query.limit,
+    limit,
   });
 });
 

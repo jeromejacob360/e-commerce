@@ -15,6 +15,7 @@ import { logoutUser } from '../redux/actions/userActions';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Badge, TextField } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { setSearchQuery } from '../redux/actions/productActions';
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -30,7 +31,8 @@ const ResponsiveAppBar = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    history.push(`/products/${searchText.trim()}`);
+    dispatch(setSearchQuery(searchText));
+    history.push(`/products?keyword=${searchText.trim()}`);
   };
 
   useEffect(() => {

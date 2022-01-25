@@ -10,15 +10,17 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../helper-components/Loading';
 import ProductCard from '../helper-components/productCard';
-import { clearErrors } from '../redux/actions/productActions';
+import { clearErrors, fetchProducts } from '../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Metadata from '../helper-components/metadata';
 import SortAndFilter from '../helper-components/SortAndFilter';
+import { useLocation } from 'react-router-dom';
 
 export default function Products({ match }) {
   const keyword = match.params.keyword;
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const location = useLocation();
 
   const { loading, products, limit, filteredProductsCount, error } =
     useSelector((state) => state.products);
@@ -28,6 +30,10 @@ export default function Products({ match }) {
   const [perPageLimit, setPerPageLimit] = useState(4);
 
   const totalPages = Math.ceil(filteredProductsCount / limit || 1);
+
+  useEffect(() => {
+    dispatch(fetchProducts(location.pathname + location.search));
+  }, [dispatch, location.pathname, location.search]);
 
   useEffect(() => {
     if (error) {

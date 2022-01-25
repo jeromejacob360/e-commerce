@@ -3,17 +3,20 @@ export const productsReducer = (state = { products: [] }, action) => {
     case 'ALL_PRODUCT_REQUEST':
     case 'ADMIN_PRODUCTS_REQUEST':
       return {
+        ...state,
         loading: true,
       };
     case 'ALL_PRODUCT_SUCCESS':
     case 'ADMIN_PRODUCTS_SUCCESS':
       return {
+        ...state,
         loading: false,
         ...action.payload,
       };
     case 'ALL_PRODUCT_FAILURE':
     case 'ADMIN_PRODUCTS_FAILURE':
       return {
+        ...state,
         loading: false,
         error: action.payload,
       };
@@ -21,6 +24,12 @@ export const productsReducer = (state = { products: [] }, action) => {
       return {
         ...state,
         error: null,
+      };
+
+    case 'SET_SEARCH_QUERY':
+      return {
+        ...state,
+        searchQuery: action.payload,
       };
 
     case 'CLEAR_STATE':
