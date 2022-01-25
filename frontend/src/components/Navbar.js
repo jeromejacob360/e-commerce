@@ -105,7 +105,7 @@ const ResponsiveAppBar = () => {
         <Toolbar className="justify-between" disableGutters>
           <Link to="/">
             <h2 className="hidden mr-2 text-2xl text-white md:flex">
-              VIRTUAL STORE
+              THE SHOE STORE
             </h2>
           </Link>
           {/* FOR SMALL SCREENS */}

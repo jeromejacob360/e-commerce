@@ -198,7 +198,7 @@ export default function ProductDetails({ match, history }) {
 
   return product?.images ? (
     <div className="my-10">
-      <Metadata title={product.name + '--Virtual shop'} />
+      <Metadata title={product.name + '--The shoe store'} />
       <div className="flex flex-col items-center justify-center px-5 border-b lg:flex-row">
         <div className="max-w-[300px]">
           <Carousel>

@@ -47,7 +47,7 @@ export default function Home() {
             })}
           </div>
           <h1 className="mb-4 text-3xl text-gray-500">FEATURED PRODUCTS</h1>
-          <div className="flex items-center w-full px-4 mt-4 sm:px-10 md:px-20 lg:px-28 xl:px-40">
+          <div className="w-[300px] mt-4 bg-red-300">
             <Button
               fullWidth
               variant="contained"

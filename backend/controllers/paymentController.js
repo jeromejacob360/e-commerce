@@ -9,7 +9,7 @@ exports.processPayment = catchAsyncError(async (req, res, next) => {
       currency: 'inr',
       description: 'Payment for order',
       metadata: {
-        companyName: 'Virtual Store',
+        companyName: 'The Shoe Store',
       },
     });
 

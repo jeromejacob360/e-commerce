@@ -71,12 +71,13 @@ export default function Products({ match }) {
           </div>
         )}
 
-        <div className={`${searchAndFilterOpen ? 'block' : 'hidden lg:block'}`}>
+        <div>
           <SortAndFilter
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             keyword={keyword}
             perPageLimit={perPageLimit}
+            open={searchAndFilterOpen}
           />
         </div>
 

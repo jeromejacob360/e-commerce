@@ -4,6 +4,7 @@ import {
   AccordionSummary,
   Box,
   Button,
+  Collapse,
   Container,
   List,
   ListItem,
@@ -27,6 +28,7 @@ export default function SortAndFilter({
   currentPage,
   setCurrentPage,
   perPageLimit,
+  open,
 }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -36,6 +38,7 @@ export default function SortAndFilter({
   const [rating, setRating] = useState(0);
   const [sort, setSort] = useState('-numOfReviews');
   const [category, setCategory] = useState([]);
+  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
 
   const conditions = [
     { value: '-numOfReviews', text: 'Popularity' },
@@ -53,6 +56,12 @@ export default function SortAndFilter({
       dispatch(clearErrors());
     }
   }, [dispatch, enqueueSnackbar, error]);
+
+  useEffect(() => {
+    window.onresize = () => {
+      setInnerWidth(window.innerWidth);
+    };
+  }, []);
 
   const handleToggle = (value) => () => {
     const currentIndex = category.indexOf(value);
@@ -93,194 +102,199 @@ export default function SortAndFilter({
   }, [currentPage, fetchProductsOnPageChange]);
 
   return (
-    <Container className="w-[300px] md:w-full">
-      <Accordion
-        sx={{
-          marginBottom: '20px',
-        }}
-      >
-        <AccordionSummary
-          data-testid="ExpandMoreIcon-price"
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+    <Collapse in={innerWidth > 1024 ? true : open}>
+      <Container className="w-[300px] md:w-full mt-4 lg:mt-0">
+        <Accordion
+          sx={{
+            marginBottom: '20px',
+          }}
         >
-          <Typography>Price</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box
-            sx={{
-              width: '100%',
-            }}
+          <AccordionSummary
+            data-testid="ExpandMoreIcon-price"
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
           >
-            <Slider
-              value={price}
-              onChange={(event, value) => setPrice(value)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={10000}
-              step={100}
-            />
-            <div className="flex justify-end">
-              {JSON.stringify(price) !== JSON.stringify([0, 10000]) && (
-                <Button
-                  onClick={() => {
-                    setPrice([0, 10000]);
-                  }}
-                >
-                  Clear
-                </Button>
-              )}
-            </div>
-          </Box>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion
-        sx={{
-          marginBottom: '20px',
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>Brand</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <List>
-            {categories.map((categoryItem) => {
-              const labelId = `checkbox-list-label-${categoryItem}`;
-
-              return (
-                <div className="capitalize" key={categoryItem}>
-                  <ListItem disablePadding>
-                    <ListItemButton
-                      role={undefined}
-                      onClick={handleToggle(categoryItem)}
-                      dense
-                    >
-                      <ListItemIcon>
-                        <Checkbox
-                          edge="start"
-                          checked={category.indexOf(categoryItem) !== -1}
-                          tabIndex={-1}
-                          disableRipple
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </ListItemIcon>
-                      <ListItemText id={labelId} primary={`${categoryItem}`} />
-                    </ListItemButton>
-                  </ListItem>
-                </div>
-              );
-            })}
-            {category.length ? (
-              <div className="flex justify-end">
-                <Button
-                  onClick={() => {
-                    setCategory([]);
-                  }}
-                >
-                  Clear
-                </Button>
-              </div>
-            ) : null}
-          </List>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        sx={{
-          marginBottom: '20px',
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>Rating</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box
-            sx={{
-              width: '100%',
-            }}
-          >
-            <Rating
-              name="simple-controlled"
-              value={rating}
-              precision={0.5}
-              size="large"
-              onChange={(event, newValue) => {
-                setRating(newValue);
-              }}
+            <Typography>Price</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box
               sx={{
                 width: '100%',
               }}
-            />
-            {rating ? (
+            >
+              <Slider
+                value={price}
+                onChange={(event, value) => setPrice(value)}
+                valueLabelDisplay="auto"
+                min={0}
+                max={10000}
+                step={100}
+              />
               <div className="flex justify-end">
-                <Button
-                  onClick={() => {
-                    setRating(0);
-                  }}
-                >
-                  Clear
-                </Button>
+                {JSON.stringify(price) !== JSON.stringify([0, 10000]) && (
+                  <Button
+                    onClick={() => {
+                      setPrice([0, 10000]);
+                    }}
+                  >
+                    Clear
+                  </Button>
+                )}
               </div>
-            ) : null}
-          </Box>
-        </AccordionDetails>
-      </Accordion>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
 
-      <Accordion
-        sx={{
-          marginBottom: '20px',
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+        <Accordion
+          sx={{
+            marginBottom: '20px',
+          }}
         >
-          <Typography>Sort</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box
-            sx={{
-              width: '100%',
-            }}
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
           >
+            <Typography>Brand</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
             <List>
-              {conditions.map((condition) => {
+              {categories.map((categoryItem) => {
+                const labelId = `checkbox-list-label-${categoryItem}`;
+
                 return (
-                  <ListItem disablePadding key={condition.value}>
-                    <ListItemButton
-                      onClick={() => {
-                        console.log('condition.value', condition.value);
-                        setSort(condition.value);
-                      }}
-                      dense
-                    >
-                      <ListItemIcon>
-                        <Checkbox
-                          edge="start"
-                          checked={sort === condition.value}
-                          tabIndex={-1}
-                          disableRipple
+                  <div className="capitalize" key={categoryItem}>
+                    <ListItem disablePadding>
+                      <ListItemButton
+                        role={undefined}
+                        onClick={handleToggle(categoryItem)}
+                        dense
+                      >
+                        <ListItemIcon>
+                          <Checkbox
+                            edge="start"
+                            checked={category.indexOf(categoryItem) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{ 'aria-labelledby': labelId }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText
+                          id={labelId}
+                          primary={`${categoryItem}`}
                         />
-                      </ListItemIcon>
-                      {condition.text}
-                    </ListItemButton>
-                  </ListItem>
+                      </ListItemButton>
+                    </ListItem>
+                  </div>
                 );
               })}
+              {category.length ? (
+                <div className="flex justify-end">
+                  <Button
+                    onClick={() => {
+                      setCategory([]);
+                    }}
+                  >
+                    Clear
+                  </Button>
+                </div>
+              ) : null}
             </List>
-          </Box>
-        </AccordionDetails>
-      </Accordion>
-    </Container>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion
+          sx={{
+            marginBottom: '20px',
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Rating</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box
+              sx={{
+                width: '100%',
+              }}
+            >
+              <Rating
+                name="simple-controlled"
+                value={rating}
+                precision={0.5}
+                size="large"
+                onChange={(event, newValue) => {
+                  setRating(newValue);
+                }}
+                sx={{
+                  width: '100%',
+                }}
+              />
+              {rating ? (
+                <div className="flex justify-end">
+                  <Button
+                    onClick={() => {
+                      setRating(0);
+                    }}
+                  >
+                    Clear
+                  </Button>
+                </div>
+              ) : null}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion
+          sx={{
+            marginBottom: '20px',
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Sort</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box
+              sx={{
+                width: '100%',
+              }}
+            >
+              <List>
+                {conditions.map((condition) => {
+                  return (
+                    <ListItem disablePadding key={condition.value}>
+                      <ListItemButton
+                        onClick={() => {
+                          console.log('condition.value', condition.value);
+                          setSort(condition.value);
+                        }}
+                        dense
+                      >
+                        <ListItemIcon>
+                          <Checkbox
+                            edge="start"
+                            checked={sort === condition.value}
+                            tabIndex={-1}
+                            disableRipple
+                          />
+                        </ListItemIcon>
+                        {condition.text}
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </Container>
+    </Collapse>
   );
 }
