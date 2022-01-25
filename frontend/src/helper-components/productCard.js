@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function ProductCard({ product }) {
   return (
-    <Link to={`/product/${product._id}`} target={'_blank'} className="m-4">
+    <Link to={`/product/${product._id}`} className="mx-2 my-1">
       <div
         className="flex-row items-center justify-between hidden h-full p-4 border shadow-md sm:flex sm:flex-col w-[295px]"
         data-testid="product-card"

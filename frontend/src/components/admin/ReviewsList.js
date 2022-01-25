@@ -168,19 +168,37 @@ export default function ReviewsList() {
                   value={pId}
                   onChange={(e) => setPId(e.target.value)}
                 >
+                  <MenuItem disabled>
+                    <div className="sm:w-[500px] pr-4 flex justify-between">
+                      <span className="hidden sm:inline w-[300px]">
+                        Product id
+                      </span>
+                      <span className="w-8 mx-4">Image</span>
+                      <span className="sm:w-[225px] pl-4">Name</span>
+                      <span className="sm:w-[50px] text-right">Rating</span>
+                    </div>
+                  </MenuItem>
                   {products &&
                     products.map((product) => {
                       return (
                         <MenuItem key={product._id} value={product._id}>
-                          <div className="flex items-center justify-between w-[500px] pr-4">
-                            <span>{product._id}</span>
+                          <div className="sm:w-[500px] w-full flex pr-4 justify-between">
+                            <span className="hidden sm:inline sm:w-[300px]">
+                              {product._id}
+                            </span>
                             <img
-                              className="object-contain w-8 h-8"
+                              className="object-contain w-8 h-8 mx-4"
                               src={product.images[0].url}
                               alt=""
                             />
-                            <span>{product.name}</span>
-                            <span>{product.rating}</span>
+                            <span className="sm:w-[225px]">
+                              {product.name.length > 18
+                                ? product.name.substring(0, 16) + '..'
+                                : product.name}
+                            </span>
+                            <span className="sm:w-[50px] text-right">
+                              {product.rating}
+                            </span>
                           </div>
                         </MenuItem>
                       );

@@ -251,7 +251,7 @@ export default function ProductDetails({ match, history }) {
             <div className="text-sm text-gray-400">No reviews yet</div>
           )}
           <br />
-          <div className="flex flex-col items-center justify-between mb-1 sm:flex-row sm:space-x-4">
+          <div className="flex flex-col items-center justify-between py-4 mb-1 sm:flex-row sm:space-x-4">
             <div className="inline-flex items-center px-2 py-1 my-1 border border-yellow-600 rounded-md">
               <Button
                 disabled={!product.stock}
