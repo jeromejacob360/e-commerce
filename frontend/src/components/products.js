@@ -22,14 +22,13 @@ export default function Products({ match }) {
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation();
 
-  const { loading, products, limit, filteredProductsCount, error } =
-    useSelector((state) => state.products);
+  const { loading, products, totalPages, error } = useSelector(
+    (state) => state.products,
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchAndFilterOpen, setSearchAndFilterOpen] = useState(false);
-  const [perPageLimit, setPerPageLimit] = useState(4);
-
-  const totalPages = Math.ceil(filteredProductsCount / limit || 1);
+  const [perPageLimit, setPerPageLimit] = useState(10);
 
   useEffect(() => {
     dispatch(fetchProducts(location.pathname + location.search));
@@ -108,9 +107,12 @@ export default function Products({ match }) {
               })}
             </div>
           ) : (
-            <h1 className="grid w-full mt-40 text-3xl text-gray-500 place-items-center">
-              No products found
-            </h1>
+            <div className="grid w-full my-40 text-3xl text-gray-500 place-items-center">
+              <h1 className="my-4">No products found</h1>
+              <div className="flex flex-col space-y-4 text-base">
+                Try widening your search?
+              </div>
+            </div>
           )}
           <div className="flex items-center justify-center mb-10 space-x-10">
             <Pagination

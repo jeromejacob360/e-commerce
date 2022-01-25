@@ -30,30 +30,26 @@ export default function SortAndFilter({
   open,
 }) {
   const history = useHistory();
-
   const { searchQuery } = useSelector((state) => state.products);
 
-  const readFromLocalStorage = (name) => {
-    return JSON.parse(localStorage.getItem(name));
-  };
+  const readFromLocalStorage = (name) => JSON.parse(localStorage.getItem(name));
 
   const [price, setPrice] = useState(
     readFromLocalStorage('price') || [0, 10000],
   );
   const [rating, setRating] = useState(localStorage.getItem('rating') || 0);
   const [sort, setSort] = useState(
-    readFromLocalStorage('sort') || '-popularity',
+    readFromLocalStorage('sort') || '-numOfReviews',
   );
   const [category, setCategory] = useState(
     readFromLocalStorage('category') || [],
   );
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-  // const [queryString, setQueryString] = useState('');
 
   const queryString = useRef('');
-
   const isRendered = useRef(false);
 
+  // Preserve the query string when changing pages
   useEffect(() => {
     localStorage.setItem('rating', rating);
     localStorage.setItem('price', JSON.stringify(price));
@@ -61,16 +57,27 @@ export default function SortAndFilter({
     localStorage.setItem('category', JSON.stringify(category));
   }, [category, price, rating, sort]);
 
+  // Toggle the accordion on on desktop
   useEffect(() => {
     window.onresize = () => {
       setInnerWidth(window.innerWidth);
     };
   }, []);
 
+  // Reset page when changing filters
   useEffect(() => {
     setCurrentPage(1);
   }, [setCurrentPage, price, category, rating, sort, perPageLimit]);
 
+  // Reset filters on new search
+  useEffect(() => {
+    setPrice([0, 10000]);
+    setRating(0);
+    setSort('-numOfReviews');
+    setCategory([]);
+  }, [searchQuery]);
+
+  // Construct the query string
   useEffect(() => {
     queryString.current = `/products?keyword=${
       searchQuery ? searchQuery : ''
@@ -100,16 +107,23 @@ export default function SortAndFilter({
     setCategory(newChecked);
   };
 
+  // Prevent query string override on first render
   useEffect(() => {
-    console.log('queryString', queryString);
     if (isRendered.current) {
-      console.log('isRendered.current', isRendered.current);
       history.push(queryString.current);
     } else {
-      console.log('isRendered.current', isRendered.current);
       isRendered.current = true;
     }
-  }, [queryString, history, rating, price, sort, category]);
+  }, [
+    queryString,
+    history,
+    rating,
+    price,
+    sort,
+    category,
+    currentPage,
+    perPageLimit,
+  ]);
 
   return (
     <Collapse in={innerWidth > 1024 ? true : open}>

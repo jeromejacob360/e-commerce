@@ -7,7 +7,6 @@ import { useSnackbar } from 'notistack';
 import { Button } from '@mui/material';
 import Metadata from '../helper-components/metadata';
 import { Link } from 'react-router-dom';
-import { categories } from '../data/data';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -32,19 +31,6 @@ export default function Home() {
         <Loading />
       ) : products ? (
         <div className="flex flex-col items-center">
-          <div className="justify-between hidden w-full mb-4 md:flex xl:px-40 lg:px-20">
-            {categories.map((category) => {
-              return (
-                <Button
-                  key={category}
-                  component={Link}
-                  to={`/products/${category}`}
-                >
-                  {category}
-                </Button>
-              );
-            })}
-          </div>
           <h1 className="mb-4 text-3xl text-gray-500">FEATURED PRODUCTS</h1>
           <div className="w-[300px] mt-4 bg-red-300">
             <Button
