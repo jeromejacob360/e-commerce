@@ -3,9 +3,16 @@ class ApiFeatures {
     this.query = query;
     this.queryString = queryString;
     this.categories = categories;
+    console.log('********************');
+    console.log(' ');
+    console.log('this.queryString', this.queryString);
+    console.log(' ');
+    console.log('this.categories', this.categories);
+    console.log(' ');
   }
 
   search() {
+    console.log('search');
     const keyword = this.queryString.keyword
       ? [
           {
@@ -28,6 +35,7 @@ class ApiFeatures {
   }
 
   filter() {
+    console.log('filter');
     const queryObj = { ...this.queryString };
 
     // Remove unnecessary fields from query string
@@ -49,12 +57,16 @@ class ApiFeatures {
   }
 
   sort() {
+    console.log('sort');
     const sort = this.queryString.sort;
     this.query = this.query.sort(sort);
     return this;
   }
 
   paginate(limit) {
+    console.log('paginate');
+    console.log(' ');
+    console.log('********************');
     const page = this.queryString.page * 1 || 1;
     const skip = (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);

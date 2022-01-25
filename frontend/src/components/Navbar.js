@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { logoutUser } from '../redux/actions/userActions';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Badge, TextField } from '@mui/material';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -103,12 +104,12 @@ const ResponsiveAppBar = () => {
       <Container maxWidth="xl">
         <Toolbar className="justify-between" disableGutters>
           <Link to="/">
-            <h2 className="hidden mr-2 text-2xl text-white sm:flex">
+            <h2 className="hidden mr-2 text-2xl text-white md:flex">
               VIRTUAL STORE
             </h2>
           </Link>
           {/* FOR SMALL SCREENS */}
-          <div className="flex items-center justify-between flex-1 sm:hidden">
+          <div className="flex items-center justify-between flex-1 md:hidden">
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -133,7 +134,7 @@ const ResponsiveAppBar = () => {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              className="block sm:hidden"
+              className="block md:hidden"
             >
               <MenuItem onClick={handleCloseNavMenu}>
                 <Link to={`/`}>
@@ -146,7 +147,10 @@ const ResponsiveAppBar = () => {
                 </Link>
               </MenuItem>
             </Menu>
-            <form className="flex-1 px-2" onSubmit={handleSearch}>
+            <form
+              className="relative flex items-center flex-1 px-4 md:px-20 sm:px-10"
+              onSubmit={handleSearch}
+            >
               <TextField
                 className="p-2 bg-white rounded-md"
                 fullWidth
@@ -155,17 +159,30 @@ const ResponsiveAppBar = () => {
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}
               />
+              {searchText && (
+                <span
+                  onClick={() => setSearchText('')}
+                  className="absolute right-6"
+                >
+                  <Link to="/products">
+                    <HighlightOffIcon />
+                  </Link>
+                </span>
+              )}
             </form>
           </div>
 
           {/* SEARCH PANEL IN LARGE SCREEN */}
-          <div className="items-center justify-between flex-1 hidden px-10 space-x-4 text-white sm:flex">
+          <div className="items-center justify-between flex-1 hidden px-10 space-x-4 md:flex">
             <Link to={`/products`}>
               <Typography sx={{ fontSize: '1.25rem' }} textAlign="center">
                 Collections
               </Typography>
             </Link>
-            <form onSubmit={handleSearch}>
+            <form
+              className="relative flex items-center"
+              onSubmit={handleSearch}
+            >
               <TextField
                 className="p-2 bg-white rounded-md"
                 fullWidth
@@ -174,6 +191,16 @@ const ResponsiveAppBar = () => {
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}
               />
+              {searchText && (
+                <span
+                  onClick={() => setSearchText('')}
+                  className="absolute right-2"
+                >
+                  <Link to="/products">
+                    <HighlightOffIcon />
+                  </Link>
+                </span>
+              )}
             </form>
           </div>
           <div className="flex items-center">

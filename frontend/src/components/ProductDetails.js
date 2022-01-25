@@ -30,7 +30,7 @@ export default function ProductDetails({ match, history }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const { loading, product, error } = useSelector(
     (state) => state.productDetails,
   );
@@ -70,7 +70,7 @@ export default function ProductDetails({ match, history }) {
   ]);
 
   useEffect(() => {
-    if (product?.reviews.length > 0 && user) {
+    if (product?.reviews.length > 0 && isAuthenticated) {
       const reviewed = product.reviews.some(
         (review) => review.userId === user._id,
       );
@@ -86,8 +86,8 @@ export default function ProductDetails({ match, history }) {
         temp.unshift(product.reviews[reviewIndex]);
         setReviews(temp);
       } else setReviews(product?.reviews);
-    }
-  }, [product?.reviews, user, reviewSuccess, product]);
+    } else setReviews(product?.reviews);
+  }, [product?.reviews, user, reviewSuccess, product, isAuthenticated]);
 
   useEffect(() => {
     if (cartError) {
@@ -295,7 +295,7 @@ export default function ProductDetails({ match, history }) {
         </div>
       )}
 
-      {reviews.length > 0 ? (
+      {reviews?.length > 0 ? (
         <>
           <h3 className="my-4 text-xl text-center">Reviews</h3>
           <div

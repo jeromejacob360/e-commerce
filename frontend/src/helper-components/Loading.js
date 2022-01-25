@@ -5,7 +5,6 @@ export default function Loading() {
   return (
     <Backdrop
       sx={{
-        top: '68.5px',
         color: '#fff',
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}

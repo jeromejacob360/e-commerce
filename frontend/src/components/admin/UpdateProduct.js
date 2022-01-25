@@ -25,6 +25,7 @@ import {
 } from '../../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Loading from '../../helper-components/Loading';
+import { categories } from '../../data/data';
 import Sidebar from './Sidebar';
 const initialState = {
   name: '',
@@ -36,15 +37,6 @@ const initialState = {
 };
 
 export default function UpdateProduct({ history, match }) {
-  const categories = [
-    'Laptop',
-    'Footwear',
-    'Bottom',
-    'Tops',
-    'Attire',
-    'Camera',
-    'SmartPhones',
-  ];
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 

@@ -7,7 +7,7 @@ const cloudinary = require('cloudinary');
 // Get all products from the database
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.countDocuments();
-  const limit = req.query.limit * 1 || 4;
+  const limit = req.query.limit * 1 || 8;
 
   const apiFeature = new ApiFeatures(
     Product.find(),

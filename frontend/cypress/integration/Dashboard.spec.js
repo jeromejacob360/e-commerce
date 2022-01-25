@@ -16,8 +16,8 @@ describe('Testing the dashboard', () => {
     cy.get('[placeholder="Price"]').click().type('999');
     cy.get('[placeholder="Stock"]').click().type('100');
     cy.get('[placeholder="Description"]').click().type('Description');
-    cy.contains('Brandybibkbkvbyigyifyfu').click();
-    cy.contains('Footwear').click();
+    cy.contains('Brand').click();
+    cy.contains('adidas').click();
     cy.get('[data-testid="select-images-button"]').attachFile('1.jpg');
     cy.intercept('POST', '/api/admin/product/new').as('uploadRequest');
     cy.get('[data-testid="submit-create-button"]').click();
@@ -36,7 +36,7 @@ describe('Testing the dashboard', () => {
     cy.get('[placeholder="Stock"]').clear().type('22');
     cy.get('[placeholder="Description"]').clear().type('Description 2');
     cy.get('[data-testid="categories dropdown"]').click();
-    cy.contains('Laptop').click();
+    cy.contains('nike').click();
     cy.get('[data-testid="select-images-button"]').attachFile('2.jpg');
     cy.intercept('PUT', '/api/admin/product/*').as('uploadRequest2');
     cy.get('[data-testid="submit-update-product"]').click();
