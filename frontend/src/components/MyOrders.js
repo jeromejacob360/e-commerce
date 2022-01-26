@@ -4,7 +4,7 @@ import { clearErrors, getMyOrders } from '../redux/actions/orderActions';
 import { DataGrid } from '@mui/x-data-grid';
 import Loading from '../helper-components/Loading';
 import { useSnackbar } from 'notistack';
-import Metadata from '../helper-components/metadata';
+import Metadata from '../helper-components/Metadata';
 import { Link } from 'react-router-dom';
 import LaunchIcon from '@mui/icons-material/Launch';
 

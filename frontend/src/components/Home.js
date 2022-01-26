@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../helper-components/Loading';
 import { useSnackbar } from 'notistack';
 import { Button } from '@mui/material';
-import Metadata from '../helper-components/metadata';
+import Metadata from '../helper-components/Metadata';
 import { Link } from 'react-router-dom';
 
 export default function Home() {

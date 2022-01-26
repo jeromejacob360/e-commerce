@@ -1,5 +1,5 @@
 import React from 'react';
-import Metadata from './metadata';
+import Metadata from './Metadata';
 
 export default function PageTitle({ title }) {
   return (

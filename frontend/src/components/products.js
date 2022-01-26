@@ -12,7 +12,7 @@ import Loading from '../helper-components/Loading';
 import ProductCard from '../helper-components/productCard';
 import { clearErrors, fetchProducts } from '../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
-import Metadata from '../helper-components/metadata';
+import Metadata from '../helper-components/Metadata';
 import SortAndFilter from '../helper-components/SortAndFilter';
 import { useLocation } from 'react-router-dom';
 

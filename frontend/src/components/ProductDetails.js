@@ -12,7 +12,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import ReviewCard from '../helper-components/ReviewCard';
 import Loading from '../helper-components/Loading';
 import { useSnackbar } from 'notistack';
-import Metadata from '../helper-components/metadata';
+import Metadata from '../helper-components/Metadata';
 import { addToCart, clearCartErrors } from '../redux/actions/cartActions';
 import RatingDialog from '../helper-components/RatingDialog';
 import { getMyOrders } from '../redux/actions/orderActions';

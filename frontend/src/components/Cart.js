@@ -1,6 +1,6 @@
 import { Button, IconButton } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import Metadata from '../helper-components/metadata';
+import Metadata from '../helper-components/Metadata';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Link } from 'react-router-dom';

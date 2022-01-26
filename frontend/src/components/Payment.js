@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Steps from '../helper-components/Steps';
-import Metadata from '../helper-components/metadata';
+import Metadata from '../helper-components/Metadata';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import EventIcon from '@mui/icons-material/Event';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';

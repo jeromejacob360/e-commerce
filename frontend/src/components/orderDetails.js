@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearErrors, getOrderDetails } from '../redux/actions/orderActions';
 import { useSnackbar } from 'notistack';
 import Loading from '../helper-components/Loading';
-import Metadata from '../helper-components/metadata';
+import Metadata from '../helper-components/Metadata';
 import { Link } from 'react-router-dom';
 import date from 'date-and-time';
 import { Button } from '@mui/material';
