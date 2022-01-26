@@ -33,6 +33,9 @@ import ReviewsList from './components/admin/ReviewsList';
 import ProcessOrder from './components/admin/ProcessOrder';
 import ErrorBoundary from './components/ErrorBoundary';
 import UserReviews from './components/UserReviews';
+import UpdatePassword from './components/UpdatePassword';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
   const dispatch = useDispatch();
@@ -61,91 +64,86 @@ function App() {
     <>
       <CssBaseline />
       <BrowserRouter>
-        <ErrorBoundary>
-          <Navbar />
-          {stripeApiKey && (
-            <Elements stripe={loadStripe(stripeApiKey)}>
-              <Route exact path="/payment" component={Payment} />
-            </Elements>
-          )}
-          <div className="max max-w-[1920px] mx-auto mt-24">
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/login" component={LoginSignup} />
-              <Route exact path="/products" component={Products} />
-              <Route exact path="/products/:keyword" component={Products} />
-              <Route exact path="/product/:id" component={ProductDetails} />
+        {/* <ErrorBoundary> */}
+        <Navbar />
+        {stripeApiKey && (
+          <Elements stripe={loadStripe(stripeApiKey)}>
+            <Route exact path="/payment" component={Payment} />
+          </Elements>
+        )}
+        <div className="max max-w-[1920px] mx-auto mt-24">
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={LoginSignup} />
+            <Route exact path="/products" component={Products} />
+            <Route exact path="/products/:keyword" component={Products} />
+            <Route exact path="/product/:id" component={ProductDetails} />
+            <ProtectedRoute
+              exact
+              path="/admin/order/:id"
+              component={ProcessOrder}
+            />
+            <ProtectedRoute exact path="/cart" component={Cart} />
+            <ProtectedRoute exact path="/account" component={Profile} />
+            <ProtectedRoute
+              exact
+              path="/checkout/confirm"
+              component={Confirm}
+            />
+            <ProtectedRoute exact path="/checkout" component={Checkout} />
+            <ProtectedRoute exact path="/success" component={OrderSuccess} />
+            <ProtectedRoute exact path="/me/update" component={UpdateProfile} />
+            <Route exact path="/password/forgot" component={ForgotPassword} />
+            <Route
+              exact
+              path="/password/reset/:token"
+              component={ResetPassword}
+            />
+            <ProtectedRoute
+              exact
+              path="/password/update"
+              component={UpdatePassword}
+            />
+            <ProtectedRoute exact path="/me/reviews" component={UserReviews} />
+            <ProtectedRoute exact path="/orders/me" component={MyOrders} />
+            <ProtectedRoute exact path="/order/:id" component={OrderDetails} />
+            <ProtectedRoute
+              exact
+              path="/admin/dashboard"
+              component={Dashboard}
+            />
+            <ProtectedRoute
+              exact
+              path="/admin/products"
+              component={ProductsList}
+            />
+            <ProtectedRoute
+              exact
+              path="/admin/product/:id"
+              component={UpdateProduct}
+            />
+            <ProtectedRoute
+              exact
+              path="/admin/product"
+              component={CreateProduct}
+            />
+            <ProtectedRoute exact path="/admin/orders" component={OrdersList} />
+            <ProtectedRoute exact path="/admin/users" component={UsersList} />
+            <ErrorBoundary>
               <ProtectedRoute
                 exact
-                path="/admin/order/:id"
-                component={ProcessOrder}
+                path="/admin/reviews"
+                component={ReviewsList}
               />
-              <ProtectedRoute exact path="/cart" component={Cart} />
-              <ProtectedRoute exact path="/account" component={Profile} />
-              <ProtectedRoute
-                exact
-                path="/checkout/confirm"
-                component={Confirm}
-              />
-              <ProtectedRoute exact path="/checkout" component={Checkout} />
-              <ProtectedRoute exact path="/success" component={OrderSuccess} />
-              <ProtectedRoute
-                exact
-                path="/me/update"
-                component={UpdateProfile}
-              />
-              <ProtectedRoute
-                exact
-                path="/me/reviews"
-                component={UserReviews}
-              />
-              <ProtectedRoute exact path="/orders/me" component={MyOrders} />
-              <ProtectedRoute
-                exact
-                path="/order/:id"
-                component={OrderDetails}
-              />
-              <ProtectedRoute
-                exact
-                path="/admin/dashboard"
-                component={Dashboard}
-              />
-              <ProtectedRoute
-                exact
-                path="/admin/products"
-                component={ProductsList}
-              />
-              <ProtectedRoute
-                exact
-                path="/admin/product/:id"
-                component={UpdateProduct}
-              />
-              <ProtectedRoute
-                exact
-                path="/admin/product"
-                component={CreateProduct}
-              />
-              <ProtectedRoute
-                exact
-                path="/admin/orders"
-                component={OrdersList}
-              />
-              <ProtectedRoute exact path="/admin/users" component={UsersList} />
-              <ErrorBoundary>
-                <ProtectedRoute
-                  exact
-                  path="/admin/reviews"
-                  component={ReviewsList}
-                />
-              </ErrorBoundary>
-              <Route
-                component={
-                  window.location.pathname === '/payment' ? null : FourOFour
-                }
-              />
-            </Switch>
-          </div>
-        </ErrorBoundary>
+            </ErrorBoundary>
+            <Route
+              component={
+                window.location.pathname === '/payment' ? null : FourOFour
+              }
+            />
+          </Switch>
+        </div>
+        {/* </ErrorBoundary> */}
       </BrowserRouter>
     </>
   );

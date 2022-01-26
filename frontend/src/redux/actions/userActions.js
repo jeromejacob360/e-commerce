@@ -40,6 +40,48 @@ export const logoutUser = () => async (dispatch) => {
   }
 };
 
+// send forgot password email
+export const forgotPassword = (email) => async (dispatch) => {
+  try {
+    dispatch({ type: 'FORGOT_PASSWORD_REQUEST' });
+
+    const { data } = await axios.post(`/api/password/forgot`, { email: email });
+
+    dispatch({
+      type: 'FORGOT_PASSWORD_SUCCESS',
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'FORGOT_PASSWORD_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
+//Reset password
+export const resetPassword =
+  (password, confirmPassword, token) => async (dispatch) => {
+    try {
+      dispatch({ type: 'RESET_PASSWORD_REQUEST' });
+
+      const { data } = await axios.put(`/api/password/reset/${token}`, {
+        password,
+        confirmPassword,
+      });
+      console.log('data', data);
+
+      dispatch({
+        type: 'RESET_PASSWORD_SUCCESS',
+        payload: data.message,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'RESET_PASSWORD_FAILURE',
+        payload: error.response.data.message,
+      });
+    }
+  };
+
 // Load user to state
 export const loadUser = () => async (dispatch) => {
   try {

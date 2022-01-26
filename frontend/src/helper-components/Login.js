@@ -3,7 +3,6 @@ import {
   FormGroup,
   IconButton,
   InputAdornment,
-  Link,
   OutlinedInput,
 } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
@@ -13,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -67,7 +67,9 @@ export default function Login() {
             </InputAdornment>
           }
         />
-        <Link href="#">Forgot password</Link>
+        <Link className="text-orange-600" to="/password/forgot">
+          Forgot password?
+        </Link>
         <Button
           type="submit"
           onClick={handleLogin}

@@ -87,6 +87,40 @@ export const userReducer = (state = { user: {} }, action) => {
   }
 };
 
+export const forgotPasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'FORGOT_PASSWORD_REQUEST':
+    case 'RESET_PASSWORD_REQUEST':
+      return {
+        loading: true,
+        error: null,
+      };
+
+    case 'FORGOT_PASSWORD_SUCCESS':
+    case 'RESET_PASSWORD_SUCCESS':
+      return {
+        loading: false,
+        message: action.payload,
+        success: true,
+      };
+
+    case 'FORGOT_PASSWORD_FAILURE':
+    case 'RESET_PASSWORD_FAILURE':
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    case 'CLEAR_ERRORS':
+      return {
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
 export const allUsersReducer = (state = { users: [] }, action) => {
   switch (action.type) {
     case 'ALL_USERS_REQUEST':
