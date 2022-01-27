@@ -1,10 +1,9 @@
-import { Avatar, Button, Paper } from '@mui/material';
-import React from 'react';
+import { Avatar, Button, ButtonGroup, Paper } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
 export default function Account() {
   const { user } = useSelector((state) => state.user);
+
   return (
     <div className="flex flex-col items-center justify-center w-full mt-20">
       <Paper
@@ -39,13 +38,29 @@ export default function Account() {
       </Paper>
       <Link to="/me/update"></Link>
 
-      <div className="flex justify-center w-full mt-4 space-x-6">
-        <Button component={Link} to="/orders/me" variant="outlined">
-          My Orders
-        </Button>
-        <Button component={Link} to="/me/reviews" variant="outlined">
-          My Reviews
-        </Button>
+      <div className="flex flex-col items-center space-y-8">
+        <ButtonGroup
+          variant="outlined"
+          aria-label="outlined primary button group"
+        >
+          <Button component={Link} to="/orders/me">
+            My Orders
+          </Button>
+          <Button component={Link} to="/me/reviews">
+            My Reviews
+          </Button>
+        </ButtonGroup>
+        <ButtonGroup
+          variant="outlined"
+          aria-label="outlined primary button group"
+        >
+          <Button component={Link} to="/me/update">
+            Update profile
+          </Button>
+          <Button component={Link} to="/password/update">
+            Change password
+          </Button>
+        </ButtonGroup>
       </div>
     </div>
   );

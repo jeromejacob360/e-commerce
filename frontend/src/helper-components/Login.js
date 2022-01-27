@@ -28,7 +28,7 @@ export default function Login() {
   }
   return (
     <form>
-      <FormGroup margin="dense" size="small" className="space-y-8 w-80">
+      <FormGroup margin="dense" size="small" className="pt-10 space-y-8 w-80">
         <OutlinedInput
           type="email"
           placeholder="Email"

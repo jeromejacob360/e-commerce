@@ -7,8 +7,9 @@ import { useSnackbar } from 'notistack';
 import Metadata from '../helper-components/Metadata';
 import { Link } from 'react-router-dom';
 import LaunchIcon from '@mui/icons-material/Launch';
+import { Button } from '@mui/material';
 
-export default function MyOrders() {
+export default function MyOrders({ history }) {
   const { loading, orders, error } = useSelector((state) => state.myOrders);
   const { user } = useSelector((state) => state.user);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -95,7 +96,7 @@ export default function MyOrders() {
 
   if (loading) return <Loading />;
 
-  return (
+  return orders?.length > 0 ? (
     <div>
       <h1 className="py-2 my-4 text-2xl font-bold text-center">My Orders</h1>
       <Metadata title={'Orders - ' + user.name} />
@@ -108,6 +109,13 @@ export default function MyOrders() {
         disableSelectionOnClick
         autoHeight
       />
+    </div>
+  ) : (
+    <div className="space-y-6 text-xl text-center text-gray-600">
+      <h4>You have no orders yet</h4>
+      <Button variant="outlined" onClick={() => history.go(-1)}>
+        Go Back
+      </Button>
     </div>
   );
 }

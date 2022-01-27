@@ -51,6 +51,9 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler('Incorrect email or password', 401));
   }
 
+  // Ignore password when sending user object
+  user.password = undefined;
+
   // 3) If everything ok, send token to client
   sendToken(user, 200, res, 'Login successful');
 });
@@ -127,7 +130,6 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
   if (!user)
     return next(new ErrorHandler('Reset token is invalid or has expired', 400));
-  console.log('user', user);
   // 2) Set the new password
 
   // verify password and confirm password
@@ -142,6 +144,43 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
   //Login the user
   sendToken(user, 200, res, 'Password reset successful');
+});
+
+// Change password
+exports.changePassword = catchAsyncErrors(async (req, res, next) => {
+  //check if the passwords match
+  if (req.body.newPassword !== req.body.confirmPassword) {
+    return next(new ErrorHandler('Passwords do not match', 400));
+  }
+
+  // 1) Get user from collection
+  const user = await User.findById(req.user.id).select('+password');
+
+  if (!user) return next(new ErrorHandler('User not found', 404));
+
+  // 2) Check if posted password is correct
+  if (!(await user.correctPassword(req.body.oldPassword, user.password))) {
+    return next(new ErrorHandler('Incorrect password', 401));
+  }
+
+  // 3) Check if the new password is same as the old password
+  if (req.body.newPassword === req.body.oldPassword) {
+    return next(
+      new ErrorHandler('New password must be different from old password', 400),
+    );
+  }
+
+  // 4) If all good, update password
+  user.password = req.body.newPassword;
+  await user.save();
+
+  // 5) Log user in, send JWT
+  // sendToken(user, 200, res, 'Password changed successfully');
+
+  res.status(200).json({
+    success: true,
+    message: 'Password changed successfully',
+  });
 });
 
 // Get user details
@@ -190,18 +229,37 @@ exports.getUserReviews = catchAsyncErrors(async (req, res, next) => {
 // Update user details
 exports.updateUserDetails = catchAsyncErrors(async (req, res, next) => {
   const newUser = {
-    name: req.body.name,
-    email: req.body.email,
+    ...req.body,
   };
 
-  const user = await User.findByIdAndUpdate(req.user.id, newUser, {
+  const user = await User.findById(req.user.id);
+
+  if (!user) return next(new ErrorHandler('No user found', 404));
+
+  // check if avatar is already uploaded
+  if (!user.avatar.url || user.avatar.url !== newUser.avatar) {
+    console.log('avatar is not the same');
+
+    if (user.avatar.url)
+      await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+    const myCloudinary = await cloudinary.v2.uploader.upload(newUser.avatar);
+    newUser.avatar = {
+      public_id: myCloudinary.public_id,
+      url: myCloudinary.secure_url,
+    };
+  } else {
+    newUser.avatar = user.avatar;
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, newUser, {
     new: true,
     runValidators: true,
     useFindAndModify: false,
   });
   res.status(200).json({
     success: true,
-    user,
+    user: updatedUser,
   });
 });
 

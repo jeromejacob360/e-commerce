@@ -21,6 +21,7 @@ export default function SignupForm({
   setUser,
   handleSubmit,
   buttonText = 'Signup',
+  passwordField = true,
 }) {
   const [showPw, setShowPw] = useState(false);
 
@@ -39,7 +40,7 @@ export default function SignupForm({
 
   return (
     <form>
-      <FormGroup margin="dense" size="small" className="space-y-8 w-80">
+      <FormGroup margin="dense" size="small" className="pt-10 space-y-8 w-80">
         <OutlinedInput
           type="text"
           placeholder="Name"
@@ -67,29 +68,31 @@ export default function SignupForm({
           }
         />
 
-        <OutlinedInput
-          name="password"
-          type={showPw ? 'text' : 'password'}
-          placeholder="password"
-          value={user.password}
-          onChange={setValue}
-          startAdornment={
-            <InputAdornment position="start">
-              <LockIcon />
-            </InputAdornment>
-          }
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowPw(!showPw)}
-                edge="end"
-              >
-                {showPw ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-        />
+        {passwordField && (
+          <OutlinedInput
+            name="password"
+            type={showPw ? 'text' : 'password'}
+            placeholder="password"
+            value={user.password}
+            onChange={setValue}
+            startAdornment={
+              <InputAdornment position="start">
+                <LockIcon />
+              </InputAdornment>
+            }
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPw(!showPw)}
+                  edge="end"
+                >
+                  {showPw ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        )}
         <Box
           sx={{
             display: 'flex',

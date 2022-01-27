@@ -8,7 +8,7 @@ import date from 'date-and-time';
 import RatingDialog from '../helper-components/RatingDialog';
 import { deleteReview } from '../redux/actions/productActions';
 
-export default function UserReviews() {
+export default function UserReviews({ history }) {
   const [editReviewModalOpen, setEditReviewModalOpen] = useState(false);
 
   const reviewRef = useRef();
@@ -73,8 +73,7 @@ export default function UserReviews() {
 
   return (
     <>
-      {reviews ? (
-        reviews?.length > 0 &&
+      {reviews?.length > 0 ? (
         reviews.map((review) => {
           return (
             <div
@@ -120,7 +119,12 @@ export default function UserReviews() {
           );
         })
       ) : (
-        <h4 className="text-xl text-center text-gray-600">No reviews found</h4>
+        <div className="space-y-6 text-xl text-center text-gray-600">
+          <h4>No reviews found</h4>
+          <Button variant="outlined" onClick={() => history.go(-1)}>
+            Go Back
+          </Button>
+        </div>
       )}
       {editReviewModalOpen && (
         <RatingDialog

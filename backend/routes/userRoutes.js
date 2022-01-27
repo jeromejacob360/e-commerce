@@ -13,16 +13,18 @@ const {
   getUserReviews,
   forgotPassword,
   resetPassword,
+  changePassword,
 } = require('../controllers/userController');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser);
 router.route('/password/forgot').post(forgotPassword);
+router.route('/password/change').put(isAuthenticatedUser, changePassword);
 router.route('/password/reset/:token').put(resetPassword);
 router.route('/logout').get(logoutUser);
 router.route('/me').get(isAuthenticatedUser, getUserDetails);
-router.route('/me/update').get(isAuthenticatedUser, updateUserDetails);
+router.route('/me/update').put(isAuthenticatedUser, updateUserDetails);
 router.route('/shipping').post(isAuthenticatedUser, saveAddress);
 router.route('/me/reviews').get(isAuthenticatedUser, getUserReviews);
 

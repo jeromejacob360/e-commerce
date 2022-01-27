@@ -26,7 +26,7 @@ export default function ResetPassword({ match, history }) {
       enqueueSnackbar(message, { variant: 'success' });
       history.push('/login');
     }
-  });
+  }, [error, success, message, dispatch, history, enqueueSnackbar]);
 
   const resetPasswordSubmit = (e) => {
     e.preventDefault();

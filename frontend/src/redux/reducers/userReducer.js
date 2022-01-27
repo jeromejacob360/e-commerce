@@ -91,6 +91,7 @@ export const forgotPasswordReducer = (state = {}, action) => {
   switch (action.type) {
     case 'FORGOT_PASSWORD_REQUEST':
     case 'RESET_PASSWORD_REQUEST':
+    case 'CHANGE_PASSWORD_REQUEST':
       return {
         loading: true,
         error: null,
@@ -98,6 +99,7 @@ export const forgotPasswordReducer = (state = {}, action) => {
 
     case 'FORGOT_PASSWORD_SUCCESS':
     case 'RESET_PASSWORD_SUCCESS':
+    case 'CHANGE_PASSWORD_SUCCESS':
       return {
         loading: false,
         message: action.payload,
@@ -106,6 +108,7 @@ export const forgotPasswordReducer = (state = {}, action) => {
 
     case 'FORGOT_PASSWORD_FAILURE':
     case 'RESET_PASSWORD_FAILURE':
+    case 'CHANGE_PASSWORD_FAILURE':
       return {
         loading: false,
         error: action.payload,
@@ -115,6 +118,9 @@ export const forgotPasswordReducer = (state = {}, action) => {
       return {
         error: null,
       };
+
+    case 'CLEAR_PROFILE_STATE':
+      return { user: {} };
 
     default:
       return state;
@@ -155,19 +161,23 @@ export const allUsersReducer = (state = { users: [] }, action) => {
 export const profileReducer = (state = { user: {} }, action) => {
   switch (action.type) {
     case 'UPDATE_USER_REQUEST':
+    case 'UPDATE_PROFILE_REQUEST':
     case 'DELETE_USER_REQUEST':
       return {
         loading: true,
       };
 
     case 'UPDATE_USER_SUCCESS':
+    case 'UPDATE_PROFILE_SUCCESS':
     case 'DELETE_USER_SUCCESS':
       return {
         loading: false,
+        success: true,
         ...action.payload,
       };
 
     case 'UPDATE_USER_FAILURE':
+    case 'UPDATE_PROFILE_FAILURE':
     case 'DELETE_USER_FAILURE':
       return {
         ...state,
@@ -186,6 +196,9 @@ export const profileReducer = (state = { user: {} }, action) => {
         ...state,
         error: null,
       };
+    case 'CLEAR_PROFILE_STATE':
+      return { user: {} };
+
     case 'CLEAR_STATE':
       return { user: {} };
 

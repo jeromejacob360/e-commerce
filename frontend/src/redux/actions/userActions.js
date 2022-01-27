@@ -58,6 +58,7 @@ export const forgotPassword = (email) => async (dispatch) => {
     });
   }
 };
+
 //Reset password
 export const resetPassword =
   (password, confirmPassword, token) => async (dispatch) => {
@@ -68,7 +69,6 @@ export const resetPassword =
         password,
         confirmPassword,
       });
-      console.log('data', data);
 
       dispatch({
         type: 'RESET_PASSWORD_SUCCESS',
@@ -81,6 +81,46 @@ export const resetPassword =
       });
     }
   };
+
+//Change password
+export const changePassword = (passwords) => async (dispatch) => {
+  try {
+    dispatch({ type: 'CHANGE_PASSWORD_REQUEST' });
+
+    const { data } = await axios.put(`/api/password/change`, {
+      ...passwords,
+    });
+
+    dispatch({
+      type: 'CHANGE_PASSWORD_SUCCESS',
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'CHANGE_PASSWORD_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Update user profile
+export const updateProfile = (user) => async (dispatch) => {
+  try {
+    dispatch({ type: 'UPDATE_PROFILE_REQUEST' });
+
+    const { data } = await axios.put(`/api/me/update`, user);
+
+    dispatch({
+      type: 'UPDATE_PROFILE_SUCCESS',
+      payload: data.user,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'UPDATE_PROFILE_FAILURE',
+      payload: error.response.data.message,
+    });
+  }
+};
 
 // Load user to state
 export const loadUser = () => async (dispatch) => {
