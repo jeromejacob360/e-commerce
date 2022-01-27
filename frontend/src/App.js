@@ -8,7 +8,7 @@ import LoginSignup from './components/LoginSignup';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadUser } from './redux/actions/userActions';
-import ProtectedRoute from './helper-components/protectedRoute';
+import ProtectedRoute from './helper-components/ProtectedRoute';
 import Profile from './components/Account';
 import UpdateProfile from './components/UpdateProfile';
 import Cart from './components/Cart';

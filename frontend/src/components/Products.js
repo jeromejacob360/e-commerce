@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../helper-components/Loading';
-import ProductCard from '../helper-components/productCard';
+import ProductCard from '../helper-components/ProductCard';
 import { clearErrors, fetchProducts } from '../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Metadata from '../helper-components/Metadata';

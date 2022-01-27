@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import ProductCard from '../helper-components/productCard';
+import ProductCard from '../helper-components/ProductCard';
 import { clearErrors, fetchProducts } from '../redux/actions/productActions';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../helper-components/Loading';

@@ -14,7 +14,7 @@ import Loading from '../../helper-components/Loading';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { DataGrid } from '@mui/x-data-grid';
 import Sidebar from './Sidebar';
-import ProductCard from '../../helper-components/productCard';
+import ProductCard from '../../helper-components/ProductCard';
 
 export default function ReviewsList() {
   const [pId, setPId] = useState('');
