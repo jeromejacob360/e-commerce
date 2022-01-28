@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Steps from '../helper-components/Steps';
 import Metadata from '../helper-components/Metadata';
@@ -180,18 +180,27 @@ export default function Payment({ history }) {
     setStripeApiKey(stripeApiKey);
   }
 
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+    enqueueSnackbar('Copied to clipboard', {
+      variant: 'success',
+      autoHideDuration: 1000,
+    });
+  }
+
   if (!stripeApiKey) {
     return <Loading />;
   }
 
   return (
-    <div>
+    <div className="relative">
       <Metadata title="Payment" />
       <Steps activeStep={2} />
       <div>
         <h1 className="pb-2 mx-auto mt-20 mb-8 text-2xl font-semibold text-center border-b w-60">
           Card Info
         </h1>
+
         <form
           className="grid space-y-8 place-items-center"
           onSubmit={handleSubmit}
@@ -230,6 +239,42 @@ export default function Payment({ history }) {
           >{`Pay - ₹${orderInfo && orderInfo.total}`}</Button>
         </form>
       </div>
+      <p className="absolute -bottom-20 text-center w-full">
+        Psst.. Its in test mode. Use{' '}
+        <Tooltip title="Copy to clipboard">
+          <span
+            onClick={() => {
+              copyToClipboard(4242424242424242);
+            }}
+            className="text-lg text-orange-600 cursor-pointer"
+          >
+            4242424242424242
+          </span>
+        </Tooltip>{' '}
+        for card number,{' '}
+        <Tooltip title="Copy to clipboard">
+          <span
+            onClick={() => {
+              copyToClipboard(555);
+            }}
+            className="text-orange-600 cursor-pointer"
+          >
+            any future date
+          </span>
+        </Tooltip>{' '}
+        for expiry and{' '}
+        <Tooltip title="Copy to clipboard">
+          <span
+            onClick={() => {
+              copyToClipboard(999);
+            }}
+            className="text-orange-600 cursor-pointer"
+          >
+            any number
+          </span>
+        </Tooltip>{' '}
+        for CVC
+      </p>
     </div>
   );
 }

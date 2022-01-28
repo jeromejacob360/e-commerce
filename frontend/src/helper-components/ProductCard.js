@@ -1,13 +1,14 @@
 import { Button, Rating } from '@mui/material';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { addToCart, clearCartErrors } from '../redux/actions/cartActions';
 import { useSnackbar } from 'notistack';
 import { useSelector, useDispatch } from 'react-redux';
 
-export default function ProductCard({ product, history }) {
+export default function ProductCard({ product }) {
   const [addedQuantity, setAddedQuantity] = React.useState(0);
 
+  const history = useHistory();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -60,9 +61,10 @@ export default function ProductCard({ product, history }) {
           <Button
             variant="contained"
             sx={{ color: 'white' }}
-            onClick={() =>
-              history.push('/login?redirect=' + window.location.pathname)
-            }
+            onClick={() => {
+              console.log('window.location.pathname', window.location.pathname);
+              history.push('/login?redirect=' + window.location.pathname);
+            }}
           >
             Login
           </Button>
