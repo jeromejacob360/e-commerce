@@ -16,6 +16,7 @@ import Metadata from '../helper-components/Metadata';
 import { addToCart, clearCartErrors } from '../redux/actions/cartActions';
 import RatingDialog from '../helper-components/RatingDialog';
 import { getMyOrders } from '../redux/actions/orderActions';
+import { motion } from 'framer-motion';
 
 export default function ProductDetails({ match, history }) {
   const [quantity, setQuantity] = useState(1);
@@ -106,9 +107,6 @@ export default function ProductDetails({ match, history }) {
               Login
             </Button>
           </div>,
-          {
-            variant: 'error',
-          },
         );
       } else {
         dispatch(clearCartErrors());
@@ -199,7 +197,12 @@ export default function ProductDetails({ match, history }) {
   }
 
   return product?.images ? (
-    <div className="my-10">
+    <motion.div
+      className="my-10"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10, transition: { duration: 5 } }}
+    >
       <Metadata title={product.name + '--The shoe store'} />
       <div className="flex flex-col items-center justify-center px-5 border-b lg:flex-row">
         <div className="max-w-[300px]">
@@ -214,7 +217,7 @@ export default function ProductDetails({ match, history }) {
             ))}
           </Carousel>
         </div>
-        <div className="mx-5">
+        <div className="mx-5 sm:mt-56">
           <h3 className="mb-2 text-xl">{product.name}</h3>
           <div className="text-gray-500 max-w-[400px] mb-3">
             {product.description}
@@ -279,7 +282,7 @@ export default function ProductDetails({ match, history }) {
               disabled={
                 !product.stock ||
                 cartLoading ||
-                addedQuantity + quantity > product.stock
+                addedQuantity + quantity >= product.stock
               }
               color="primary"
               variant="contained"
@@ -317,6 +320,6 @@ export default function ProductDetails({ match, history }) {
         open={ratingDialogOpen}
         setOpen={setRatingDialogOpen}
       />
-    </div>
+    </motion.div>
   ) : null;
 }

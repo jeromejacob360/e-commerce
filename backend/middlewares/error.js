@@ -1,7 +1,6 @@
 const ErrorHandler = require('../utils/errorHandler');
 
 module.exports = (err, req, res, next) => {
-  console.log('err', err);
   // Mongoose cast error
   if (err.name === 'CastError') {
     err = new ErrorHandler('Resource not found at ' + err.path, 404);

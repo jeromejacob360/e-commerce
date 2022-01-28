@@ -14,6 +14,7 @@ import { clearErrors, fetchProducts } from '../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Metadata from '../helper-components/Metadata';
 import SortAndFilter from '../helper-components/SortAndFilter';
+import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
 export default function Products({ match }) {
@@ -94,16 +95,27 @@ export default function Products({ match }) {
           {loading ? (
             <Loading />
           ) : products?.length ? (
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                marginBottom: '2rem',
-              }}
-            >
-              {products?.map((product) => {
-                return <ProductCard key={product._id} product={product} />;
+            <div className="flex flex-wrap justify-center mx-2 my-1 mb-8">
+              {products?.map((product, i) => {
+                return (
+                  <motion.div
+                    key={product._id}
+                    className="m-2"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.2, delay: i * 0.01 },
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: 10,
+                      transition: { duration: i * 0.2 },
+                    }}
+                  >
+                    <ProductCard product={product} />
+                  </motion.div>
+                );
               })}
             </div>
           ) : (
@@ -116,6 +128,7 @@ export default function Products({ match }) {
           )}
           <div className="flex items-center justify-center mb-10 space-x-10">
             <Pagination
+              size="small"
               count={totalPages}
               onChange={(e, page) => setCurrentPage(page)}
               sx={{
@@ -128,7 +141,7 @@ export default function Products({ match }) {
               shape="rounded"
             />
             <div className="flex items-center">
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-500 hidden sm:block">
                 Results per page &nbsp;
               </span>
               <Select

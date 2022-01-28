@@ -13,10 +13,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { logoutUser } from '../redux/actions/userActions';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
-import { Badge, TextField } from '@mui/material';
+import { Badge, ListItemIcon, TextField } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useSnackbar } from 'notistack';
 import { setSearchQuery } from '../redux/actions/productActions';
+import Logout from '@mui/icons-material/Logout';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -49,21 +52,21 @@ const ResponsiveAppBar = () => {
   };
 
   useEffect(() => {
+    const menuOptions = [
+      { name: 'My Orders', function: orders, icon: <LocalMallIcon /> },
+      { name: 'Profile', function: account, icon: <AccountCircleIcon /> },
+      { name: 'Logout', function: logout, icon: <Logout /> },
+    ];
+
     if (isAuthenticated && user?.role === 'admin') {
       setOptions([
-        { name: 'Dashboard', function: dashboard },
-        { name: 'Orders', function: orders },
-        { name: 'Account', function: account },
-        { name: 'Logout', function: logout },
+        { name: 'Dashboard', function: dashboard, icon: <DashboardIcon /> },
+        ...menuOptions,
       ]);
     }
 
     if (isAuthenticated && user?.role === 'user') {
-      setOptions([
-        { name: 'Orders', function: orders },
-        { name: 'Account', function: account },
-        { name: 'Logout', function: logout },
-      ]);
+      setOptions(menuOptions);
     }
 
     if (!isAuthenticated) {
@@ -77,7 +80,7 @@ const ResponsiveAppBar = () => {
       history.push('/orders/me');
     }
     function login() {
-      history.push('/login');
+      history.push('/login?redirect=' + window.location.pathname);
     }
 
     function account() {
@@ -274,6 +277,7 @@ const ResponsiveAppBar = () => {
                     option.function();
                   }}
                 >
+                  <ListItemIcon>{option.icon}</ListItemIcon>
                   <h2>{option.name}</h2>
                 </MenuItem>
               ))}
