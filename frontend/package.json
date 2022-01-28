@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.24.0",
     "cloudinary": "^1.28.0",
+    "country-state-picker": "^1.1.5",
     "date-and-time": "^2.1.0",
     "express-fileupload": "^1.2.1",
     "framer-motion": "^6.2.3",

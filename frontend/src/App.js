@@ -165,9 +165,13 @@ function App() {
                   component={ReviewsList}
                 />
                 <Route
-                  component={
-                    window.location.pathname === '/payment' ? null : FourOFour
-                  }
+                  render={() => {
+                    if (window.location.pathname === '/payment') {
+                      return null;
+                    } else {
+                      return <FourOFour />;
+                    }
+                  }}
                 />
               </Switch>
             </AnimatePresence>

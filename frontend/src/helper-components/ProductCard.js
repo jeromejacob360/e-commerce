@@ -6,7 +6,6 @@ import { useSnackbar } from 'notistack';
 import { useSelector, useDispatch } from 'react-redux';
 
 export default function ProductCard({ product, history }) {
-  console.log('product', product);
   const [addedQuantity, setAddedQuantity] = React.useState(0);
 
   const dispatch = useDispatch();
@@ -75,13 +74,13 @@ export default function ProductCard({ product, history }) {
   return (
     <Link className="m-2 group" to={`/product/${product._id}`}>
       <div
-        className="flex-row group overflow-hidden relative transition-all hover:pb-20 items-center justify-between hidden h-[470px] p-4 border shadow-md sm:flex sm:flex-col w-[295px]"
+        className="flex-row group overflow-hidden relative transition-all hover:pb-20 items-center justify-between hidden h-[470px] p-4 border shadow-md hover:shadow-xl sm:flex sm:flex-col w-[295px]"
         data-testid="product-card"
       >
         <div>
           {product?.images?.length > 0 && (
             <div className="relative pr-32 w-[250px] h-60 duration-500">
-              <div className="flex space-x-10 absolute left-0 group-hover:-left-[calc(100%+30px)] duration-300 w-full">
+              <div className="flex space-x-10 absolute left-0 group-hover:-left-[calc(100%+30px)] duration-500 w-full">
                 <img
                   className="object-contain w-full h-auto sm:h-60"
                   src={product.images[0].url}

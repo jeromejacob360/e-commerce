@@ -20,6 +20,7 @@ import { setSearchQuery } from '../redux/actions/productActions';
 import Logout from '@mui/icons-material/Logout';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LoginIcon from '@mui/icons-material/Login';
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -70,7 +71,7 @@ const ResponsiveAppBar = () => {
     }
 
     if (!isAuthenticated) {
-      setOptions([{ name: 'Login', function: login }]);
+      setOptions([{ name: 'Login', function: login, icon: <LoginIcon /> }]);
     }
     function dashboard() {
       handleCloseUserMenu();
