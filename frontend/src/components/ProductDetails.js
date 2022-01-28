@@ -217,7 +217,7 @@ export default function ProductDetails({ match, history }) {
             ))}
           </Carousel>
         </div>
-        <div className="mx-5 sm:mt-56">
+        <div className="mx-5 lg:mt-56">
           <h3 className="mb-2 text-xl">{product.name}</h3>
           <div className="text-gray-500 max-w-[400px] mb-3">
             {product.description}
@@ -226,9 +226,15 @@ export default function ProductDetails({ match, history }) {
             <h5 className="text-3xl">₹{product.price}</h5>
             <span>
               {product.stock > 0 ? (
-                <span className="text-lg font-bold text-green-500">
-                  In stock
-                </span>
+                product.stock > 9 ? (
+                  <span className="text-lg font-bold text-green-500">
+                    In stock
+                  </span>
+                ) : (
+                  <span className="text-lg font-bold text-green-500">
+                    Hot cake!!.. Only {product.stock} left in stock.
+                  </span>
+                )
               ) : (
                 <span className="text-lg font-bold text-red-500">
                   Out of stock

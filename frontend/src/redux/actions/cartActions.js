@@ -16,7 +16,7 @@ export function addToCart(productId, quantity) {
       });
 
       dispatch({
-        type: 'CLEAR_CART_SUCCESS',
+        type: 'CLEAR_CART_SUCCESS_MESSAGE',
       });
     } catch (error) {
       dispatch({
@@ -43,6 +43,25 @@ export function removeFromCart(productId) {
     } catch (error) {
       dispatch({
         type: 'REMOVE_FROM_CART_FAILURE',
+        payload: error.response.data.message,
+      });
+    }
+  };
+}
+
+export function clearCart() {
+  return async function (dispatch) {
+    try {
+      dispatch({ type: 'CLEAR_CART_REQUEST' });
+
+      await axios.post('/api/cart/clear');
+
+      dispatch({
+        type: 'CLEAR_CART_SUCCESS',
+      });
+    } catch (error) {
+      dispatch({
+        type: 'CLEAR_CART_FAILURE',
         payload: error.response.data.message,
       });
     }

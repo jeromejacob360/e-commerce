@@ -78,6 +78,22 @@ exports.removeFromCart = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// Clear the cart
+exports.clearCart = catchAsyncErrors(async (req, res, next) => {
+  const cart = await Cart.findOne({ userId: req.user.id });
+  if (!cart) {
+    return next(new ErrorHandler('Cart not found', 404));
+  }
+
+  cart.items = [];
+  await cart.save();
+  return res.status(201).json({
+    success: true,
+    message: 'Product removed from cart',
+    cart: cart.items,
+  });
+});
+
 // Get the cart
 exports.getCart = catchAsyncErrors(async (req, res, next) => {
   const cart = await Cart.findOne({ userId: req.user.id });

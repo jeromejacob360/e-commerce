@@ -4,6 +4,7 @@ export const cartReducer = (
 ) => {
   switch (action.type) {
     case 'ADD_TO_CART_REQUEST':
+    case 'CLEAR_CART_REQUEST':
       return {
         ...state,
         loading: true,
@@ -25,6 +26,7 @@ export const cartReducer = (
       };
 
     case 'ADD_TO_CART_FAILURE':
+    case 'CLEAR_CART_FAILURE':
       return {
         ...state,
         loading: false,
@@ -40,10 +42,11 @@ export const cartReducer = (
       };
 
     case 'REMOVE_FROM_CART_SUCCESS':
+    case 'CLEAR_CART_SUCCESS':
       return {
         loading: false,
         cartItems: action.payload,
-        completed: true,
+        completed: false,
       };
 
     case 'REMOVE_FROM_CART_FAILURE':
@@ -60,11 +63,12 @@ export const cartReducer = (
         error: null,
       };
 
-    case 'CLEAR_CART_SUCCESS':
+    case 'CLEAR_CART_SUCCESS_MESSAGE':
       return {
         ...state,
         error: null,
         success: false,
+        completed: false,
       };
 
     case 'CLEAR_STATE':

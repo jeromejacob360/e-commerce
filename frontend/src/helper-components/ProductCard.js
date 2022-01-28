@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import { useSelector, useDispatch } from 'react-redux';
 
 export default function ProductCard({ product }) {
+  console.log('product', product);
   const [addedQuantity, setAddedQuantity] = React.useState(0);
 
   const history = useHistory();
@@ -21,8 +22,6 @@ export default function ProductCard({ product }) {
   const { isAuthenticated } = useSelector((state) => state.user);
 
   React.useEffect(() => {
-    if (!completed) {
-    }
     if (completed) {
       enqueueSnackbar('Item added to cart', {
         variant: 'success',
@@ -35,7 +34,7 @@ export default function ProductCard({ product }) {
       dispatch(clearCartErrors());
     }
     if (product) {
-      const item = cartItems.find((item) => {
+      const item = cartItems?.find((item) => {
         return item.productId === product._id;
       });
       if (item) {
@@ -62,7 +61,6 @@ export default function ProductCard({ product }) {
             variant="contained"
             sx={{ color: 'white' }}
             onClick={() => {
-              console.log('window.location.pathname', window.location.pathname);
               history.push('/login?redirect=' + window.location.pathname);
             }}
           >
@@ -101,7 +99,20 @@ export default function ProductCard({ product }) {
           </h3>
         </div>
         <p className="text-gray-500">{product.description}</p>
-        <p>₹{product.price}</p>
+        <p className="text-lg lining-nums mr-auto">₹{product.price}</p>
+        <span className="group-hover:h-0 text-sm overflow-hidden">
+          {product.stock > 0 ? (
+            product.stock < 10 ? (
+              <span className="font-bold text-orange-500">
+                Only {product.stock} left in stock
+              </span>
+            ) : (
+              <span className="font-bold text-green-500">In stock</span>
+            )
+          ) : (
+            <span className="font-bold text-red-500">Out of stock</span>
+          )}
+        </span>
         {product.reviews.length > 0 ? (
           <div className="flex space-x-2">
             <Rating value={product.rating} precision={0.5} readOnly />
@@ -117,9 +128,7 @@ export default function ProductCard({ product }) {
               padding: '10px 30px',
             }}
             disabled={
-              !product.stock ||
-              cartLoading ||
-              addedQuantity + 1 >= product.stock
+              !product.stock || cartLoading || addedQuantity >= product.stock
             }
             color="primary"
             variant="contained"

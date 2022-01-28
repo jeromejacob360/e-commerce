@@ -17,7 +17,7 @@ import axios from 'axios';
 import Loading from '../helper-components/Loading';
 import { useSnackbar } from 'notistack';
 import { createOrder } from '../redux/actions/orderActions';
-import { removeFromCart } from '../redux/actions/cartActions';
+import { clearCart, removeFromCart } from '../redux/actions/cartActions';
 
 export default function Payment({ history }) {
   const stripe = useStripe();
@@ -158,9 +158,8 @@ export default function Payment({ history }) {
         dispatch({
           type: 'CLEAR_CART',
         });
-        cartItemWithImageObj.map((item) => {
-          return dispatch(removeFromCart(item.productId));
-        });
+        dispatch(clearCart());
+
         setDisablePayBtn(false);
         history.push('/success');
       } else {
