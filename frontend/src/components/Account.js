@@ -1,6 +1,15 @@
-import { Avatar, Button, ButtonGroup, Paper } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  InputAdornment,
+  OutlinedInput,
+  Paper,
+} from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+
 export default function Account() {
   const { user } = useSelector((state) => state.user);
 

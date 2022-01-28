@@ -6,9 +6,11 @@ import Signup from '../helper-components/Signup';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import Loading from '../helper-components/Loading';
+import { useHistory } from 'react-router-dom';
 
-export default function LoginSignup({ history }) {
+export default function LoginSignup() {
   const theme = useTheme();
+  const history = useHistory();
 
   const [mode, setMode] = useState('login');
 

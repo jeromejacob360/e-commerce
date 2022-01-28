@@ -32,8 +32,6 @@ export const productsReducer = (state = { products: [] }, action) => {
         searchQuery: action.payload,
       };
 
-    case 'CLEAR_STATE':
-      return { products: [] };
     default:
       return state;
   }
@@ -126,8 +124,7 @@ export const detailsReducer = (state = { products: [] }, action) => {
         ...state,
         error: null,
       };
-    case 'CLEAR_STATE':
-      return { products: [] };
+
     default:
       return state;
   }
@@ -186,8 +183,7 @@ export const productReviewsReducer = (state = { reviews: [] }, action) => {
         ...state,
         error: null,
       };
-    case 'CLEAR_STATE':
-      return { reviews: [] };
+
     default:
       return state;
   }

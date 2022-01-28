@@ -17,7 +17,7 @@ import SortAndFilter from '../helper-components/SortAndFilter';
 import { useLocation } from 'react-router-dom';
 
 export default function Products({ match }) {
-  const keyword = match.params.keyword;
+  const keyword = match?.params.keyword;
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const location = useLocation();

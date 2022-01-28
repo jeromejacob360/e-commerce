@@ -9,10 +9,10 @@ import Metadata from '../helper-components/Metadata';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
+  const { loading, error, products } = useSelector((state) => state.products);
+
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-
-  const { loading, error, products } = useSelector((state) => state.products);
 
   useEffect(() => {
     if (error) {

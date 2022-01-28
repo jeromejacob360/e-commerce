@@ -72,7 +72,7 @@ export default function ProductDetails({ match, history }) {
   useEffect(() => {
     if (product?.reviews.length > 0 && isAuthenticated) {
       const reviewed = product.reviews.some(
-        (review) => review.userId === user._id,
+        (review) => review.userId === user?._id,
       );
       setReviewed(reviewed);
 
@@ -99,7 +99,9 @@ export default function ProductDetails({ match, history }) {
             <Button
               variant="contained"
               sx={{ color: 'white' }}
-              onClick={() => history.push('/login')}
+              onClick={() =>
+                history.push('/login?redirect=' + window.location.pathname)
+              }
             >
               Login
             </Button>

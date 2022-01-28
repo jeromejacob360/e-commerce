@@ -10,7 +10,7 @@ const { isAuthenticatedUser } = require('../middlewares/auth');
 
 // Routes
 
-router.route('/cart/add').post(isAuthenticatedUser, addProductToCart); //TODO add userless cart add
+router.route('/cart/add').post(isAuthenticatedUser, addProductToCart);
 router.route('/cart/remove').post(isAuthenticatedUser, removeFromCart);
 router.route('/cart').get(isAuthenticatedUser, getCart);
 

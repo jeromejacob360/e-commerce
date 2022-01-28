@@ -15,6 +15,7 @@ import { logoutUser } from '../redux/actions/userActions';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Badge, TextField } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { useSnackbar } from 'notistack';
 import { setSearchQuery } from '../redux/actions/productActions';
 
 const ResponsiveAppBar = () => {
@@ -23,11 +24,23 @@ const ResponsiveAppBar = () => {
   const [options, setOptions] = useState([]);
   const [searchText, setSearchText] = useState('');
 
-  const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { user, isAuthenticated, loading } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
 
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const history = useHistory();
+
+  useEffect(() => {
+    if (isAuthenticated && !loading) {
+      enqueueSnackbar('Welcome ' + user.name.split(' ')[0], {
+        variant: 'success',
+      });
+    }
+    if (!isAuthenticated && !loading) {
+      enqueueSnackbar('Logged out');
+    }
+  }, [enqueueSnackbar, history, isAuthenticated, loading, user?.name]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -73,8 +86,6 @@ const ResponsiveAppBar = () => {
 
     async function logout() {
       dispatch(logoutUser());
-      history.push('/logout');
-      // window.location.href = '/login';
     }
   }, [user, history, dispatch, isAuthenticated]);
 
@@ -206,23 +217,25 @@ const ResponsiveAppBar = () => {
             </form>
           </div>
           <div className="flex items-center">
-            <Tooltip title="Go to Cart">
-              <Badge
-                component={Link}
-                to="/cart"
-                sx={{ mr: 3 }}
-                badgeContent={cartItems?.length}
-                color="error"
-              >
-                <LocalMallIcon
-                  sx={{
-                    width: '2rem',
-                    height: '2rem',
-                  }}
-                  color="secondary"
-                />
-              </Badge>
-            </Tooltip>
+            {isAuthenticated && (
+              <Tooltip title="Go to Cart">
+                <Badge
+                  component={Link}
+                  to="/cart"
+                  sx={{ mr: 3 }}
+                  badgeContent={cartItems?.length}
+                  color="error"
+                >
+                  <LocalMallIcon
+                    sx={{
+                      width: '2rem',
+                      height: '2rem',
+                    }}
+                    color="secondary"
+                  />
+                </Badge>
+              </Tooltip>
+            )}
             <Tooltip title="Open options">
               <IconButton
                 data-testid="avatarButton"
