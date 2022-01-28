@@ -6,7 +6,6 @@ import { useSnackbar } from 'notistack';
 import { useSelector, useDispatch } from 'react-redux';
 
 export default function ProductCard({ product }) {
-  console.log('product', product);
   const [addedQuantity, setAddedQuantity] = React.useState(0);
 
   const history = useHistory();

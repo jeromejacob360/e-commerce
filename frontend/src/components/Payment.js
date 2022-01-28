@@ -17,7 +17,7 @@ import axios from 'axios';
 import Loading from '../helper-components/Loading';
 import { useSnackbar } from 'notistack';
 import { createOrder } from '../redux/actions/orderActions';
-import { clearCart, removeFromCart } from '../redux/actions/cartActions';
+import { clearCart } from '../redux/actions/cartActions';
 
 export default function Payment({ history }) {
   const stripe = useStripe();
