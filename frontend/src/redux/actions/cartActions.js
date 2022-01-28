@@ -14,6 +14,10 @@ export function addToCart(productId, quantity) {
         type: 'ADD_TO_CART_SUCCESS',
         payload: data.cart,
       });
+
+      dispatch({
+        type: 'CLEAR_CART_SUCCESS',
+      });
     } catch (error) {
       dispatch({
         type: 'ADD_TO_CART_FAILURE',

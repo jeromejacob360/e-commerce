@@ -60,6 +60,13 @@ export const cartReducer = (
         error: null,
       };
 
+    case 'CLEAR_CART_SUCCESS':
+      return {
+        ...state,
+        error: null,
+        success: false,
+      };
+
     case 'CLEAR_STATE':
       return { cartItems: [], loading: false, completed: false };
 
