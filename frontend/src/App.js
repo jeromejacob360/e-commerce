@@ -84,7 +84,7 @@ function App() {
             <Route exact path="/payment" component={Payment} />
           </Elements>
         )}
-        <div className="max max-w-[1920px] mx-auto mt-24 relative">
+        <div className="max max-w-[1920px] mx-auto mt-24">
           <LayoutGroup>
             {/* BRAND ANIMATION */}
             <HomeLoader showBrandPage={showBrandPage} />

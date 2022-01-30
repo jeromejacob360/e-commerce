@@ -29,8 +29,6 @@ const ResponsiveAppBar = ({ showBrandPage }) => {
   const [options, setOptions] = useState([]);
   const [searchText, setSearchText] = useState('');
 
-  const isRendered = useRef(false);
-
   const { user, isAuthenticated, loading, logout } = useSelector(
     (state) => state.user,
   );
@@ -122,22 +120,14 @@ const ResponsiveAppBar = ({ showBrandPage }) => {
     setAnchorElUser(null);
   };
 
-  const MotionAppBar = motion(AppBar);
-
   return !showBrandPage ? (
-    <MotionAppBar
-      initial={{
-        opacity: isRendered.current ? 1 : 0,
-        y: isRendered.current ? 0 : -50,
-      }}
-      animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
+    <AppBar
       sx={{
         marginBottom: '1rem',
         position: 'fixed',
         top: 0,
-        zIndex: 100,
+        zIndex: 2,
       }}
-      onAnimationComplete={() => (isRendered.current = true)}
       position="static"
     >
       <Container maxWidth="xl">
@@ -308,7 +298,7 @@ const ResponsiveAppBar = ({ showBrandPage }) => {
           </div>
         </Toolbar>
       </Container>
-    </MotionAppBar>
+    </AppBar>
   ) : null;
 };
 export default ResponsiveAppBar;
