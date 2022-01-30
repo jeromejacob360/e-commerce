@@ -10,7 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { logoutUser } from '../redux/actions/userActions';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Badge, ListItemIcon, TextField } from '@mui/material';
@@ -23,11 +23,13 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 import { motion } from 'framer-motion';
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = ({ showBrandPage }) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [options, setOptions] = useState([]);
   const [searchText, setSearchText] = useState('');
+
+  const isRendered = useRef(false);
 
   const { user, isAuthenticated, loading, logout } = useSelector(
     (state) => state.user,
@@ -122,9 +124,12 @@ const ResponsiveAppBar = () => {
 
   const MotionAppBar = motion(AppBar);
 
-  return (
+  return !showBrandPage ? (
     <MotionAppBar
-      initial={{ opacity: 0, y: -50 }}
+      initial={{
+        opacity: isRendered.current ? 1 : 0,
+        y: isRendered.current ? 0 : -50,
+      }}
       animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
       sx={{
         marginBottom: '1rem',
@@ -132,6 +137,7 @@ const ResponsiveAppBar = () => {
         top: 0,
         zIndex: 100,
       }}
+      onAnimationComplete={() => (isRendered.current = true)}
       position="static"
     >
       <Container maxWidth="xl">
@@ -303,6 +309,6 @@ const ResponsiveAppBar = () => {
         </Toolbar>
       </Container>
     </MotionAppBar>
-  );
+  ) : null;
 };
 export default ResponsiveAppBar;

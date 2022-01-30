@@ -362,9 +362,13 @@ export default function ProductDetails({ match, history }) {
         Related products
       </h3>
       <div className="flex items-center px-10 overflow-auto snap-x md:snap-none">
-        {products.slice(0, products.length - 1).map((product) => (
-          <ProductCard product={product} key={product._id} />
-        ))}
+        {products
+          .slice(0, products.length - 1)
+          .map((relatedProduct) =>
+            relatedProduct._id === product._id ? null : (
+              <ProductCard product={relatedProduct} key={relatedProduct._id} />
+            ),
+          )}
       </div>
 
       <RatingDialog

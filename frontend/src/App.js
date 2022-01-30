@@ -78,7 +78,7 @@ function App() {
     <>
       <CssBaseline />
       <ErrorBoundary>
-        {!showBrandPage && <Navbar />}
+        {<Navbar showBrandPage={showBrandPage} />}
         {stripeApiKey && (
           <Elements stripe={loadStripe(stripeApiKey)}>
             <Route exact path="/payment" component={Payment} />
