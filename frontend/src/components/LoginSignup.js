@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import Loading from '../helper-components/Loading';
 import { useHistory } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function LoginSignup() {
   const theme = useTheme();
@@ -14,30 +15,23 @@ export default function LoginSignup() {
 
   const [mode, setMode] = useState('login');
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { error, loading, isAuthenticated } = useSelector(
     (state) => state.user,
   );
 
   useEffect(() => {
-    const action = () => (
-      <Button
-        onClick={() => {
-          closeSnackbar();
-        }}
-      >
-        Close
-      </Button>
-    );
-
     if (error) {
-      enqueueSnackbar(error, {
+      let editedError = error;
+      if (error.includes('validation failed')) {
+        editedError = error.split(':')[2];
+      }
+      enqueueSnackbar(editedError, {
         variant: 'error',
-        action,
       });
     }
-  }, [error, enqueueSnackbar, closeSnackbar]);
+  }, [error, enqueueSnackbar]);
 
   const redirect = window.location.search
     ? window.location.search.split('=')[1]
@@ -54,37 +48,54 @@ export default function LoginSignup() {
   }
 
   return (
-    <Box className="flex justify-center mt-40">
-      <Paper elevation={2}>
-        <Box px={2} pb={3}>
-          <Box className="flex justify-between mt-2 mb-8">
-            <Button
-              onClick={() => setMode('login')}
-              sx={{
-                borderBottom:
-                  mode === 'login' && `4px solid ${theme.palette.primary.main}`,
-                flex: 1,
-                borderRadius: 0,
-              }}
-            >
-              Login
-            </Button>
-            <Button
-              onClick={() => setMode('signup')}
-              sx={{
-                borderBottom:
-                  mode === 'signup' &&
-                  `4px solid ${theme.palette.primary.main}`,
-                flex: 1,
-                borderRadius: 0,
-              }}
-            >
-              Signup
-            </Button>
+    <Box className="flex justify-center mt-20 sm:mt-40">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0 }}
+      >
+        <Paper elevation={2}>
+          <Box px={2} pb={3}>
+            <Box className="flex justify-between mt-2 mb-8">
+              <Button
+                onClick={() => setMode('login')}
+                sx={{
+                  borderBottom:
+                    mode === 'login' &&
+                    `4px solid ${theme.palette.primary.main}`,
+                  flex: 1,
+                  borderRadius: 0,
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => setMode('signup')}
+                sx={{
+                  borderBottom:
+                    mode === 'signup' &&
+                    `4px solid ${theme.palette.primary.main}`,
+                  flex: 1,
+                  borderRadius: 0,
+                }}
+              >
+                Signup
+              </Button>
+            </Box>
+            <AnimatePresence exitBeforeEnter>
+              {mode === 'login' ? (
+                <motion.div layoutId="loginSignup">
+                  <Login />
+                </motion.div>
+              ) : (
+                <motion.div layoutId="loginSignup">
+                  <Signup />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Box>
-          {mode === 'login' ? <Login /> : <Signup />}
-        </Box>
-      </Paper>
+        </Paper>
+      </motion.div>
     </Box>
   );
 }

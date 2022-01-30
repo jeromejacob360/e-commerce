@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Link } from 'react-router-dom';
 import { addToCart, removeFromCart } from '../redux/actions/cartActions';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Cart({ history }) {
   const { cartItems, loading } = useSelector((state) => state.cart);
@@ -22,8 +23,10 @@ export default function Cart({ history }) {
   }
 
   function handleCheckout() {
-    history.push('/login?redirect=checkout');
+    history.push('/checkout');
   }
+
+  const MotionButton = motion(Button);
 
   if (!cartItems || !cartItems.length) {
     return (
@@ -37,10 +40,22 @@ export default function Cart({ history }) {
   }
 
   return (
-    <div className="pb-10">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+      className="pb-10"
+    >
       <Metadata title="Cart" />
-      <div className="justify-center">
-        <div className="max-w-[1000px] mx-auto shadow-md sm:p-4">
+      <div>
+        <h1 className="mb-4 text-2xl text-center">
+          <span className="px-10 pb-2 border-b">Shopping Cart</span>
+        </h1>
+
+        <motion.div
+          layoutId="step"
+          className="max-w-[1000px] mx-auto mt-10 shadow-md sm:p-4"
+        >
           <div>
             <ul
               className="grid font-semibold"
@@ -53,77 +68,100 @@ export default function Cart({ history }) {
               <li className="pr-1 text-right sm:pr-4 ">Total&nbsp;(₹)</li>
             </ul>
             <div>
-              {cartItems.length &&
-                cartItems.map((item) => (
-                  <div
-                    className="p-2 my-2 border bg-gray-50"
-                    key={item.productId}
-                  >
-                    <ul
-                      className="grid"
-                      style={{
-                        gridTemplateColumns: '2fr 1fr 1fr',
+              <AnimatePresence>
+                {cartItems.length &&
+                  cartItems.map((item) => (
+                    <motion.div
+                      initial={{
+                        height: '150px',
+                        overflow: 'hidden',
+                        margin: 0,
                       }}
+                      animate={{
+                        height: 'auto',
+                        overflow: 'visible',
+                      }}
+                      exit={{
+                        height: 0,
+                        overflow: 'hidden',
+                        margin: 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                      className="border-t "
+                      key={item.productId}
                     >
-                      <li>
-                        <Link
-                          to={`/product/${item.productId}`}
-                          className="flex items-center"
-                        >
-                          <img
-                            className="object-contain h-20 mr-2 w-14"
-                            src={item.image.url}
-                            alt="product"
-                          />
-                          <div>
-                            <p className="pl-1">₹{item.price}</p>
+                      <ul
+                        className="grid p-2"
+                        style={{
+                          gridTemplateColumns: '2fr 1fr 1fr',
+                        }}
+                      >
+                        <li>
+                          <Link
+                            to={`/product/${item.productId}`}
+                            className="flex items-center"
+                          >
+                            <img
+                              className="object-contain h-20 mr-2 w-14"
+                              src={item.image.url}
+                              alt="product"
+                            />
+                            <div>
+                              <p className="pl-1">₹{item.price}</p>
+                            </div>
+                          </Link>
+                        </li>
+                        <li className="flex flex-col items-center">
+                          <div className="flex items-center justify-center space-x-2">
+                            <IconButton
+                              disabled={loading || item.quantity === 1}
+                              onClick={() => decrement(item, item.quantity)}
+                              color="primary"
+                              aria-label="reduce"
+                              component="span"
+                            >
+                              <RemoveIcon />
+                            </IconButton>
+                            <span>{item.quantity}</span>
+                            <IconButton
+                              disabled={loading || item.quantity === item.stock}
+                              onClick={() =>
+                                increment(item, item.quantity, item.stock)
+                              }
+                              color="primary"
+                              aria-label="increase"
+                              component="span"
+                            >
+                              <AddIcon />
+                            </IconButton>
                           </div>
-                        </Link>
-                      </li>
-                      <li className="flex flex-col items-center">
-                        <div className="flex items-center justify-center space-x-2">
-                          <IconButton
-                            disabled={loading || item.quantity === 1}
-                            onClick={() => decrement(item, item.quantity)}
-                            color="primary"
-                            aria-label="reduce"
-                            component="span"
-                          >
-                            <RemoveIcon />
-                          </IconButton>
-                          <span>{item.quantity}</span>
-                          <IconButton
-                            disabled={loading || item.quantity === item.stock}
+                          <Button
                             onClick={() =>
-                              increment(item, item.quantity, item.stock)
+                              dispatch(removeFromCart(item.productId))
                             }
-                            color="primary"
-                            aria-label="increase"
-                            component="span"
+                            variant="text"
                           >
-                            <AddIcon />
-                          </IconButton>
-                        </div>
-                        <Button
-                          onClick={() =>
-                            dispatch(removeFromCart(item.productId))
-                          }
-                          variant="text"
-                        >
-                          Remove
-                        </Button>
-                      </li>
-                      <li className="pr-4 text-right ">
-                        {item.price * item.quantity}
-                      </li>
-                    </ul>
-                    <h3 className="mt-1 whitespace-nowrap">{item.name}</h3>
-                  </div>
-                ))}
+                            Remove
+                          </Button>
+                        </li>
+                        <li className="pr-4 text-right ">
+                          {item.price * item.quantity}
+                        </li>
+                      </ul>
+                      <h3 className="mt-1 whitespace-nowrap">{item.name}</h3>
+                      <p className="mt-1 mb-2">{item.description}</p>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
             </div>
           </div>
-        </div>
-        <div className="max-w-[1000px] mt-4 mx-auto">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: 0.1 }}
+          className="max-w-[1000px] mt-4 mx-auto"
+        >
           <div className="flex justify-end w-full pr-2 text-xl font-bold">
             <p>Total amount:&nbsp; </p>
             <span>
@@ -135,16 +173,17 @@ export default function Cart({ history }) {
           </div>
 
           <div className="flex justify-end px-4 mt-4">
-            <Button
+            <MotionButton
+              layoutId="button"
               onClick={handleCheckout}
               variant="contained"
               color="primary"
             >
               Place order
-            </Button>
+            </MotionButton>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

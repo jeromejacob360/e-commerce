@@ -13,6 +13,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -27,7 +28,11 @@ export default function Login() {
     dispatch(login(email, password));
   }
   return (
-    <form>
+    <motion.form
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+    >
       <FormGroup margin="dense" size="small" className="pt-10 space-y-8 w-80">
         <OutlinedInput
           type="email"
@@ -80,6 +85,6 @@ export default function Login() {
           Log in
         </Button>
       </FormGroup>
-    </form>
+    </motion.form>
   );
 }

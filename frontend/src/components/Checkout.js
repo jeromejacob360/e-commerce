@@ -13,6 +13,7 @@ import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveShippingInfo } from '../redux/actions/userActions';
 import { getStates } from 'country-state-picker';
+import { motion } from 'framer-motion';
 
 export default function Checkout({ history }) {
   const states = getStates('in');
@@ -82,15 +83,44 @@ export default function Checkout({ history }) {
       history.push('/checkout/confirm');
     }
   }
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 10 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { staggerChildren: 0.02 },
+    },
+  };
+
+  const variants = {
+    hidden: { y: 20, opacity: 0 },
+    show: { y: 0, opacity: 1 },
+  };
+
+  const MotionFormGroup = motion(FormGroup);
+  const MotionSelect = motion(Select);
+  const MotionButton = motion(Button);
+
   return (
     <div className="mb-10">
       <Metadata title="Shipping Details" />
       <Steps activeStep={0} />
-      <div className="flex flex-col items-center justify-center w-screen mt-8">
-        <h1 className="px-10 pb-2 mb-4 text-xl border-b">Shipping Details</h1>
+      <div className="flex flex-col items-center justify-center w-full mt-8">
+        <h1 className="px-10 pb-2 mb-4 text-2xl border-b">Shipping Details</h1>
         <form>
-          <FormGroup margin="dense" size="small" className="space-y-4 w-80">
-            <div className="flex relative items-center">
+          <MotionFormGroup
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            margin="dense"
+            size="small"
+            className="space-y-4 w-80"
+          >
+            <motion.div
+              variants={variants}
+              className="relative flex items-center"
+            >
               <OutlinedInput
                 fullWidth
                 type="tel"
@@ -118,8 +148,11 @@ export default function Checkout({ history }) {
                   length={address?.mobile?.length}
                 />
               )}
-            </div>
-            <div className="relative flex items-center">
+            </motion.div>
+            <motion.div
+              variants={variants}
+              className="relative flex items-center"
+            >
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -132,8 +165,11 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.name.length > 3} />
               )}
-            </div>
-            <div className="relative flex items-center">
+            </motion.div>
+            <motion.div
+              variants={variants}
+              className="relative flex items-center"
+            >
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -146,8 +182,11 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.area.length > 3} />
               )}
-            </div>
-            <div className="relative flex items-center">
+            </motion.div>
+            <motion.div
+              variants={variants}
+              className="relative flex items-center"
+            >
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -160,8 +199,11 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.street.length > 3} />
               )}
-            </div>
-            <div className="relative flex items-center">
+            </motion.div>
+            <motion.div
+              variants={variants}
+              className="relative flex items-center"
+            >
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -174,8 +216,11 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.city.length > 3} />
               )}
-            </div>
-            <div className="relative flex items-center">
+            </motion.div>
+            <motion.div
+              variants={variants}
+              className="relative flex items-center"
+            >
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -188,9 +233,12 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.district.length > 3} />
               )}
-            </div>
+            </motion.div>
 
-            <div className="flex relative items-center">
+            <motion.div
+              variants={variants}
+              className="relative flex items-center"
+            >
               <OutlinedInput
                 type="tel"
                 fullWidth
@@ -214,10 +262,12 @@ export default function Checkout({ history }) {
                   condition1={address.pinCode?.length === 6 || !address.pinCode}
                   condition2={address.pinCode?.length === 6}
                   length={address.pinCode?.length}
+                  reqLength={6}
                 />
               )}
-            </div>
-            <Select
+            </motion.div>
+            <MotionSelect
+              variants={variants}
               name="state"
               displayEmpty
               renderValue={(value) =>
@@ -231,8 +281,9 @@ export default function Checkout({ history }) {
                   {state}
                 </MenuItem>
               ))}
-            </Select>
-            <Button
+            </MotionSelect>
+            <MotionButton
+              variants={variants}
               type="submit"
               onClick={handleSubmit}
               fullWidth
@@ -241,8 +292,8 @@ export default function Checkout({ history }) {
               disabled={shippingInfoloading}
             >
               Continue
-            </Button>
-          </FormGroup>
+            </MotionButton>
+          </MotionFormGroup>
         </form>
       </div>
     </div>

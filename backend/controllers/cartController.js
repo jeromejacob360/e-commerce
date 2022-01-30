@@ -12,6 +12,7 @@ exports.addProductToCart = catchAsyncErrors(async (req, res, next) => {
   const productToCart = {
     productId: data._id,
     name: data.name,
+    description: data.description,
     price: data.price,
     image: data.images[0],
     stock: data.stock,

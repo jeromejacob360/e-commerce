@@ -6,7 +6,11 @@ const cloudinary = require('cloudinary');
 // Get all products from the database
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   let { sort, limit, ...find } = req.query;
-  sort = sort || '-numOfReviews';
+  sort = sort || '-numOfReviews price';
+  if (sort === '-numOfReviews') {
+    sort = '-numOfReviews price';
+  }
+
   limit = limit || 10;
 
   const keyword = find.keyword
@@ -29,6 +33,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
     success: true,
     products: products.docs,
     productsCount: products.total,
+    limit: products.limit,
     totalPages: products.pages,
     currentPage: products.page,
   });

@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Loading from '../helper-components/Loading';
 import ProductCard from '../helper-components/ProductCard';
 import { clearErrors, fetchProducts } from '../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
@@ -16,6 +15,7 @@ import Metadata from '../helper-components/Metadata';
 import SortAndFilter from '../helper-components/SortAndFilter';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import ProductCardSkeleton from './loading-skeletons/ProductCardSkeleton';
 
 export default function Products({ match }) {
   const keyword = match?.params.keyword;
@@ -93,24 +93,28 @@ export default function Products({ match }) {
           }}
         >
           {loading ? (
-            <Loading />
+            <div className="flex flex-wrap justify-center mx-2 my-1 mb-8">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((_, i) => (
+                <div key={i}>
+                  <ProductCardSkeleton />
+                </div>
+              ))}
+            </div>
           ) : products?.length ? (
             <div className="flex flex-wrap justify-center mx-2 my-1 mb-8">
               {products?.map((product, i) => {
                 return (
                   <motion.div
                     key={product._id}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
                     className="m-2"
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0 }}
                     animate={{
                       opacity: 1,
-                      y: 0,
-                      transition: { duration: 0.2, delay: i * 0.01 },
                     }}
                     exit={{
                       opacity: 0,
-                      y: 10,
-                      transition: { duration: i * 0.2 },
                     }}
                   >
                     <ProductCard product={product} />
@@ -141,7 +145,7 @@ export default function Products({ match }) {
               shape="rounded"
             />
             <div className="flex items-center">
-              <span className="text-sm text-gray-500 hidden sm:block">
+              <span className="hidden text-sm text-gray-500 sm:block">
                 Results per page &nbsp;
               </span>
               <Select

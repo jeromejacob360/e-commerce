@@ -17,6 +17,7 @@ import { addToCart, clearCartErrors } from '../redux/actions/cartActions';
 import RatingDialog from '../helper-components/RatingDialog';
 import { getMyOrders } from '../redux/actions/orderActions';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export default function ProductDetails({ match, history }) {
   const [quantity, setQuantity] = useState(1);
@@ -201,7 +202,7 @@ export default function ProductDetails({ match, history }) {
       className="my-10"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10, transition: { duration: 5 } }}
+      exit={{ opacity: 0, y: 10, transition: { duration: 0.2 } }}
     >
       <Metadata title={product.name + '--The shoe store'} />
       <div className="flex flex-col items-center justify-center px-5 border-b lg:flex-row">
@@ -293,16 +294,24 @@ export default function ProductDetails({ match, history }) {
               color="primary"
               variant="contained"
             >
-              {cartLoading ? 'Adding..' : 'Add to cart'}
+              {cartLoading ? 'Adding...' : 'Add to cart'}
             </Button>
           </div>
         </div>
       </div>
-      {!reviewed && (
-        <div className="flex justify-center pt-6">
-          <Button variant="outlined" onClick={handleSubmitReviewClick}>
-            Submit a review
-          </Button>
+      {isAuthenticated ? (
+        reviewed ? null : (
+          <div className="flex justify-center pt-6">
+            <Button variant="outlined" onClick={handleSubmitReviewClick}>
+              Submit a review
+            </Button>
+          </div>
+        )
+      ) : (
+        <div className="flex justify-center pt-6 text-xl text-orange-500">
+          <Link to={'/login?redirect=' + window.location.pathname}>
+            Login to submit a review
+          </Link>
         </div>
       )}
 
@@ -311,7 +320,7 @@ export default function ProductDetails({ match, history }) {
           <h3 className="my-4 text-xl text-center">Reviews</h3>
           <div
             ref={reviewsRef}
-            className="flex flex-col items-center justify-center w-screen overflow-auto md:items-stretch md:flex-row sm:space-x-2"
+            className="flex flex-col items-center justify-center w-full overflow-auto md:items-stretch md:flex-row sm:space-x-2"
           >
             {reviews.map((review, index) => (
               <ReviewCard review={review} key={index} />

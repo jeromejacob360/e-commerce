@@ -28,7 +28,9 @@ const ResponsiveAppBar = () => {
   const [options, setOptions] = useState([]);
   const [searchText, setSearchText] = useState('');
 
-  const { user, isAuthenticated, loading } = useSelector((state) => state.user);
+  const { user, isAuthenticated, loading, logout } = useSelector(
+    (state) => state.user,
+  );
   const { cartItems } = useSelector((state) => state.cart);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -37,14 +39,14 @@ const ResponsiveAppBar = () => {
 
   useEffect(() => {
     if (isAuthenticated && !loading) {
-      enqueueSnackbar('Welcome ' + user.name.split(' ')[0], {
+      enqueueSnackbar('Welcome ' + user?.name?.split(' ')[0], {
         variant: 'success',
       });
     }
-    if (!isAuthenticated && !loading) {
+    if (logout) {
       enqueueSnackbar('Logged out');
     }
-  }, [enqueueSnackbar, history, isAuthenticated, loading, user?.name]);
+  }, [enqueueSnackbar, history, isAuthenticated, loading, logout, user?.name]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -171,7 +173,7 @@ const ResponsiveAppBar = () => {
               <TextField
                 className="p-2 bg-white rounded-md"
                 fullWidth
-                placeholder="Search......"
+                placeholder="Search..."
                 size="small"
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}
@@ -203,7 +205,7 @@ const ResponsiveAppBar = () => {
               <TextField
                 className="p-2 bg-white rounded-md"
                 fullWidth
-                placeholder="Search......"
+                placeholder="Search..."
                 size="small"
                 value={searchText}
                 onChange={(event) => setSearchText(event.target.value)}

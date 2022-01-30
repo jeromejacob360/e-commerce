@@ -7,6 +7,7 @@ import store from './redux/store';
 import { Grow, ThemeProvider } from '@mui/material';
 import { theme } from './mui/theme';
 import { SnackbarProvider } from 'notistack';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <Provider store={store}>
@@ -17,7 +18,9 @@ ReactDOM.render(
         TransitionComponent={Grow}
         hideIconVariant
       >
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </SnackbarProvider>
     </ThemeProvider>
   </Provider>,

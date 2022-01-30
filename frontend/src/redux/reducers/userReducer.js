@@ -31,6 +31,7 @@ export const userReducer = (state = { user: {} }, action) => {
         ...state,
         loading: false,
         isAuthenticated: false,
+        logout: false,
       };
 
     case 'LOGOUT_REQUEST':
@@ -44,6 +45,7 @@ export const userReducer = (state = { user: {} }, action) => {
         loading: false,
         isAuthenticated: false,
         user: {},
+        logout: true,
       };
 
     case 'LOGOUT_FAILURE':
@@ -51,6 +53,7 @@ export const userReducer = (state = { user: {} }, action) => {
         ...state,
         loading: false,
         error: action.payload,
+        logout: false,
       };
 
     case 'SAVE_SHIPPING_INFO_REQUEST':

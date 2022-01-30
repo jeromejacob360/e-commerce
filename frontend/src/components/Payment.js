@@ -192,7 +192,7 @@ export default function Payment({ history }) {
   }
 
   return (
-    <div className="relative">
+    <>
       <Metadata title="Payment" />
       <Steps activeStep={2} />
       <div>
@@ -238,8 +238,9 @@ export default function Payment({ history }) {
           >{`Pay - ₹${orderInfo && orderInfo.total}`}</Button>
         </form>
       </div>
-      <p className="absolute -bottom-20 text-center w-full">
-        Psst.. Its in test mode. Use{' '}
+      <p className="w-full px-10 mt-20 sm:text-center">
+        Psst.. Its in test mode.
+        <br /> Use{' '}
         <Tooltip title="Copy to clipboard">
           <span
             onClick={() => {
@@ -274,6 +275,6 @@ export default function Payment({ history }) {
         </Tooltip>{' '}
         for CVC
       </p>
-    </div>
+    </>
   );
 }

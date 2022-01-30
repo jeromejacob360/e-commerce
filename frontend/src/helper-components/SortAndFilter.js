@@ -37,6 +37,10 @@ export default function SortAndFilter({
   const [price, setPrice] = useState(
     readFromLocalStorage('price') || [0, 10000],
   );
+
+  const [priceToDisplay, setPriceToDisplay] = useState(
+    readFromLocalStorage('price') || [0, 10000],
+  );
   const [rating, setRating] = useState(localStorage.getItem('rating') || 0);
   const [sort, setSort] = useState(
     readFromLocalStorage('sort') || '-numOfReviews',
@@ -161,8 +165,9 @@ export default function SortAndFilter({
               }}
             >
               <Slider
-                value={price}
-                onChange={(event, value) => setPrice(value)}
+                value={priceToDisplay}
+                onChange={(event, value) => setPriceToDisplay(value)}
+                onChangeCommitted={(event, value) => setPrice(value)}
                 valueLabelDisplay="auto"
                 min={0}
                 max={10000}
