@@ -19,7 +19,7 @@ export default function ReviewCard({ review }) {
     <>
       <div
         onClick={() => setReviewDialogOpen(true)}
-        className="relative bg-gray-50 flex flex-col items-center w-[350px] px-4 py-2 mb-4 space-y-4 border rounded-lg cursor-pointer"
+        className="relative pl-4 mx-2 snap-start bg-gray-50 flex flex-col items-center w-[350px] px-4 py-2 mb-4 space-y-4 border rounded-lg cursor-pointer"
       >
         <Avatar
           src={review.avatar}
@@ -41,8 +41,8 @@ export default function ReviewCard({ review }) {
           readOnly
         />
         <div className="whitespace-pre-wrap cursor-pointer">
-          {review?.reviewMessage?.length > 200
-            ? review.reviewMessage.substring(0, 200) + '...'
+          {review?.reviewMessage?.length > 100
+            ? review.reviewMessage.substring(0, 100) + '...'
             : review.reviewMessage}
         </div>
       </div>

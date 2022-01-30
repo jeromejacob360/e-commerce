@@ -45,7 +45,7 @@ export default function Payment({ history }) {
   }));
 
   const order = {
-    shippingInfo: user.shippingInfo,
+    shippingInfo: user?.shippingInfo,
     orderItems: cartItems,
     itemsPrice: orderInfo.cartTotal,
     discount: orderInfo.discount,
@@ -180,7 +180,13 @@ export default function Payment({ history }) {
   }
 
   function copyToClipboard(text) {
-    navigator.clipboard.writeText(text);
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+
     enqueueSnackbar('Copied to clipboard', {
       variant: 'success',
       autoHideDuration: 1000,
@@ -238,6 +244,7 @@ export default function Payment({ history }) {
           >{`Pay - ₹${orderInfo && orderInfo.total}`}</Button>
         </form>
       </div>
+
       <p className="w-full px-10 mt-20 sm:text-center">
         Psst.. Its in test mode.
         <br /> Use{' '}

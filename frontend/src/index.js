@@ -17,6 +17,7 @@ ReactDOM.render(
         maxSnack={1}
         TransitionComponent={Grow}
         hideIconVariant
+        autoHideDuration={2000}
       >
         <BrowserRouter>
           <App />

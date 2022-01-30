@@ -73,7 +73,7 @@ export default function ProductCard({ product }) {
     dispatch(addToCart(product._id, 1));
   }
   return (
-    <Link className="m-2 group" to={`/product/${product?._id}`}>
+    <Link className="pl-4 m-2 group snap-start" to={`/product/${product?._id}`}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -135,7 +135,11 @@ export default function ProductCard({ product }) {
             color="primary"
             variant="contained"
           >
-            {cartLoading ? 'Adding...' : 'Add to cart'}
+            {addedQuantity + 1 > product.stock
+              ? 'Out of stock'
+              : cartLoading
+              ? 'Adding...'
+              : 'Add to cart'}
           </Button>
         </div>
       </motion.div>

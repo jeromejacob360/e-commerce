@@ -18,6 +18,7 @@ import RatingDialog from '../helper-components/RatingDialog';
 import { getMyOrders } from '../redux/actions/orderActions';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import ProductCard from '../helper-components/ProductCard';
 
 export default function ProductDetails({ match, history }) {
   const [quantity, setQuantity] = useState(1);
@@ -30,7 +31,7 @@ export default function ProductDetails({ match, history }) {
   const watching = useRef(false);
 
   const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { loading, product, error } = useSelector(
@@ -50,9 +51,16 @@ export default function ProductDetails({ match, history }) {
     completed,
   } = useSelector((state) => state.cart);
 
+  const { products } = useSelector((state) => state.products);
+
   useEffect(() => {
-    dispatch(getMyOrders());
-    dispatch(fetchProductDetails(match.params.id));
+    // fetch data on page reload
+    if (!product?._id) dispatch(fetchProductDetails(match.params.id));
+
+    // fetch product if it is not in the store or when review is successful
+    if (product?._id !== match.params.id || success)
+      dispatch(fetchProductDetails(match.params.id));
+
     if (error) {
       dispatch(clearErrors());
       enqueueSnackbar(error, {
@@ -69,7 +77,12 @@ export default function ProductDetails({ match, history }) {
     match.params.id,
     success,
     reviewSuccess,
+    product?._id,
   ]);
+
+  useEffect(() => {
+    dispatch(getMyOrders());
+  }, [dispatch, match.params.id]);
 
   useEffect(() => {
     if (product?.reviews.length > 0 && isAuthenticated) {
@@ -101,9 +114,10 @@ export default function ProductDetails({ match, history }) {
             <Button
               variant="contained"
               sx={{ color: 'white' }}
-              onClick={() =>
-                history.push('/login?redirect=' + window.location.pathname)
-              }
+              onClick={() => {
+                closeSnackbar();
+                history.push('/login?redirect=' + window.location.pathname);
+              }}
             >
               Login
             </Button>
@@ -130,7 +144,15 @@ export default function ProductDetails({ match, history }) {
         type: 'CLEAR_NEW_REVIEW',
       });
     }
-  }, [reviewError, dispatch, enqueueSnackbar, success, cartError, history]);
+  }, [
+    reviewError,
+    dispatch,
+    enqueueSnackbar,
+    success,
+    cartError,
+    history,
+    closeSnackbar,
+  ]);
 
   //find the item in the cart
   useEffect(() => {
@@ -289,12 +311,16 @@ export default function ProductDetails({ match, history }) {
               disabled={
                 !product.stock ||
                 cartLoading ||
-                addedQuantity + quantity >= product.stock
+                addedQuantity + quantity > product.stock
               }
               color="primary"
               variant="contained"
             >
-              {cartLoading ? 'Adding...' : 'Add to cart'}
+              {addedQuantity + quantity > product.stock
+                ? 'Out of stock'
+                : cartLoading
+                ? 'Adding...'
+                : 'Add to cart'}
             </Button>
           </div>
         </div>
@@ -320,7 +346,7 @@ export default function ProductDetails({ match, history }) {
           <h3 className="my-4 text-xl text-center">Reviews</h3>
           <div
             ref={reviewsRef}
-            className="flex flex-col items-center justify-center w-full overflow-auto md:items-stretch md:flex-row sm:space-x-2"
+            className="flex items-stretch px-10 overflow-auto snap-x md:snap-none"
           >
             {reviews.map((review, index) => (
               <ReviewCard review={review} key={index} />
@@ -330,6 +356,17 @@ export default function ProductDetails({ match, history }) {
       ) : (
         <h4 className="flex justify-center my-6 text-2xl">No reviews yet</h4>
       )}
+
+      {/* RELATED PRODUCTS */}
+      <h3 className="pt-6 my-4 text-xl text-center border-b">
+        Related products
+      </h3>
+      <div className="flex items-center px-10 overflow-auto snap-x md:snap-none">
+        {products.slice(0, products.length - 1).map((product) => (
+          <ProductCard product={product} key={product._id} />
+        ))}
+      </div>
+
       <RatingDialog
         productId={product._id}
         open={ratingDialogOpen}

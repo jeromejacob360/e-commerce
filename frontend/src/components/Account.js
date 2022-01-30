@@ -1,4 +1,4 @@
-import { Avatar, Button, ButtonGroup, Paper } from '@mui/material';
+import { Avatar, Button, ButtonGroup } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -10,9 +10,9 @@ export default function Account() {
     <div className="flex flex-col items-center justify-center w-full mt-20">
       <motion.div
         initial={{ boxShadow: '0px 0px 0px 0px rgba(0,0,0,0.2)' }}
-        animate={{ boxShadow: 'rgba(0,0,0,0.2) 1px 1px 20px 7px' }}
+        animate={{ boxShadow: 'rgba(0,0,0,0.2) 1px 1px 10px 7px' }}
         transition={{ duration: 0.8 }}
-        className="flex flex-col items-center justify-center py-4 m-6 border rounded-3xl w-72"
+        className="flex flex-col items-center justify-center py-8 mx-6 border mb-14 rounded-3xl w-72"
       >
         <div className="flex flex-col items-start space-y-3">
           <Avatar

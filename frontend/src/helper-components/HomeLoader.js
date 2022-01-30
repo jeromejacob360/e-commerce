@@ -1,47 +1,23 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 
-export default function HomeLoader({ showPage }) {
+export default function HomeLoader({ showBrandPage }) {
   return (
     <AnimatePresence>
-      {showPage && (
+      {showBrandPage && (
         <motion.div
           exit={{
             height: 0,
             transition: { duration: 0.5 },
           }}
-          className="fixed inset-0 z-10 grid w-full h-full bg-white place-items-center"
+          className="fixed inset-0 z-10 grid w-full h-full bg-gray-100 place-items-center"
         >
-          <div className="flex text-5xl text-orange-600">
+          <div className="flex text-3xl text-orange-600 sm:text-5xl">
             <motion.h1
-              initial={{ y: '100', opacity: 0 }}
-              animate={{
-                y: 0,
-                opacity: 1,
-              }}
-              transition={{ delay: 0.8 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.5 } }}
             >
-              THE
-            </motion.h1>
-            <motion.h1
-              initial={{ y: '100', opacity: 0 }}
-              animate={{
-                y: 0,
-                opacity: 1,
-              }}
-              transition={{ delay: 1 }}
-            >
-              &nbsp;SHOE&nbsp;
-            </motion.h1>
-            <motion.h1
-              initial={{ y: '100', opacity: 0 }}
-              animate={{
-                y: 0,
-                opacity: 1,
-              }}
-              transition={{ delay: 1.2 }}
-            >
-              STORE
+              THE SHOE STORE
             </motion.h1>
           </div>
         </motion.div>

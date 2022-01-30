@@ -42,7 +42,11 @@ import HomeLoader from './helper-components/HomeLoader';
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const [showPage, setShowPage] = useState(true);
+  const [showBrandPage, setShowBrandPage] = useState(
+    true,
+    // Limit the number of times the brand page is shown
+    // localStorage.getItem('showBrandPage') ? false : true,
+  );
 
   const { isAuthenticated } = useSelector((state) => state.user);
   const [stripeApiKey, setStripeApiKey] = useState('');
@@ -58,7 +62,9 @@ function App() {
 
   useEffect(() => {
     setTimeout(() => {
-      setShowPage(false);
+      // Limit the number of times the user can see the brand page
+      // localStorage.setItem('showBrandPage', 'false');
+      setShowBrandPage(false);
     }, 2000);
     dispatch(loadUser());
   }, [dispatch]);
@@ -72,15 +78,16 @@ function App() {
     <>
       <CssBaseline />
       <ErrorBoundary>
-        <Navbar />
+        {!showBrandPage && <Navbar />}
         {stripeApiKey && (
           <Elements stripe={loadStripe(stripeApiKey)}>
             <Route exact path="/payment" component={Payment} />
           </Elements>
         )}
-        <div className="max max-w-[1920px] mx-auto mt-24">
+        <div className="max max-w-[1920px] mx-auto mt-24 relative">
           <LayoutGroup>
-            <HomeLoader showPage={showPage} />
+            {/* BRAND ANIMATION */}
+            <HomeLoader showBrandPage={showBrandPage} />
             <Switch location={location} key={location.pathname}>
               <Route exact path="/" component={Home} />
               <Route exact path="/login" component={LoginSignup} />

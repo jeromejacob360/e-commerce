@@ -9,7 +9,11 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductCard from '../helper-components/ProductCard';
-import { clearErrors, fetchProducts } from '../redux/actions/productActions';
+import {
+  clearErrors,
+  fetchProductDetails,
+  fetchProducts,
+} from '../redux/actions/productActions';
 import { useSnackbar } from 'notistack';
 import Metadata from '../helper-components/Metadata';
 import SortAndFilter from '../helper-components/SortAndFilter';
@@ -105,6 +109,9 @@ export default function Products({ match }) {
               {products?.map((product, i) => {
                 return (
                   <motion.div
+                    onMouseEnter={() =>
+                      dispatch(fetchProductDetails(product._id))
+                    }
                     key={product._id}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}

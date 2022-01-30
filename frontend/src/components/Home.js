@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import ProductCard from '../helper-components/ProductCard';
-import { clearErrors, fetchProducts } from '../redux/actions/productActions';
+import {
+  clearErrors,
+  fetchProductDetails,
+  fetchProducts,
+} from '../redux/actions/productActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { Button } from '@mui/material';
@@ -61,6 +65,7 @@ export default function Home() {
           {products.map((product, i) => {
             return (
               <motion.div
+                onMouseEnter={() => dispatch(fetchProductDetails(product._id))}
                 initial={{ opacity: 0, x: i * 20 }}
                 animate={{ opacity: 1, x: 0, transition: { duration: 0.3 } }}
                 key={product._id}

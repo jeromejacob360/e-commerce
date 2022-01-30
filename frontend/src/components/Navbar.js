@@ -21,6 +21,7 @@ import Logout from '@mui/icons-material/Logout';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
+import { motion } from 'framer-motion';
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -33,7 +34,7 @@ const ResponsiveAppBar = () => {
   );
   const { cartItems } = useSelector((state) => state.cart);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -41,12 +42,21 @@ const ResponsiveAppBar = () => {
     if (isAuthenticated && !loading) {
       enqueueSnackbar('Welcome ' + user?.name?.split(' ')[0], {
         variant: 'success',
+        autoHideDuration: 1000,
       });
     }
     if (logout) {
       enqueueSnackbar('Logged out');
     }
-  }, [enqueueSnackbar, history, isAuthenticated, loading, logout, user?.name]);
+  }, [
+    closeSnackbar,
+    enqueueSnackbar,
+    history,
+    isAuthenticated,
+    loading,
+    logout,
+    user?.name,
+  ]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -110,8 +120,12 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
+  const MotionAppBar = motion(AppBar);
+
   return (
-    <AppBar
+    <MotionAppBar
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
       sx={{
         marginBottom: '1rem',
         position: 'fixed',
@@ -288,7 +302,7 @@ const ResponsiveAppBar = () => {
           </div>
         </Toolbar>
       </Container>
-    </AppBar>
+    </MotionAppBar>
   );
 };
 export default ResponsiveAppBar;

@@ -44,7 +44,7 @@ export default function Cart({ history }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-      className="pb-10"
+      className="px-2 pb-10"
     >
       <Metadata title="Cart" />
       <div>

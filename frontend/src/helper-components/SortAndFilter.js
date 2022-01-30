@@ -63,9 +63,10 @@ export default function SortAndFilter({
 
   // Toggle the accordion on on desktop
   useEffect(() => {
-    window.onresize = () => {
+    const listener = (window.onresize = () => {
       setInnerWidth(window.innerWidth);
-    };
+    });
+    return () => window.removeEventListener('resize', listener);
   }, []);
 
   // Reset page when changing filters
