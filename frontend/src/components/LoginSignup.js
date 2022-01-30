@@ -1,4 +1,4 @@
-import { Box, Button, Paper } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '@mui/material';
 import Login from '../helper-components/Login';
@@ -50,11 +50,15 @@ export default function LoginSignup() {
   return (
     <Box className="flex justify-center mt-20 sm:mt-40">
       <motion.div
+        className={`duration-150 border shadow-blue-800/50 rounded-lg shadow-2xl ${
+          mode === 'login' ? 'h-[420px]' : 'h-[540px]'
+        }`}
+        layout
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
       >
-        <Paper elevation={2}>
+        <div>
           <Box px={2} pb={3}>
             <Box className="flex justify-between mt-2 mb-8">
               <Button
@@ -94,7 +98,7 @@ export default function LoginSignup() {
               )}
             </AnimatePresence>
           </Box>
-        </Paper>
+        </div>
       </motion.div>
     </Box>
   );

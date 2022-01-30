@@ -1,37 +1,26 @@
-import {
-  Avatar,
-  Button,
-  ButtonGroup,
-  InputAdornment,
-  OutlinedInput,
-  Paper,
-} from '@mui/material';
+import { Avatar, Button, ButtonGroup, Paper } from '@mui/material';
+import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 export default function Account() {
   const { user } = useSelector((state) => state.user);
 
   return (
     <div className="flex flex-col items-center justify-center w-full mt-20">
-      <Paper
-        elevation={0}
-        sx={{
-          p: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+      <motion.div
+        initial={{ boxShadow: '0px 0px 0px 0px rgba(0,0,0,0.2)' }}
+        animate={{ boxShadow: 'rgba(0,0,0,0.2) 1px 1px 20px 7px' }}
+        transition={{ duration: 0.8 }}
+        className="flex flex-col items-center justify-center py-4 m-6 border rounded-3xl w-72"
       >
         <div className="flex flex-col items-start space-y-3">
           <Avatar
             src={user?.avatar?.url}
             alt={user.name}
             sx={{
-              width: '70px',
-              height: '70px',
+              width: '100px',
+              height: '100px',
             }}
           />
           <h1 className="font-bold capitalize">{user.name}</h1>
@@ -44,29 +33,34 @@ export default function Account() {
             {user.createdAt.toString().substring(0, 10)}
           </p>
         </div>
-      </Paper>
+      </motion.div>
       <Link to="/me/update"></Link>
 
       <div className="flex flex-col items-center space-y-8">
         <ButtonGroup
-          variant="outlined"
-          aria-label="outlined primary button group"
+          fullWidth
+          variant="contained"
+          aria-label="contained primary button group"
         >
-          <Button component={Link} to="/orders/me">
+          <Button sx={{ color: 'white' }} component={Link} to="/orders/me">
             My Orders
           </Button>
-          <Button component={Link} to="/me/reviews">
+          <Button sx={{ color: 'white' }} component={Link} to="/me/reviews">
             My Reviews
           </Button>
         </ButtonGroup>
         <ButtonGroup
-          variant="outlined"
-          aria-label="outlined primary button group"
+          variant="contained"
+          aria-label="contained primary button group"
         >
-          <Button component={Link} to="/me/update">
+          <Button sx={{ color: 'white' }} component={Link} to="/me/update">
             Update profile
           </Button>
-          <Button component={Link} to="/password/update">
+          <Button
+            sx={{ color: 'white' }}
+            component={Link}
+            to="/password/update"
+          >
             Change password
           </Button>
         </ButtonGroup>
