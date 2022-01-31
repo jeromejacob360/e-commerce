@@ -14,7 +14,7 @@ describe('Trying to place an order', () => {
   });
 
   it('should add an item to cart if the cart is empty', () => {
-    cy.get('[data-testid="LocalMallIcon"]').click();
+    cy.get('[data-testid="LocalMallIcon"]').first().click();
     cy.url()
       .should('include', 'cart')
       .get('body')
@@ -31,7 +31,7 @@ describe('Trying to place an order', () => {
   });
 
   it('Places an order', () => {
-    cy.get('[data-testid="LocalMallIcon"]').click();
+    cy.get('[data-testid="LocalMallIcon"]').first().click();
     cy.contains('place order', { matchCase: false }).click();
     cy.contains('continue', { matchCase: false }).click();
     cy.contains('proceed to payment', { matchCase: false }).click();

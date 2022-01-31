@@ -200,7 +200,6 @@ const ResponsiveAppBar = ({ showBrandPage }) => {
               )}
             </form>
           </div>
-
           {/* SEARCH PANEL IN LARGE SCREEN */}
           <div className="items-center justify-between flex-1 hidden px-10 space-x-4 md:flex">
             <Link to={`/products`}>

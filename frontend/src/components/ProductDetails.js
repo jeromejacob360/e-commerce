@@ -81,6 +81,9 @@ export default function ProductDetails({ match, history }) {
   ]);
 
   useEffect(() => {
+    // Scroll to top of page
+    window.scrollTo(0, 0);
+
     dispatch(getMyOrders());
   }, [dispatch, match.params.id]);
 

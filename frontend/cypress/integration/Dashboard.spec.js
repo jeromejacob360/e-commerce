@@ -13,7 +13,7 @@ describe('Testing the dashboard', () => {
     cy.contains('Dashboard').click();
     cy.contains('Create product').click();
     cy.get('[placeholder="Product name"]').click().type('Name');
-    cy.get('[placeholder="Price"]').click().type('999');
+    cy.get('[placeholder="Price"]').click().type('1');
     cy.get('[placeholder="Stock"]').click().type('100');
     cy.get('[placeholder="Description"]').click().type('Description');
     cy.contains('Brand').click();
@@ -26,13 +26,14 @@ describe('Testing the dashboard', () => {
     cy.contains('All products').click();
   });
 
-  it('Updates the last product in productsList page-1', () => {
+  it('Updates the first product in productsList page sorted by price', () => {
     cy.get('[data-testid="userAvatar"]').click();
     cy.contains('Dashboard').click();
     cy.contains('All products').click();
-    cy.get('[data-testid="EditIcon"]').last().click();
+    cy.get('[data-field="price"]').first().click();
+    cy.get('[data-testid="EditIcon"]').first().click();
     cy.get('[placeholder="Product name"]').clear().type('Name 2');
-    cy.get('[placeholder="Price"]').clear().type('222');
+    cy.get('[placeholder="Price"]').clear().type('2');
     cy.get('[placeholder="Stock"]').clear().type('22');
     cy.get('[placeholder="Description"]').clear().type('Description 2');
     cy.get('[data-testid="categories dropdown"]').click();
@@ -43,11 +44,13 @@ describe('Testing the dashboard', () => {
     cy.wait('@uploadRequest2');
     cy.contains('Product updated').should('be.visible');
   });
+
   it('Deletes the last product in productsList page-1', () => {
     cy.get('[data-testid="userAvatar"]').click();
     cy.contains('Dashboard').click();
     cy.contains('All products').click();
-    cy.get('[data-testid="DeleteOutlineIcon"]').last().click();
+    cy.get('[data-field="price"]').first().click();
+    cy.get('[data-testid="DeleteOutlineIcon"]').first().click();
     cy.contains('Product deleted').should('be.visible');
   });
 });
