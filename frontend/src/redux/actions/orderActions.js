@@ -44,7 +44,6 @@ export const updateOrder = (id, order) => async (dispatch) => {
 
 // Cancel an order
 export const cancelOrder = (productId, orderId, reason) => async (dispatch) => {
-  console.log('productId, orderId, reason', productId, orderId, reason);
   try {
     dispatch({
       type: 'CANCEL_ORDER_REQUEST',
@@ -65,6 +64,67 @@ export const cancelOrder = (productId, orderId, reason) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: 'CANCEL_ORDER_FAILURE',
+      payload: error.response.data.message,
+    });
+
+    dispatch({
+      type: 'CLEAR_ERRORS',
+    });
+  }
+};
+
+// Return an order
+export const returnOrder = (productId, orderId, reason) => async (dispatch) => {
+  try {
+    dispatch({
+      type: 'RETURN_ORDER_REQUEST',
+    });
+
+    const { data } = await axios.put('/api/order/return/' + orderId, {
+      productId,
+      reason,
+    });
+
+    dispatch({
+      type: 'RETURN_ORDER_SUCCESS',
+      payload: data,
+    });
+    dispatch({
+      type: 'CLEAR_SUCCESS',
+    });
+  } catch (error) {
+    dispatch({
+      type: 'RETURN_ORDER_FAILURE',
+      payload: error.response.data.message,
+    });
+
+    dispatch({
+      type: 'CLEAR_ERRORS',
+    });
+  }
+};
+
+// Cancel a return
+export const cancelReturn = (productId, orderId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: 'CANCEL_RETURN_REQUEST',
+    });
+
+    const { data } = await axios.post('/api/order/return/' + orderId, {
+      productId,
+    });
+
+    dispatch({
+      type: 'CANCEL_RETURN_SUCCESS',
+      payload: data,
+    });
+    dispatch({
+      type: 'CLEAR_SUCCESS',
+    });
+  } catch (error) {
+    dispatch({
+      type: 'CANCEL_RETURN_FAILURE',
       payload: error.response.data.message,
     });
 

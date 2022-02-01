@@ -238,8 +238,6 @@ exports.updateUserDetails = catchAsyncErrors(async (req, res, next) => {
 
   // check if avatar is already uploaded
   if (!user.avatar.url || user.avatar.url !== newUser.avatar) {
-    console.log('avatar is not the same');
-
     if (user.avatar.url)
       await cloudinary.v2.uploader.destroy(user.avatar.public_id);
 

@@ -280,7 +280,7 @@ export default function UpdateProduct({ history, match }) {
               </form>
             </div>
             {uploading && (
-              <div className="fixed bottom-10 left-10">
+              <div className="fixed bottom-10 right-10">
                 <Fab color="secondary" aria-label="add">
                   <CircularProgress value={80} />
                 </Fab>

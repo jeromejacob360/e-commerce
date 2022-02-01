@@ -26,7 +26,6 @@ const orderSchema = new mongoose.Schema(
         },
         status: { type: String, default: 'Processing' },
         reason: { type: String, default: '' },
-        deliveredAt: { type: Date, default: null },
         timeOfReturn: { type: Date, default: null },
       },
     ],
@@ -87,15 +86,21 @@ orderSchema.post('save', function updateOrder() {
   if (this.orderStatus === 'Processing') {
     setTimeout(() => {
       this.orderStatus = 'Shipped';
-      this.save();
-    }, 1000 * 60 * 5 * 10); // 50 minutes
+    }, 1000 * 60 * 60); // 1 hour
   } else if (this.orderStatus === 'Shipped') {
     setTimeout(() => {
       this.orderStatus = 'Delivered';
       this.deliveredAt = Date.now();
-      this.save();
-    }, 1000 * 60 * 5 * 10); // 50 minutes
+    }, 1000 * 60 * 60); // 1 hour
   }
+
+  this.orderItems.forEach((orderItem) => {
+    if (orderItem.status === 'Return requested')
+      setTimeout(() => {
+        orderItem.status = 'Return accepted';
+      }, 1000 * 60 * 60); // 1 hour
+  });
+  this.save();
 });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -50,7 +50,7 @@ export default function LoginSignup() {
   return (
     <Box className="flex justify-center mt-20 sm:mt-40">
       <motion.div
-        className={`duration-150 border shadow-blue-800/50 rounded-lg shadow-2xl ${
+        className={`duration-300 border shadow-blue-800/50 rounded-lg shadow-2xl ${
           mode === 'login' ? 'h-[420px]' : 'h-[540px]'
         }`}
         layout

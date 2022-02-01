@@ -38,15 +38,19 @@ export const newOrderReducer = (state = {}, action) => {
   }
 };
 
-// Cancel order
+// Cancel/return order
 export const cancelOrderReducer = (state = {}, action) => {
   switch (action.type) {
     case 'CANCEL_ORDER_REQUEST':
+    case 'RETURN_ORDER_REQUEST':
+    case 'CANCEL_RETURN_REQUEST':
       return {
         ...state,
         loading: true,
       };
     case 'CANCEL_ORDER_SUCCESS':
+    case 'RETURN_ORDER_SUCCESS':
+    case 'CANCEL_RETURN_SUCCESS':
       return {
         ...state,
         loading: false,
@@ -58,6 +62,8 @@ export const cancelOrderReducer = (state = {}, action) => {
         success: null,
       };
     case 'CANCEL_ORDER_FAILURE':
+    case 'RETURN_ORDER_FAILURE':
+    case 'CANCEL_RETURN_FAILURE':
       return {
         ...state,
         loading: false,

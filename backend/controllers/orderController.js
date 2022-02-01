@@ -115,7 +115,7 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
     if (
       orderItem.status === 'Delivered' ||
       orderItem.status === 'Cancelled' ||
-      orderItem.status === 'ReturnRequested'
+      orderItem.status === 'Return requested'
     )
       return;
     orderItem.status = req.body.orderStatus;
@@ -153,17 +153,12 @@ exports.cancelOrder = catchAsyncErrors(async (req, res, next) => {
       if (product.status === 'Delivered')
         return next(new ErrorHandler('Product already delivered', 400));
 
-      if (product.status === 'ReturnRequested')
+      if (product.status === 'Return requested')
         return next(
           new ErrorHandler('Product already requested for return', 400),
         );
-    }
-  }
-  for (let i = 0; i < order.orderItems.length; i++) {
-    const product = order.orderItems[i];
 
-    if (product.productId.toString() === productId) {
-      console.log('Product found');
+      // All good, update product status
       product.status = 'Cancelled';
       product.reason = reason;
       product.timeOfReturn = Date.now();
@@ -172,6 +167,7 @@ exports.cancelOrder = catchAsyncErrors(async (req, res, next) => {
       order.totalPrice -= product.price;
     }
   }
+
   const allProductsCancelled = order.orderItems.every((orderItem) => {
     return orderItem.cancelled === true;
   });
@@ -191,11 +187,101 @@ exports.cancelOrder = catchAsyncErrors(async (req, res, next) => {
     }
   }
 
-  const savedDoc = await order.save({ validateBeforeSave: false });
+  await order.save({ validateBeforeSave: false });
   res.status(200).json({
     success: true,
-    updatedDocument: savedDoc,
-    message: 'Order cancelled',
+    message: 'Order cancelled. Amount refunded',
+  });
+});
+
+// Return order
+exports.returnOrder = catchAsyncErrors(async (req, res, next) => {
+  const { productId, reason } = req.body;
+
+  const order = await Order.findById(req.params.id);
+
+  if (!order) return next(new ErrorHandler('Order not found', 404));
+
+  if (order.user.toString() !== req.user.id && req.user.role !== 'admin')
+    return next(new ErrorHandler('You can return your order only', 405));
+
+  for (let i = 0; i < order.orderItems.length; i++) {
+    const product = order.orderItems[i];
+    if (product.productId.toString() === productId) {
+      // Product found
+      if (product.status === 'Processing' || product.status === 'Shipped')
+        return next(
+          new ErrorHandler(
+            'Product not delivered yet. You can cancel the order instead',
+            400,
+          ),
+        );
+
+      if (product.status === 'Cancelled')
+        return next(new ErrorHandler('Product already cancelled', 400));
+
+      if (product.status === 'Returned')
+        return next(new ErrorHandler('Product already returned', 400));
+
+      // All good, update status
+      // Check if product has crossed the return window
+      const returnWindow = order.deliveredAt + 1000 * 60 * 60 * 24 * 7; // 7 days
+      if (Date.now() > returnWindow) {
+        return next(
+          new ErrorHandler(
+            'Product cannot be returned. It has crossed the return window',
+            400,
+          ),
+        );
+      }
+
+      product.status = 'Return requested';
+      product.reason = reason;
+      product.timeOfReturn = Date.now();
+    }
+  }
+
+  await order.save({ validateBeforeSave: false });
+  res.status(200).json({
+    success: true,
+    message: 'Return requested',
+  });
+});
+
+// Cancel return request
+exports.cancelReturn = catchAsyncErrors(async (req, res, next) => {
+  const { productId } = req.body;
+
+  const order = await Order.findById(req.params.id);
+
+  if (!order) return next(new ErrorHandler('Order not found', 404));
+
+  if (order.user.toString() !== req.user.id && req.user.role !== 'admin')
+    return next(new ErrorHandler('You can manage your order only', 405));
+
+  for (let i = 0; i < order.orderItems.length; i++) {
+    const product = order.orderItems[i];
+
+    if (product.productId.toString() === productId) {
+      // Product found
+      if (product.status !== 'Return requested') {
+        return next(
+          new ErrorHandler(
+            'Product not requested for return. You can cancel the order instead',
+            400,
+          ),
+        );
+      }
+      product.status = 'Delivered';
+      product.reason = '';
+    }
+  }
+
+  await order.save({ validateBeforeSave: false });
+  res.status(200).json({
+    success: true,
+    message: 'Return cancelled',
+    success: true,
   });
 });
 
