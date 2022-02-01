@@ -20,6 +20,7 @@ import {
 import { cartReducer } from './reducers/cartReducer';
 import {
   allOrdersReducer,
+  cancelOrderReducer,
   myOrdersReducer,
   newOrderReducer,
   orderDetailsReducer,
@@ -41,6 +42,7 @@ const reducer = combineReducers({
   allOrders: allOrdersReducer,
   allUsers: allUsersReducer,
   order: orderReducer,
+  cancelOrder: cancelOrderReducer,
   profile: profileReducer,
   productReviews: productReviewsReducer,
   reviews: reviewReducer,

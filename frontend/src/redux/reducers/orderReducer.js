@@ -18,6 +18,51 @@ export const newOrderReducer = (state = {}, action) => {
         loading: false,
         error: action.payload,
       };
+
+    case 'CLEAR_SUCCESS':
+      return {
+        ...state,
+        success: null,
+      };
+
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+      };
+    case 'CLEAR_STATE':
+      return {};
+
+    default:
+      return state;
+  }
+};
+
+// Cancel order
+export const cancelOrderReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'CANCEL_ORDER_REQUEST':
+      return {
+        ...state,
+        loading: true,
+      };
+    case 'CANCEL_ORDER_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        ...action.payload,
+      };
+    case 'CLEAR_SUCCESS':
+      return {
+        ...state,
+        success: null,
+      };
+    case 'CANCEL_ORDER_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
     case 'CLEAR_ERRORS':
       return {
         ...state,
@@ -155,6 +200,7 @@ export const orderDetailsReducer = (
   switch (action.type) {
     case 'ORDER_DETAILS_REQUEST':
       return {
+        ...state,
         loading: true,
       };
     case 'ORDER_DETAILS_SUCCESS':

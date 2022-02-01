@@ -15,7 +15,8 @@ export default function Confirm({ history }) {
   }, 0);
 
   const shipping = cartTotal > 500 ? 0 : 50;
-  const discount = cartTotal < 10000 ? 0 : 0.05 * cartTotal;
+  let discount = cartTotal < 10000 ? 0 : 0.05 * cartTotal;
+  discount = Math.round(discount * 100) / 100;
   const total = cartTotal + shipping - discount;
 
   function proceedToPayment(e) {

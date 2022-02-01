@@ -42,6 +42,38 @@ export const updateOrder = (id, order) => async (dispatch) => {
   }
 };
 
+// Cancel an order
+export const cancelOrder = (productId, orderId, reason) => async (dispatch) => {
+  console.log('productId, orderId, reason', productId, orderId, reason);
+  try {
+    dispatch({
+      type: 'CANCEL_ORDER_REQUEST',
+    });
+
+    const { data } = await axios.put('/api/order/cancel/' + orderId, {
+      productId,
+      reason,
+    });
+
+    dispatch({
+      type: 'CANCEL_ORDER_SUCCESS',
+      payload: data,
+    });
+    dispatch({
+      type: 'CLEAR_SUCCESS',
+    });
+  } catch (error) {
+    dispatch({
+      type: 'CANCEL_ORDER_FAILURE',
+      payload: error.response.data.message,
+    });
+
+    dispatch({
+      type: 'CLEAR_ERRORS',
+    });
+  }
+};
+
 // Delete an order
 export const deleteOrder = (id) => async (dispatch) => {
   try {

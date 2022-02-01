@@ -15,6 +15,7 @@ const orderSchema = new mongoose.Schema(
     orderItems: [
       {
         name: { type: String, required: true },
+        description: { type: String, required: true },
         price: { type: Number, required: true },
         quantity: { type: Number, required: true },
         image: { type: String, required: true },
@@ -23,6 +24,10 @@ const orderSchema = new mongoose.Schema(
           ref: 'Product',
           required: true,
         },
+        status: { type: String, default: 'Processing' },
+        reason: { type: String, default: '' },
+        deliveredAt: { type: Date, default: null },
+        timeOfReturn: { type: Date, default: null },
       },
     ],
     user: {
@@ -77,5 +82,20 @@ const orderSchema = new mongoose.Schema(
   },
   { timeStamps: true },
 );
+
+orderSchema.post('save', function updateOrder() {
+  if (this.orderStatus === 'Processing') {
+    setTimeout(() => {
+      this.orderStatus = 'Shipped';
+      this.save();
+    }, 1000 * 60 * 5 * 10); // 50 minutes
+  } else if (this.orderStatus === 'Shipped') {
+    setTimeout(() => {
+      this.orderStatus = 'Delivered';
+      this.deliveredAt = Date.now();
+      this.save();
+    }, 1000 * 60 * 5 * 10); // 50 minutes
+  }
+});
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -43,9 +43,8 @@ function App() {
   const location = useLocation();
   const dispatch = useDispatch();
   const [showBrandPage, setShowBrandPage] = useState(
-    true,
     // Limit the number of times the brand page is shown
-    // localStorage.getItem('showBrandPage') ? false : true,
+    sessionStorage.getItem('showBrandPage') ? false : true,
   );
 
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -63,7 +62,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       // Limit the number of times the user can see the brand page
-      // localStorage.setItem('showBrandPage', 'false');
+      sessionStorage.setItem('showBrandPage', 'false');
       setShowBrandPage(false);
     }, 2000);
     dispatch(loadUser());

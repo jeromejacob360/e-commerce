@@ -47,7 +47,7 @@ exports.getOrder = catchAsyncErrors(async (req, res, next) => {
   }
 
   if (order.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    return next(new ErrorHandler('You can view your order only', 404));
+    return next(new ErrorHandler('You can view your order only', 405));
   }
 
   res.status(200).json({
@@ -111,6 +111,16 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
   }
   order.orderStatus = req.body.orderStatus;
 
+  order.orderItems.forEach(async (orderItem) => {
+    if (
+      orderItem.status === 'Delivered' ||
+      orderItem.status === 'Cancelled' ||
+      orderItem.status === 'ReturnRequested'
+    )
+      return;
+    orderItem.status = req.body.orderStatus;
+  });
+
   if (req.body.orderStatus === 'Delivered') {
     order.deliveredAt = Date.now();
   }
@@ -119,6 +129,73 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     updatedDocument: savedDoc,
+  });
+});
+
+// Cancel order
+exports.cancelOrder = catchAsyncErrors(async (req, res, next) => {
+  const { productId, reason } = req.body;
+
+  const order = await Order.findById(req.params.id);
+
+  if (!order) return next(new ErrorHandler('Order not found', 404));
+
+  if (order.user.toString() !== req.user.id && req.user.role !== 'admin')
+    return next(new ErrorHandler('You can cancel your order only', 405));
+
+  for (let i = 0; i < order.orderItems.length; i++) {
+    const product = order.orderItems[i];
+    if (product.productId.toString() === productId) {
+      // Product found
+      if (product.status === 'Cancelled')
+        return next(new ErrorHandler('Product already cancelled', 400));
+
+      if (product.status === 'Delivered')
+        return next(new ErrorHandler('Product already delivered', 400));
+
+      if (product.status === 'ReturnRequested')
+        return next(
+          new ErrorHandler('Product already requested for return', 400),
+        );
+    }
+  }
+  for (let i = 0; i < order.orderItems.length; i++) {
+    const product = order.orderItems[i];
+
+    if (product.productId.toString() === productId) {
+      console.log('Product found');
+      product.status = 'Cancelled';
+      product.reason = reason;
+      product.timeOfReturn = Date.now();
+      // Update order totals
+      order.itemsPrice -= product.price;
+      order.totalPrice -= product.price;
+    }
+  }
+  const allProductsCancelled = order.orderItems.every((orderItem) => {
+    return orderItem.cancelled === true;
+  });
+
+  if (allProductsCancelled) {
+    order.orderStatus = 'Cancelled';
+  }
+
+  // Update stock
+  for (let i = 0; i < order.orderItems.length; i++) {
+    const orderItem = order.orderItems[i];
+    if (orderItem.cancelled) {
+      await updateStock(
+        orderItem.productId.toString(),
+        orderItem.quantity * -1,
+      );
+    }
+  }
+
+  const savedDoc = await order.save({ validateBeforeSave: false });
+  res.status(200).json({
+    success: true,
+    updatedDocument: savedDoc,
+    message: 'Order cancelled',
   });
 });
 
