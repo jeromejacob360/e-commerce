@@ -30,6 +30,7 @@ STRIPE_SECRET_KEY =
 
 STRIPE_PUBLISHABLE_KEY =
 
-## **Cypress e2e testing** - `cd frontend` `npm run test`
+## **Cypress e2e testing**
+`cd frontend` `npm run test`
 
 Make sure to add two images named 1.jpg and 2.jpg in frontend/cypress/fixtures
