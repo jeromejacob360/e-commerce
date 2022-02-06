@@ -285,6 +285,37 @@ exports.cancelReturn = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// Get all return requests
+exports.getReturnRequests = catchAsyncErrors(async (req, res, next) => {
+  const retReqs = Order.aggregate(
+    [
+      {
+        $match: {
+          orderItems: { $elemMatch: { status: 'Return requested' } },
+        },
+      },
+      { $unwind: { path: '$orderItems' } },
+      { $match: { 'orderItems.status': 'Return requested' } },
+    ],
+    function (err, result) {
+      if (err) {
+        return next(new ErrorHandler('Error fetching return requests', 400));
+      }
+      res.status(200).json({
+        success: true,
+        returnRequests: result,
+      });
+    },
+  );
+});
+
+// Manager approve return request
+exports.approveReturn = catchAsyncErrors(async (req, res, next) => {
+  const { productId, action } = req.body;
+  const order = await Order.findById(req.params.orderId);
+  console.log('order', order);
+});
+
 async function updateStock(id, quantity) {
   const product = await Product.findById(id);
 

@@ -13,7 +13,17 @@ import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveShippingInfo } from '../redux/actions/userActions';
 import { getStates } from 'country-state-picker';
-import { motion } from 'framer-motion';
+
+const initialState = {
+  name: '',
+  area: '',
+  street: '',
+  city: '',
+  district: '',
+  state: '',
+  pinCode: '',
+  mobile: '',
+};
 
 export default function Checkout({ history }) {
   const states = getStates('in');
@@ -22,24 +32,14 @@ export default function Checkout({ history }) {
   const { shippingInfoloading, error, user } = useSelector(
     (state) => state.user,
   );
-  const shippingInfo = user.shippingInfo || {
-    name: '',
-    area: '',
-    street: '',
-    city: '',
-    district: '',
-    state: '',
-    pinCode: '',
-    mobile: '',
-  };
 
   const isRendered = useRef(false);
+  const [address, setAddress] = useState(user.shippingInfo || initialState);
 
   useEffect(() => {
     isRendered.current = true;
   }, []);
 
-  const [address, setAddress] = useState(shippingInfo);
   useEffect(() => {
     if (error) {
       enqueueSnackbar(error, { variant: 'error' });
@@ -84,24 +84,6 @@ export default function Checkout({ history }) {
     }
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 10 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { staggerChildren: 0.02 },
-    },
-  };
-
-  const variants = {
-    hidden: { y: 20, opacity: 0 },
-    show: { y: 0, opacity: 1 },
-  };
-
-  const MotionFormGroup = motion(FormGroup);
-  const MotionSelect = motion(Select);
-  const MotionButton = motion(Button);
-
   return (
     <div className="mb-10">
       <Metadata title="Shipping Details" />
@@ -109,18 +91,8 @@ export default function Checkout({ history }) {
       <div className="flex flex-col items-center justify-center w-full mt-8">
         <h1 className="px-10 pb-2 mb-4 text-2xl border-b">Shipping Details</h1>
         <form>
-          <MotionFormGroup
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            margin="dense"
-            size="small"
-            className="space-y-4 w-80"
-          >
-            <motion.div
-              variants={variants}
-              className="relative flex items-center"
-            >
+          <FormGroup margin="dense" size="small" className="space-y-4 w-80">
+            <div className="relative flex items-center">
               <OutlinedInput
                 fullWidth
                 type="tel"
@@ -148,11 +120,8 @@ export default function Checkout({ history }) {
                   length={address?.mobile?.length}
                 />
               )}
-            </motion.div>
-            <motion.div
-              variants={variants}
-              className="relative flex items-center"
-            >
+            </div>
+            <div className="relative flex items-center">
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -165,11 +134,8 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.name.length > 3} />
               )}
-            </motion.div>
-            <motion.div
-              variants={variants}
-              className="relative flex items-center"
-            >
+            </div>
+            <div className="relative flex items-center">
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -182,11 +148,8 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.area.length > 3} />
               )}
-            </motion.div>
-            <motion.div
-              variants={variants}
-              className="relative flex items-center"
-            >
+            </div>
+            <div className="relative flex items-center">
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -199,11 +162,8 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.street.length > 3} />
               )}
-            </motion.div>
-            <motion.div
-              variants={variants}
-              className="relative flex items-center"
-            >
+            </div>
+            <div className="relative flex items-center">
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -216,11 +176,8 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.city.length > 3} />
               )}
-            </motion.div>
-            <motion.div
-              variants={variants}
-              className="relative flex items-center"
-            >
+            </div>
+            <div className="relative flex items-center">
               <OutlinedInput
                 fullWidth
                 type="text"
@@ -233,12 +190,9 @@ export default function Checkout({ history }) {
               {isRendered.current && (
                 <InputTick condition={address.district.length > 3} />
               )}
-            </motion.div>
+            </div>
 
-            <motion.div
-              variants={variants}
-              className="relative flex items-center"
-            >
+            <div className="relative flex items-center">
               <OutlinedInput
                 type="tel"
                 fullWidth
@@ -265,9 +219,8 @@ export default function Checkout({ history }) {
                   reqLength={6}
                 />
               )}
-            </motion.div>
-            <MotionSelect
-              variants={variants}
+            </div>
+            <Select
               name="state"
               displayEmpty
               renderValue={(value) =>
@@ -281,9 +234,8 @@ export default function Checkout({ history }) {
                   {state}
                 </MenuItem>
               ))}
-            </MotionSelect>
-            <MotionButton
-              variants={variants}
+            </Select>
+            <Button
               type="submit"
               onClick={handleSubmit}
               fullWidth
@@ -292,8 +244,8 @@ export default function Checkout({ history }) {
               disabled={shippingInfoloading}
             >
               Continue
-            </MotionButton>
-          </MotionFormGroup>
+            </Button>
+          </FormGroup>
         </form>
       </div>
     </div>

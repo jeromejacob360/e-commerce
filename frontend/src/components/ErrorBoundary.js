@@ -12,6 +12,10 @@ class ErrorBoundary extends React.Component {
     this.props.history.goBack();
   }
 
+  componentDidCatch(error, errorInfo) {
+    if (process.env.NODE_ENV === 'development') console.log(error, errorInfo);
+  }
+
   static getDerivedStateFromError() {
     return { hasError: true };
   }

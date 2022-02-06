@@ -3,7 +3,6 @@ import Metadata from '../helper-components/Metadata';
 import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 export default function Confirm({ history }) {
   const { user } = useSelector((state) => state.user);
@@ -31,28 +30,13 @@ export default function Confirm({ history }) {
     history.push('/payment');
   }
 
-  const MotionButton = motion(Button);
-  const containerVariants = {
-    hidden: { opacity: 0, y: 10 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { staggerChildren: 0.02 },
-    },
-  };
-
-  const variants = {
-    hidden: { y: 20, opacity: 0 },
-    show: { y: 0, opacity: 1 },
-  };
-
   const address = `${shippingInfo.area}, ${shippingInfo.street}, ${shippingInfo.city}, ${shippingInfo.district}, ${shippingInfo.state}`;
   return (
     <div className="max-w-screen-xl mx-auto mb-10">
       <Metadata title="Confirm order" />
       <Steps activeStep={1} />
       <div className="px-4 mt-10 md:grid md:grid-cols-[2fr_1fr] ">
-        <motion.div className="md:mr-10">
+        <div className="md:mr-10">
           <div className="px-4 ADDRESS">
             <h3 className="px-10 pb-2 mb-4 text-2xl text-center border-b">
               Shipping Address
@@ -82,7 +66,7 @@ export default function Confirm({ history }) {
             </h4>
             {cartItems.map((item, i) => {
               return (
-                <motion.div
+                <div
                   initial={{ opacity: 0, y: 10 * i }}
                   animate={{ opacity: 1, y: 0, transition: { duration: 0.3 } }}
                   key={item.productId}
@@ -105,54 +89,35 @@ export default function Confirm({ history }) {
                       ₹{item.price * item.quantity}
                     </span>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
             <div className="py-3 text-right border-t border-b">
               Total:&nbsp;₹{cartTotal}
             </div>
           </div>
-        </motion.div>
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <motion.h4
-            variants={variants}
-            className="pb-2 mb-4 text-2xl text-center border-b"
-          >
+        </div>
+        <div initial="hidden" animate="show">
+          <h4 className="pb-2 mb-4 text-2xl text-center border-b">
             Order Summary
-          </motion.h4>
-          <motion.h4
-            variants={variants}
-            className="flex justify-between mb-2 px-14"
-          >
+          </h4>
+          <h4 className="flex justify-between mb-2 px-14">
             <span>Cart Total:&nbsp;</span>
             <span>₹{cartTotal}</span>
-          </motion.h4>
-          <motion.h4
-            variants={variants}
-            className="flex justify-between mb-2 px-14"
-          >
+          </h4>
+          <h4 className="flex justify-between mb-2 px-14">
             <span>Shipping:&nbsp;</span>
             <span>₹{shipping}</span>
-          </motion.h4>
-          <motion.h4
-            variants={variants}
-            className="flex justify-between mb-2 px-14"
-          >
+          </h4>
+          <h4 className="flex justify-between mb-2 px-14">
             <span>Discount:&nbsp;</span>
             <span>₹{discount}</span>
-          </motion.h4>
-          <motion.h4
-            variants={variants}
-            className="flex justify-between py-2 text-lg font-semibold border-t border-b px-14"
-          >
+          </h4>
+          <h4 className="flex justify-between py-2 text-lg font-semibold border-t border-b px-14">
             <span>Total:&nbsp;</span>
             <span>₹{total}</span>
-          </motion.h4>
-          <MotionButton
+          </h4>
+          <Button
             onClick={proceedToPayment}
             fullWidth
             sx={{
@@ -161,8 +126,8 @@ export default function Confirm({ history }) {
             variant="contained"
           >
             Proceed to payment
-          </MotionButton>
-        </motion.div>
+          </Button>
+        </div>
       </div>
     </div>
   );

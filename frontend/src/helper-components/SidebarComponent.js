@@ -5,6 +5,7 @@ import Inventory2Icon from '@mui/icons-material/Inventory2';
 import PeopleIcon from '@mui/icons-material/People';
 import RedeemIcon from '@mui/icons-material/Redeem';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 
 export default function SidebarComponent() {
   return (
@@ -31,6 +32,12 @@ export default function SidebarComponent() {
           <p className="flex items-center space-x-2">
             <Inventory2Icon />
             <span>Orders</span>
+          </p>
+        </Link>
+        <Link to="/admin/returns" className="w-full">
+          <p className="flex items-center space-x-2">
+            <AssignmentReturnIcon />
+            <span>Return requests</span>
           </p>
         </Link>
         <Link to="/admin/users" className="w-full">

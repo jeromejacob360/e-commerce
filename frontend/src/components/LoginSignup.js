@@ -54,7 +54,7 @@ export default function LoginSignup() {
           mode === 'login' ? 'h-[420px]' : 'h-[540px]'
         }`}
         layout
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
       >

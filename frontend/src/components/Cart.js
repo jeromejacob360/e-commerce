@@ -43,7 +43,7 @@ export default function Cart({ history }) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+      exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }}
       className="px-2 pb-10"
     >
       <Metadata title="Cart" />
@@ -52,10 +52,7 @@ export default function Cart({ history }) {
           <span className="px-10 pb-2 border-b">Shopping Cart</span>
         </h1>
 
-        <motion.div
-          layoutId="step"
-          className="max-w-[1000px] mx-auto mt-10 shadow-md sm:p-4"
-        >
+        <div className="max-w-[1000px] mx-auto mt-10 shadow-md sm:p-4">
           <div>
             <ul
               className="grid font-semibold"
@@ -155,7 +152,7 @@ export default function Cart({ history }) {
               </AnimatePresence>
             </div>
           </div>
-        </motion.div>
+        </div>
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -174,7 +171,6 @@ export default function Cart({ history }) {
 
           <div className="flex justify-end px-4 mt-4">
             <MotionButton
-              layoutId="button"
               onClick={handleCheckout}
               variant="contained"
               color="primary"

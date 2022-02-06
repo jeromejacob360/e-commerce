@@ -14,9 +14,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useSnackbar } from 'notistack';
 
 export default function Login() {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,6 +26,13 @@ export default function Login() {
   const [showPw, setShowPw] = useState(false);
 
   function handleLogin(e) {
+    e.preventDefault();
+    if (!email.trim() || !password.trim()) {
+      enqueueSnackbar('Please fill in all fields', {
+        variant: 'error',
+      });
+      return;
+    }
     e.preventDefault();
     dispatch(login(email, password));
   }

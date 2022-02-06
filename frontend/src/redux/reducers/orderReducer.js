@@ -150,6 +150,39 @@ export const allOrdersReducer = (state = {}, action) => {
   }
 };
 
+// Get all return requests (Admin)
+export const returnRequestsReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'GET_RETURN_REQUESTS_REQUEST':
+      return {
+        loading: true,
+      };
+    case 'GET_RETURN_REQUESTS_SUCCESS':
+      return {
+        ...state,
+        ...action.payload,
+        loading: false,
+      };
+    case 'GET_RETURN_REQUESTS_FAILURE':
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case 'CLEAR_ERRORS':
+      return {
+        ...state,
+        error: null,
+        success: false,
+      };
+
+    case 'CLEAR_STATE':
+      return [];
+    default:
+      return state;
+  }
+};
+
 // Update/delete orders
 export const orderReducer = (state = {}, action) => {
   switch (action.type) {

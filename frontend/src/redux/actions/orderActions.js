@@ -197,6 +197,64 @@ export const getAllOrders = () => async (dispatch) => {
   }
 };
 
+// Get all return requests
+export const getAllReturnRequests = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: 'GET_RETURN_REQUESTS_REQUEST',
+    });
+
+    const { data } = await axios.get('/api/admin/returns');
+
+    dispatch({
+      type: 'GET_RETURN_REQUESTS_SUCCESS',
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'GET_RETURN_REQUESTS_FAILURE',
+      payload: error.response.data.message,
+    });
+    dispatch({
+      type: 'CLEAR_ERRORS',
+    });
+  }
+};
+
+// Manage return requests
+export const manageReturnRequest =
+  (productId, orderId, action) => async (dispatch) => {
+    try {
+      dispatch({
+        type: 'MANAGE_RETURN_REQUEST',
+      });
+
+      const { data } = await axios.put('/api/admin/returns/' + orderId, {
+        productId,
+        action,
+      });
+
+      dispatch({
+        type: 'MANAGE_RETURN_SUCCESS',
+        payload: data,
+      });
+
+      dispatch({
+        type: 'CLEAR_SUCCESS',
+      });
+    } catch (error) {
+      dispatch({
+        type: 'MANAGE_RETURN_FAILURE',
+        payload: error.response.data.message,
+      });
+
+      dispatch({
+        type: 'CLEAR_ERRORS',
+      });
+    }
+  };
+
+// Get order by id
 export const getOrderDetails = (id) => async (dispatch) => {
   try {
     dispatch({
