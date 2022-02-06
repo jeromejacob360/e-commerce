@@ -4,7 +4,6 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Loading from '../helper-components/Loading';
 import PageTitle from '../helper-components/PageTitle';
 import {
   clearErrors,
@@ -12,6 +11,9 @@ import {
   manageReturnRequest,
 } from '../redux/actions/orderActions';
 import Sidebar from './admin/Sidebar';
+import { Link } from 'react-router-dom';
+import { fetchProductDetails } from '../redux/actions/productActions';
+import LoadingSpinner from '../helper-components/LoadingSpinner';
 
 export default function ReturnsList() {
   const dispatch = useDispatch();
@@ -22,20 +24,41 @@ export default function ReturnsList() {
   const { returnRequests, loading, error, success } = useSelector(
     (state) => state.returnRequests,
   );
+  const {
+    loading: updateLoading,
+    error: updateError,
+    success: updateSuccess,
+    message: updateMessage,
+  } = useSelector((state) => state.order);
 
   useEffect(() => {
     dispatch(getAllReturnRequests());
-  }, [dispatch]);
+  }, [dispatch, updateSuccess]);
 
   useEffect(() => {
     if (error) {
       enqueueSnackbar(error, { variant: 'error' });
       dispatch(clearErrors());
     }
-  }, [error, enqueueSnackbar, dispatch, success]);
+    if (updateError) {
+      enqueueSnackbar(updateError, { variant: 'error' });
+      dispatch(clearErrors());
+    }
+    if (updateSuccess) {
+      enqueueSnackbar(updateMessage, { variant: 'success' });
+      dispatch(clearErrors());
+    }
+  }, [
+    error,
+    enqueueSnackbar,
+    dispatch,
+    success,
+    updateError,
+    updateSuccess,
+    updateMessage,
+  ]);
 
   function handleReturnRequest(productId, orderId, status) {
-    console.log('productId, orderId, status', productId, orderId, status);
     dispatch(manageReturnRequest(productId, orderId, status));
   }
 
@@ -51,10 +74,8 @@ export default function ReturnsList() {
           ' ' +
           returnRequest.orderItems.description,
         price: returnRequest.orderItems.price,
-        // quantity: returnRequest.orderItems.quantity,
-        // Image: returnRequest.orderItems.image,
-        // reason: returnRequest.orderItems.reason,
         user: returnRequest.user,
+        status: returnRequest.orderItems.status,
       });
     });
 
@@ -64,6 +85,18 @@ export default function ReturnsList() {
       headerName: 'ProductId',
       minWidth: 200,
       flex: 0.3,
+      renderCell: (rowData) => {
+        return (
+          <Link
+            onMouseEnter={() =>
+              dispatch(fetchProductDetails(rowData.row.productId))
+            }
+            to={`/product/${rowData.row.productId}`}
+          >
+            {rowData.row.productId}
+          </Link>
+        );
+      },
     },
 
     {
@@ -79,55 +112,33 @@ export default function ReturnsList() {
       minWidth: 90,
       flex: 0.3,
     },
-    // {
-    //   field: 'quantity',
-    //   headerName: 'Quantity',
-    //   minWidth: 90,
-    //   flex: 0.3,
-    // },
     {
       field: 'description',
       headerName: 'Description',
       minWidth: 180,
       flex: 0.3,
     },
-    // {
-    //   field: 'Image',
-    //   headerName: 'Image',
-    //   minWidth: 90,
-    //   flex: 0.3,
-    //   renderCell: (params) => {
-    //     return (
-    //       <img
-    //         className="object-contain w-8 h-10"
-    //         src={params.row.Image}
-    //         alt="product"
-    //       />
-    //     );
-    //   },
-    // },
-    // {
-    //   field: 'reason',
-    //   headerName: 'Reason',
-    //   minWidth: 180,
-    //   flex: 0.3,
-    // },
     {
       field: 'user',
       headerName: 'User',
       minWidth: 180,
       flex: 0.3,
     },
-
     {
       field: 'action',
       headerName: 'Action',
       type: 'text',
-      minWidth: 100,
+      minWidth: 180,
       flex: 0.5,
       headerAlign: 'center',
 
       renderCell: (params) => {
+        if (
+          params.row.status === 'Return rejected' ||
+          params.row.status === 'Returned'
+        ) {
+          return params.row.status;
+        }
         return (
           <>
             <Select
@@ -143,7 +154,7 @@ export default function ReturnsList() {
                 )
               }
             >
-              <MenuItem disabled>Select</MenuItem>
+              <MenuItem disabled>{params.row.status}</MenuItem>
               <MenuItem value="accepted">Accept</MenuItem>
               <MenuItem value="rejected">Reject</MenuItem>
             </Select>
@@ -158,9 +169,7 @@ export default function ReturnsList() {
       <PageTitle title="Return requests" />
       <div className="flex flex-col sm:flex-row 2xl:px-10">
         <Sidebar />
-        {loading ? (
-          <Loading />
-        ) : (
+        {
           <div className="flex-1 sm:ml-44">
             <DataGrid
               rows={rows}
@@ -175,8 +184,9 @@ export default function ReturnsList() {
               }
             />
           </div>
-        )}
+        }
       </div>
+      {(loading || updateLoading) && <LoadingSpinner />}
     </div>
   );
 }

@@ -1,7 +1,4 @@
 const {
-  manageReturnRequest,
-} = require('../../frontend/src/redux/actions/orderActions');
-const {
   createOrder,
   getUserOrders,
   getOrder,
@@ -12,6 +9,7 @@ const {
   returnOrder,
   cancelReturn,
   getReturnRequests,
+  manageReturnRequest,
 } = require('../controllers/orderController');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
@@ -25,11 +23,13 @@ router.route('/order/return/:id').post(isAuthenticatedUser, cancelReturn);
 router.route('/orders/me').get(isAuthenticatedUser, getUserOrders);
 router
   .route('/admin/returns')
-  .get(isAuthenticatedUser, authorizeRoles('admin'), getReturnRequests);
+  .get(isAuthenticatedUser, authorizeRoles('admin'), getReturnRequests)
+  .put(isAuthenticatedUser, authorizeRoles('admin'), manageReturnRequest);
+
 router
-  .put(isAuthenticatedUser, authorizeRoles('admin'), manageReturnRequest)
   .route('/admin/orders')
   .get(isAuthenticatedUser, authorizeRoles('admin'), getAllOrders);
+
 router
   .route('/admin/order/:id')
   .put(isAuthenticatedUser, authorizeRoles('admin'), updateOrder)

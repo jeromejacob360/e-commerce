@@ -291,11 +291,28 @@ exports.getReturnRequests = catchAsyncErrors(async (req, res, next) => {
     [
       {
         $match: {
-          orderItems: { $elemMatch: { status: 'Return requested' } },
+          orderItems: {
+            $elemMatch: {
+              status: 'Return requested',
+            },
+          },
         },
       },
-      { $unwind: { path: '$orderItems' } },
-      { $match: { 'orderItems.status': 'Return requested' } },
+      {
+        $unwind: {
+          path: '$orderItems',
+        },
+      },
+      {
+        $match: {
+          'orderItems.status': 'Return requested',
+        },
+      },
+      {
+        $sort: {
+          'orderItems.status': 1,
+        },
+      },
     ],
     function (err, result) {
       if (err) {
@@ -310,10 +327,43 @@ exports.getReturnRequests = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Manager approve return request
-exports.approveReturn = catchAsyncErrors(async (req, res, next) => {
-  const { productId, action } = req.body;
-  const order = await Order.findById(req.params.orderId);
-  console.log('order', order);
+exports.manageReturnRequest = catchAsyncErrors(async (req, res, next) => {
+  const { orderId, productId, action } = req.body;
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    return next(new ErrorHandler('Order not found', 404));
+  }
+
+  const product = order.orderItems.find(
+    (orderItem) => orderItem.productId.toString() === productId,
+  );
+
+  console.log('product', product);
+
+  if (!product) {
+    return next(new ErrorHandler('Product not found', 404));
+  }
+
+  if (product.status !== 'Return requested') {
+    return next(new ErrorHandler('Product not requested for return', 400));
+  }
+
+  if (action === 'accepted') {
+    product.status = 'Returned';
+    console.log('product.status', product.status);
+  }
+
+  if (action === 'rejected') {
+    product.status = 'Return rejected';
+  }
+
+  await order.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    message: 'Return request ' + action,
+  });
 });
 
 async function updateStock(id, quantity) {

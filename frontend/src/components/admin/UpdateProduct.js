@@ -1,7 +1,5 @@
 import {
   Button,
-  CircularProgress,
-  Fab,
   FormGroup,
   InputAdornment,
   MenuItem,
@@ -27,6 +25,7 @@ import { useSnackbar } from 'notistack';
 import Loading from '../../helper-components/Loading';
 import { categories } from '../../data/data';
 import Sidebar from './Sidebar';
+import LoadingSpinner from '../../helper-components/LoadingSpinner';
 const initialState = {
   name: '',
   price: '',
@@ -279,13 +278,7 @@ export default function UpdateProduct({ history, match }) {
                 </FormGroup>
               </form>
             </div>
-            {uploading && (
-              <div className="fixed bottom-10 right-10">
-                <Fab color="secondary" aria-label="add">
-                  <CircularProgress value={80} />
-                </Fab>
-              </div>
-            )}
+            {uploading && <LoadingSpinner />}
           </div>
         )}
       </div>

@@ -156,6 +156,7 @@ export const returnRequestsReducer = (state = [], action) => {
     case 'GET_RETURN_REQUESTS_REQUEST':
       return {
         loading: true,
+        ...state,
       };
     case 'GET_RETURN_REQUESTS_SUCCESS':
       return {
@@ -188,6 +189,7 @@ export const orderReducer = (state = {}, action) => {
   switch (action.type) {
     case 'UPDATE_ORDER_REQUEST':
     case 'DELETE_ORDER_REQUEST':
+    case 'MANAGE_RETURN_REQUEST':
       return {
         loading: true,
       };
@@ -201,14 +203,23 @@ export const orderReducer = (state = {}, action) => {
         loading: false,
         isUpdated: action.payload,
       };
+    case 'MANAGE_RETURN_SUCCESS':
+      return {
+        loading: false,
+        success: true,
+        ...action.payload,
+      };
+
     case 'UPDATE_ORDER_FAILURE':
     case 'DELETE_ORDER_FAILURE':
+    case 'MANAGE_RETURN_FAILURE':
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
     case 'UPDATE_ORDER_RESET':
+    case 'MANAGE_RETURN_RESET':
       return {
         isUpdated: false,
       };

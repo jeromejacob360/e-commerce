@@ -223,13 +223,15 @@ export const getAllReturnRequests = () => async (dispatch) => {
 
 // Manage return requests
 export const manageReturnRequest =
-  (productId, orderId, action) => async (dispatch) => {
+  (orderId, productId, action) => async (dispatch) => {
+    console.log('productId, orderId, action', productId, orderId, action);
     try {
       dispatch({
         type: 'MANAGE_RETURN_REQUEST',
       });
 
-      const { data } = await axios.put('/api/admin/returns/' + orderId, {
+      const { data } = await axios.put('/api/admin/returns', {
+        orderId,
         productId,
         action,
       });
@@ -243,6 +245,7 @@ export const manageReturnRequest =
         type: 'CLEAR_SUCCESS',
       });
     } catch (error) {
+      console.log('error', error);
       dispatch({
         type: 'MANAGE_RETURN_FAILURE',
         payload: error.response.data.message,
