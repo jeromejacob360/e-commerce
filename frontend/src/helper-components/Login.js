@@ -20,8 +20,8 @@ export default function Login() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@admin.com');
+  const [password, setPassword] = useState('admin');
 
   const [showPw, setShowPw] = useState(false);
 
